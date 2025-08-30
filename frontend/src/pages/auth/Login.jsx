@@ -37,7 +37,7 @@ const Login = () => {
               </div>
               <button type="submit" style={styles.button}>Login</button>
               <div style={styles.signup}>
-                <p>Don't have an account? <Link to="/signup" style={{...styles.link, ...styles.signupLink}}>Sign up</Link></p>
+                <p>Don't have an account? <Link to="/signup" style={{ ...styles.link, ...styles.signupLink }}>Sign up</Link></p>
               </div>
             </form>
           </div>
@@ -95,7 +95,9 @@ const styles = {
     padding: '0.75rem',
     borderRadius: '5px',
     border: '1px solid #ccc',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    color: '#333',
+    fontSize: '1rem',
+    backgroundColor: 'rgba(181, 236, 165, 0.8)',
   },
   eyeIcon: {
     position: 'absolute',
