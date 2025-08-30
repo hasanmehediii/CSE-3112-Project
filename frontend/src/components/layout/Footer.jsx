@@ -1,20 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Assuming react-router-dom is used for navigation
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <footer style={styles.footer}>
       <div style={styles.container}>
         <div style={styles.gridContainer}>
-          {/* Left Section: Company Logo and Description */}
           <div style={styles.krishiNetSection}>
             <h2 style={styles.logo}>KrishiNet</h2>
             <p style={styles.description}>
-              KrishiNet is a comprehensive agricultural platform dedicated to empowering farmers with essential resources, market insights, and financial tools to foster sustainable growth and prosperity. 
-                          </p>
+              KrishiNet is a comprehensive agricultural platform dedicated to empowering farmers with essential resources, market insights, and financial tools to foster sustainable growth and prosperity.
+            </p>
           </div>
 
-          {/* Quick Links Section */}
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Quick Links</h3>
             <ul style={styles.list}>
@@ -26,7 +24,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Resources Section */}
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Resources</h3>
             <ul style={styles.list}>
@@ -37,7 +34,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Right Section: Contact */}
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Contact Us</h3>
             <p style={styles.contactInfo}>
@@ -50,11 +46,13 @@ const Footer = () => {
         </div>
 
         <div style={styles.bottomBar}>
-          <p style={styles.copyright}>&copy; 2025 KrishiNet. All Rights Reserved.</p>
+          <p style={styles.copyright}>
+            &copy; {new Date().getFullYear()} KrishiNet. All Rights Reserved.
+          </p>
           <div style={styles.socialLinks}>
-            <a href="#" style={styles.socialLink}><img src="/social/facebook.png" alt="Facebook" style={styles.socialIcon}/></a>
-            <a href="#" style={styles.socialLink}><img src="/social/twitter.png" alt="Twitter" style={styles.socialIcon}/></a>
-            <a href="#" style={styles.socialLink}><img src="/social/instagram.png" alt="Instagram" style={styles.socialIcon}/></a>
+            <a href="#" style={styles.socialLink}><img src="/social/facebook.png" alt="Facebook" style={styles.socialIcon} /></a>
+            <a href="#" style={styles.socialLink}><img src="/social/twitter.png" alt="Twitter" style={styles.socialIcon} /></a>
+            <a href="#" style={styles.socialLink}><img src="/social/instagram.png" alt="Instagram" style={styles.socialIcon} /></a>
           </div>
         </div>
       </div>
@@ -64,29 +62,34 @@ const Footer = () => {
 
 const styles = {
   footer: {
-    backgroundColor: '#2d3748', // Dark gray, similar to gray-800
-    color: '#e2e8f0', // Light text color
+    backgroundColor: '#2d3748',
+    color: '#e2e8f0',
     padding: '2rem 1rem',
     fontFamily: 'Arial, sans-serif',
+    width: '100%',          // ✅ ensures no overflow
+    boxSizing: 'border-box',
+    overflowX: 'hidden',
   },
   container: {
     maxWidth: '1200px',
     margin: '0 auto',
+    width: '100%',
   },
   gridContainer: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
     gap: '2rem',
     paddingBottom: '2rem',
-    borderBottom: '1px solid #4a5568', // Darker gray border
+    borderBottom: '1px solid #4a5568',
+    boxSizing: 'border-box',
   },
   krishiNetSection: {
-    gridColumn: 'span 2', // Spans 2 columns on larger screens
+    gridColumn: 'span 2',
   },
   logo: {
     fontSize: '2.5rem',
     fontWeight: 'bold',
-    color: '#68d391', // A green color for the logo
+    color: '#68d391',
     marginBottom: '1rem',
   },
   description: {
@@ -96,13 +99,13 @@ const styles = {
   },
   section: {
     marginBottom: '1rem',
-    marginTop: '1rem', // Added to shift sections slightly downwards
+    marginTop: '1rem',
   },
   sectionTitle: {
     fontSize: '1.2rem',
     fontWeight: 'bold',
     marginBottom: '1rem',
-    color: '#cbd5e0', // Lighter gray for titles
+    color: '#cbd5e0',
   },
   list: {
     listStyle: 'none',
@@ -114,10 +117,6 @@ const styles = {
     textDecoration: 'none',
     marginBottom: '0.5rem',
     display: 'block',
-    transition: 'color 0.3s ease',
-    '&:hover': {
-      color: '#68d391', // Green on hover
-    },
   },
   contactInfo: {
     fontSize: '0.9rem',
@@ -136,25 +135,19 @@ const styles = {
   },
   socialLinks: {
     display: 'flex',
-    gap: '0.5rem', // Decreased gap
+    gap: '0.5rem',
   },
   socialLink: {
-    color: '#e2e8f0',
-    textDecoration: 'none',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '30px', // Decreased size
-    height: '30px', // Decreased size
+    width: '30px',
+    height: '30px',
     borderRadius: '50%',
     backgroundColor: '#4a5568',
-    transition: 'background-color 0.3s ease',
-    '&:hover': {
-      backgroundColor: '#68d391',
-    },
   },
   socialIcon: {
-    width: '20px', // Size of the icon image itself
+    width: '20px',
     height: '20px',
   },
 };

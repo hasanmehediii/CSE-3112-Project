@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-const Navbar = () => {
+export const Navbar = () => {
   const { user, login, logout } = useAuth();
 
   return (
@@ -29,7 +29,7 @@ const Navbar = () => {
                 <button onClick={logout} className="dock-item" style={styles.dockItem}>Logout</button>
               </>
             ) : (
-              <button onClick={login} className="dock-item" style={{...styles.dockItem, ...styles.loginButton}}>Login</button>
+              <Link to="/login" className="dock-item" style={{...styles.dockItem, ...styles.loginButton}}>Login</Link>
             )}
           </div>
         </div>
@@ -88,4 +88,3 @@ const styles = {
   },
 };
 
-export default Navbar;

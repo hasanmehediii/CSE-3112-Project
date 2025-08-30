@@ -1,19 +1,24 @@
 import React from 'react';
-import Navbar from '../components/layout/Navbar.jsx';
+import { Navbar } from '../components/layout/Navbar.jsx';
 import Footer from '../components/layout/Footer.jsx';
+import './Home.css'; // Import the CSS file for additional styles
 
 const Home = () => {
   return (
-    <div>
+    <div style={styles.page}>
       <Navbar />
       <div style={styles.hero}>
         <div style={styles.heroOverlay}>
           <div style={styles.heroText}>
             <h1 style={styles.heroTitle}>KrishiNet</h1>
-            <p style={styles.heroSubtitle}>Your trusted partner in modern farming. We provide AI-driven insights, market access, and financial solutions to empower farmers across the nation.</p>
+            <p style={styles.heroSubtitle}>
+              Your trusted partner in modern farming. We provide AI-driven insights,
+              market access, and financial solutions to empower farmers across the nation.
+            </p>
           </div>
         </div>
       </div>
+
       <div style={styles.statsSection}>
         <div style={styles.statsContainer}>
           <div style={styles.statCard}>
@@ -34,17 +39,19 @@ const Home = () => {
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );
 };
 
 const styles = {
-  mainContent: {
-    paddingLeft: '5rem',
+  page: {
+    overflowX: 'hidden', // ✅ prevents right strip
+    width: '100%',
   },
   hero: {
-    backgroundImage: `url('/Home6.jpg')`,
+    backgroundImage: `url('/Home3.jpg')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: '100vh',
@@ -53,6 +60,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'flex-start',
     color: '#fff',
+    boxSizing: 'border-box',
   },
   heroOverlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -61,7 +69,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingLeft: '5rem',
+    padding: '0 5rem', // ✅ changed from only left padding to symmetric
     boxSizing: 'border-box',
   },
   heroText: {
@@ -88,8 +96,10 @@ const styles = {
     lineHeight: '1.4',
   },
   statsSection: {
-    padding: '4rem 2rem 4rem 7rem',
+    padding: '4rem 2rem', // ✅ removed 7rem left padding
     backgroundColor: '#f8f9fa',
+    width: '100%',
+    boxSizing: 'border-box',
   },
   statsContainer: {
     display: 'flex',
@@ -97,6 +107,7 @@ const styles = {
     flexWrap: 'wrap',
     maxWidth: '1200px',
     margin: '0 auto',
+    boxSizing: 'border-box',
   },
   statCard: {
     backgroundColor: '#fff',
@@ -107,6 +118,7 @@ const styles = {
     margin: '1rem',
     flex: 1,
     minWidth: '200px',
+    boxSizing: 'border-box',
   },
   statNumber: {
     fontSize: '3rem',
@@ -118,7 +130,7 @@ const styles = {
     fontSize: '1.2rem',
     color: '#6c757d',
     marginTop: '0.5rem',
-  }
+  },
 };
 
 export default Home;

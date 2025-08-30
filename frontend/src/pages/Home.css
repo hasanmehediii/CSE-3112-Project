@@ -1,0 +1,99 @@
+/* Prevent any unwanted horizontal scrolling */
+html,
+body,
+#root,
+.home {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero {
+    background-image: url('/Home3.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    /* 👈 never use 100vw */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: #fff;
+}
+
+.hero-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 5rem;
+    box-sizing: border-box;
+}
+
+.hero-text {
+    text-align: left;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.hero-title {
+    font-size: 6rem;
+    font-weight: bold;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background: -webkit-linear-gradient(45deg, #4CAF50, #2196F3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    font-family: "Open Sans", sans-serif;
+    color: #f0f0f0;
+    line-height: 1.4;
+}
+
+/* Stats Section */
+.stats-section {
+    padding: 4rem 2rem 4rem 7rem;
+    background-color: #f8f9fa;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #28a745;
+    margin: 0;
+}
+
+.stat-text {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
