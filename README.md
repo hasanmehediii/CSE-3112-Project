@@ -1,7 +1,7 @@
 # Software Engineering Project - KrishiNet
 
 <p align="center">
-  <img src="farmer.png" alt="Website Logo" width="150" height="150" style="border-radius: 50%; border: 2px solid #ccc;" />
+  <img src="farmers.png" alt="Website Logo" width="150" height="150" style="border-radius: 50%; border: 2px solid #ccc;" />
   <br>
   <strong>An online helping platform for farmers.</strong>
 </p>
