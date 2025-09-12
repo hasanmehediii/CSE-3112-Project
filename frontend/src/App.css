@@ -1,6 +1,4 @@
-#root {
-
-}
+#root {}
 
 .logo {
   height: 6em;
@@ -8,9 +6,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -19,6 +19,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -36,4 +37,19 @@
 
 .read-the-docs {
   color: #888;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  /* 🔑 no right scroll */
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+  /* 🔑 stops overflow from padding/margin */
 }
