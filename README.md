@@ -33,23 +33,36 @@ Managing food expenses and making healthy choices can be difficult for students 
 
 ## 🌟 Features
 
-**🍽️ Smart Meal Planning:** Generates a 30-day meal plan including breakfast, lunch, snacks, and dinner. Balances nutrition and budget to ensure affordable healthy meals.
+### 🍽️ Smart Meal Planning
+- Generates a **30-day meal plan** including breakfast, lunch, snacks, and dinner.
+- Balances **nutrition** and **budget** to ensure affordable, healthy meals tailored to students.
 
-**💰 Budget Management:**
-Enter your monthly pocket money. Automatically suggests meals that fit within your budget. Tracks spending to avoid overshooting your balance.
+### 💰 Budget Management
+- Input your monthly pocket money.
+- Automatically suggests meals that fit within your budget.
+- Tracks spending to prevent overshooting your balance.
 
-**🍴 Canteen Integration:** Connects with campus canteens and shows real-time menus. 
-Suggests meals from available items with nutritional details. Tracks canteen orders and earnings.
+### 🍴 Canteen Integration
+- Connects with campus canteens to display **real-time menus**.
+- Suggests meals from available items with detailed nutritional information.
+- Tracks canteen orders and earnings for canteen owners.
 
-**🌦️ Weather-Aware Recommendations:**
-Adjusts food suggestions based on daily weather (e.g., light meals on hot days, warm soups on rainy days).
+### 🌦️ Weather-Aware Recommendations
+- Adjusts meal suggestions based on daily weather (e.g., light meals on hot days, warm soups on rainy days).
 
-**👤 User & Student Profiles:**
-Manage accounts with role-based access (student, admin, canteen owner). Students can view personalized meal plans and history. Owners can manage menus, update availability, and track earnings.
+### 👤 User & Student Profiles
+- Role-based access for **students**, **admins**, and **canteen owners**.
+- Students can view personalized meal plans and order history.
+- Canteen owners can manage menus, update item availability, and track earnings.
 
-**📊 Orders & Complaints System:** Students can place orders directly from the app. Integrated complaint box to report issues and track resolutions.
+### 📊 Orders & Complaints System
+- Students can place orders directly through the app.
+- Integrated **complaint box** for reporting issues and tracking resolutions.
 
-**🔒 Secure & Scalable:** User authentication with secure password storage. Built using FastAPI backend, MongoDB database, and accessible via Flutter app and React website.
+### 🔒 Secure & Scalable
+- **User authentication** with secure password storage.
+- Built using a **FastAPI** backend, **MongoDB** database, **Flutter** mobile app, and **React** website.
+- Designed for scalability and a modern, user-friendly interface.
 
 
 ## 🛠️ Tech Stack
