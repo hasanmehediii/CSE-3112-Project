@@ -1,14 +1,11 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./Home";   // ✅ no /pages
 
-function App() {
+export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
-      </Routes>
-    </AuthProvider>
+    <Routes>
+      <Route path="/" element={<Home />} />
+    </Routes>
   );
 }
-
-export default App;
