@@ -1,105 +1,175 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import styled from 'styled-components';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState("");
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+const LoginContainer = styled.div`
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/eating-person.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 6rem 3rem;
+`;
 
-  const handleSubmit = (e) => {
+const LoginCard = styled.div`
+  background: rgba(255, 255, 255, 0.9);
+  padding: 3rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 2rem;
+  font-weight: 700;
+`;
+
+const InputGroup = styled.div`
+  margin-bottom: 1.5rem;
+  text-align: left;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-weight: 600;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #16a34a;
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  background-color: #16a34a;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #15803d;
+  }
+`;
+
+const SignUpText = styled.p`
+  margin-top: 1.5rem;
+  color: #555;
+`;
+
+const SignUpLink = styled(Link)`
+  color: #16a34a;
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  margin-top: 1rem;
+`;
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-    const found = users.find(
-      (u) => u.email === form.email && u.password === form.password
-    );
-    if (found) {
-      setMessage("Login successful!");
-    } else {
-      setMessage("Invalid email or password.");
+    setError('');
+
+    try {
+      const success = await login({ email, password });
+
+      if (success) {
+        navigate('/');
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
+    } catch (err) {
+      setError(err.response?.data?.msg || 'Login failed');
     }
   };
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      width: "100vw",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "linear-gradient(120deg, #a8ff78 0%, #78ffd6 100%)",
-      position: "fixed",
-      top: 0,
-      left: 0,
-      zIndex: 1000,
-    }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          background: "#fff",
-          padding: "2.5rem 2rem",
-          borderRadius: "1.5rem",
-          boxShadow: "0 4px 24px #16a34a22",
-          minWidth: "320px",
-          width: "100%",
-          maxWidth: "400px"
-        }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: "1.5rem", color: "#2563eb" }}>Login</h2>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        />
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "0.8rem",
-            background: "linear-gradient(90deg, #2563eb 60%, #16a34a 100%)",
-            color: "#fff",
-            fontWeight: "bold",
-            border: "none",
-            borderRadius: "1rem",
-            fontSize: "1.1rem",
-            marginTop: "1rem",
-            cursor: "pointer"
-          }}
-        >
-          Login
-        </button>
-        {message && <div style={{ color: message.includes("success") ? "#16a34a" : "#e11d48", marginTop: "1rem", textAlign: "center" }}>{message}</div>}
-        <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
-          Don't have an account?{" "}
-          <Link to="/signup" style={{ color: "#2563eb", fontWeight: "bold", textDecoration: "underline" }}>
-            Sign Up
-          </Link>
-        </div>
-      </form>
-    </div>
-  );
-}
+    <PageContainer>
+      <Navbar staticNav />
+      <LoginContainer>
+        <LoginCard>
+          <Title>Login</Title>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
-const inputStyle = {
-  width: "100%",
-  padding: "0.7rem",
-  margin: "0.5rem 0",
-  borderRadius: "0.7rem",
-  border: "1px solid #ddd",
-  fontSize: "1rem",
+          <form onSubmit={handleSubmit}>
+            <InputGroup>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </InputGroup>
+
+            <Button type="submit">Login</Button>
+          </form>
+
+          <SignUpText>
+            Don't have an account? <SignUpLink to="/signup">Sign Up</SignUpLink>
+          </SignUpText>
+        </LoginCard>
+      </LoginContainer>
+      <Footer />
+    </PageContainer>
+  );
 };
+
+export default Login;
