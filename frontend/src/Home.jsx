@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./App.css";
 
+<<<<<<< Updated upstream
 export default function Home() {
   return (
     <div>
@@ -12,7 +13,88 @@ export default function Home() {
           background: `url("/eating-person.jpg") center center/cover no-repeat`,
           minHeight: "100vh",
           width: "100vw",
+=======
+const FeaturesSection = styled.section`
+  padding: 5rem 2rem;
+  background: #120000ff;
+  text-align: center;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+`;
+
+const FeaturesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+`;
+
+const FeatureCard = styled.div`
+  background: #5f5a42ff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const IconWrapper = styled.div`
+  font-size: 3rem;
+  color: #16a34a;
+  margin-bottom: 1rem;
+`;
+
+const FeatureTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+`;
+
+const FeatureText = styled.p`
+  font-size: 1rem;
+  color: #000000ff;
+`;
+
+export default function Home() {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        background: "#fff", // or your image
+        margin: 0,
+        padding: 0,
+      }}
+    >
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Hero Section */}
+      <section
+        className="hero-section"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          height: "100vh",
+          width: "100vw", // Ensure full width
+          background: `url("/eating-person.jpg") center center/cover no-repeat`,
+          color: "#fff",
+          textAlign: "left",
+          padding: "0 5vw", // Use vw for responsive padding
+>>>>>>> Stashed changes
           position: "relative",
+          margin: 0, // Remove any margin
+          boxSizing: "border-box", // Ensure padding doesn't cause overflow
+          overflow: "hidden", // Prevent scrollbars from appearing
         }}
       >
         <div className="home-bg-overlay"></div>
@@ -160,3 +242,5 @@ export default function Home() {
     </div>
   );
 }
+
+

@@ -11,6 +11,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+<<<<<<< Updated upstream
     let users = JSON.parse(localStorage.getItem("users") || "[]");
     const found = users.find(
       (u) => u.email === form.email && u.password === form.password
@@ -19,6 +20,25 @@ export default function Login() {
       setMessage("Login successful!");
     } else {
       setMessage("Invalid email or password.");
+=======
+    setError('');
+
+    if (email === 'admin@gmail.com' && password === 'admin') {
+      navigate('/admin');
+      return;
+    }
+
+    try {
+      const success = await login({ email, password });
+
+      if (success) {
+        navigate('/');
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
+    } catch (err) {
+      setError(err.response?.data?.msg || 'Login failed');
+>>>>>>> Stashed changes
     }
   };
 
