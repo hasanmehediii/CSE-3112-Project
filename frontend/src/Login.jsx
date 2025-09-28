@@ -113,6 +113,12 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
+    // Admin login check
+    if (email === 'admin@gmail.com' && password === 'admin') {
+      navigate('/admin');
+      return;
+    }
+
     try {
       const success = await login({ email, password });
 

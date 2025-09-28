@@ -24,7 +24,7 @@ const ContentWrapper = styled.div`
 `;
 
 const AboutUsContent = styled.div`
-  max-width: 1200px;
+  max-width: 100%;
   width: 100%;
   background: rgba(255, 255, 255, 0.1);
   padding: 3rem;
