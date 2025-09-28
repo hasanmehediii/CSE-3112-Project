@@ -44,7 +44,7 @@ const AdminNavbar = () => {
     <NavbarContainer>
       <Logo to="/admin">Admin Panel</Logo>
       <NavLinks>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/admin">Home</NavLink>
         <NavLink to="/admin/canteen">Canteen</NavLink>
         <NavLink to="/admin/students">Students</NavLink>
         <NavLink to="/admin/complains">Complains</NavLink>
