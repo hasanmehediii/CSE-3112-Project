@@ -23,8 +23,8 @@ const LoginContainer = styled.div`
 `;
 
 const LoginCard = styled.div`
-  background: rgba(255, 255, 255, 0.9);
-  padding: 3rem;
+  background: rgba(255, 153, 0, 0.2);
+  padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -34,9 +34,9 @@ const LoginCard = styled.div`
 
 const Title = styled.h2`
   margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 2rem;
-  font-weight: 700;
+  color: #44ff00ff;
+  font-size: 2.5rem;
+  font-weight: 1000;
 `;
 
 const InputGroup = styled.div`
@@ -47,7 +47,7 @@ const InputGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 0.5rem;
-  color: #555;
+  color: #fff7cbff;
   font-weight: 600;
 `;
 
@@ -83,7 +83,7 @@ const Button = styled.button`
 
 const SignUpText = styled.p`
   margin-top: 1.5rem;
-  color: #555;
+  color: #fbfdc9ff;
 `;
 
 const SignUpLink = styled(Link)`
@@ -134,7 +134,7 @@ const Login = () => {
 
   return (
     <PageContainer>
-      <Navbar staticNav />
+      <Navbar/>
       <LoginContainer>
         <LoginCard>
           <Title>Login</Title>

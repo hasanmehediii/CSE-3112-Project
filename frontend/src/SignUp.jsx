@@ -122,7 +122,7 @@ const SignUp = () => {
 
   return (
     <PageContainer>
-      <Navbar staticNav />
+      <Navbar/>
       <SignUpContainer>
         <SignUpCard>
           <Title>Sign Up</Title>
