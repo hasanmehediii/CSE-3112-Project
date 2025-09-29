@@ -25,6 +25,8 @@ Our goal is to make eating both affordable and healthy, while also considering c
 
 **🥦 Health Focused:** Balanced diet suggestions to keep you energized throughout the day.
 
+## Admin + Canteen Route (Website)
+![Home Page](docs/khaikhai.png)
 
 ## 🚀 Why KhaiKhai?
 
