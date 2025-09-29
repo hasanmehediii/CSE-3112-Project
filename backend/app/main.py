@@ -10,7 +10,8 @@ from app.routes import (
     payment_routes,
     feedback_routes,
     notification_routes,
-    mealplan_routes
+    mealplan_routes,
+    auth_routes
 )
 
 app = FastAPI(title="KhaiKhai Backend")
@@ -41,6 +42,8 @@ app.include_router(payment_routes.router, prefix="/payments", tags=["payments"])
 app.include_router(feedback_routes.router, prefix="/feedback", tags=["feedback"])
 app.include_router(notification_routes.router, prefix="/notifications", tags=["notifications"])
 app.include_router(mealplan_routes.router, prefix="/mealplans", tags=["meal plans"])
+
+app.include_router(auth_routes.router, prefix="/auth", tags=["auth"])
 
 @app.get("/")
 def root():
