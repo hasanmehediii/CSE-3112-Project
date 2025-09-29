@@ -35,7 +35,7 @@ def shutdown_db_client():
 app.include_router(user_routes.router, prefix="/users", tags=["users"])
 app.include_router(canteen_routes.router, prefix="/canteens", tags=["canteens"])
 app.include_router(meal_routes.router, prefix="/meals", tags=["meals"])
-app.include_router(menu_routes.router, prefix="/menus", tags=["menus"])
+app.include_router(menu_routes.router, prefix="/menu", tags=["menu"])
 app.include_router(order_routes.router, prefix="/orders", tags=["orders"])
 app.include_router(payment_routes.router, prefix="/payments", tags=["payments"])
 app.include_router(feedback_routes.router, prefix="/feedback", tags=["feedback"])
