@@ -28,3 +28,8 @@ async def signup(request: SignupRequest):
 async def login(request: LoginRequest):
     token = await authenticate_user(request.email, request.password)
     return token
+
+@router.get("/me")
+async def get_current_user(user=Depends(authenticate_user)):
+    return user
+
