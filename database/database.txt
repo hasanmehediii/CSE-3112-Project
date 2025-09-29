@@ -1,363 +1,172 @@
-canteens collection:
-{
-  "_id": { "$oid": "68c53c2376f524c7b0c3684c" },
-  "ownerId": {
-    "$oid": "68c4fefdf2588348c6a7939a"
-  },
-  "canteenName": "Mokarrom Canteen",
-  "location": "Mokarrom",
-  "menus": [
-    {
-      "menuId": {
-        "$oid": "65123456789abcde00000001"
-      },
-      "name": "Egg Sandwich",
-      "price": { "$numberInt": "50" },
-      "quantity": { "$numberInt": "100" },
-      "category": "breakfast",
-      "isAvailable": true,
-      "nutritionalValue": {
-        "calories": { "$numberInt": "250" },
-        "protein": { "$numberInt": "12" },
-        "carbs": { "$numberInt": "30" },
-        "fat": { "$numberInt": "8" }
-      }
-    },
-    {
-      "menuId": {
-        "$oid": "65123456789abcde00000002"
-      },
-      "name": "Chicken Rice",
-      "price": { "$numberInt": "120" },
-      "quantity": { "$numberInt": "50" },
-      "category": "lunch",
-      "isAvailable": true,
-      "nutritionalValue": {
-        "calories": { "$numberInt": "450" },
-        "protein": { "$numberInt": "25" },
-        "carbs": { "$numberInt": "50" },
-        "fat": { "$numberInt": "15" }
-      }
-    }
-  ],
-  "totalEarnings": { "$numberInt": "0" }
-}
-
-
 users collection:
+------------------------------------------------------------------------------------
 {
-  "_id": { "$oid": "68c53c5976f524c7b0c3684d" },
-  "role": "student",
-  "name": "Mehedi Hasan",
-  "email": "mehedi@example.com",
-  "password": "hashed_password",
-  "phone": "+8801XXXX001",
-  "status": "active",
-  "createdAt": {
-    "$date": { "$numberLong": "1757759400000" }
-  },
-  "updatedAt": {
-    "$date": { "$numberLong": "1757759400000" }
-  }
-}
-
-
-students collection:
-{
-  "_id": { "$oid": "68c53c7776f524c7b0c3684e" },
-  "userId": {
-    "$oid": "68c4fbe8f2588348c6a79383"
-  },
-  "budget": { "$numberInt": "5000" },
-  "remainingBudget": { "$numberInt": "5000" },
+  "_id": ObjectId("..."),
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password_hash": "hashed_password",
+  "role": "student", // "admin" | "owner" | "student"
+  "profile_image": "https://...",
+  "canteen_id": ObjectId("..."), // if owner
   "preferences": {
-    "veg": true,
-    "allergies": ["nuts"],
-    "dislikedFoods": ["fried_chicken"]
+    "diet": "vegetarian", // optional for students
+    "allergies": ["nuts", "soy"]
   },
-  "nutritionGoal": {
-    "calories": { "$numberInt": "2200" },
-    "protein": { "$numberInt": "80" },
-    "carbs": { "$numberInt": "300" },
-    "fat": { "$numberInt": "70" }
+  "created_at": "2025-09-29T10:00:00Z"
+}
+
+
+canteens collection:
+-----------------------------------------------------------------------
+{
+  "_id": ObjectId("..."),
+  "name": "Campus Main Canteen",
+  "location": "Building A, Ground Floor",
+  "owner_id": ObjectId("..."), // reference to users
+  "contact": "0123456789",
+  "description": "Healthy campus meals",
+  "menu_ids": [ObjectId("..."), ObjectId("...")],
+  "open_hours": {
+    "start": "08:00",
+    "end": "22:00"
   }
 }
 
 
-weather collection:
+meals collection:
+-----------------------------------------------------------------
 {
-  "_id": { "$oid": "68c53ca376f524c7b0c3684f" },
-  "date": "2025-09-13",
-  "temperature": { "$numberInt": "32" },
-  "condition": "sunny",
-  "mealSuggestions": [
-    "lemonade",
-    "light meal",
-    "salad"
-  ]
+  "_id": ObjectId("..."),
+  "canteen_id": ObjectId("..."),
+  "name": "Grilled Chicken Bowl",
+  "category": "Lunch",
+  "price": 120.0,
+  "calories": 400,
+  "ingredients": ["chicken", "rice", "spices"],
+  "diet_type": "non-veg", // "veg" | "non-veg" | "vegan"
+  "image_url": "https://...",
+  "is_available": true
 }
 
 
 orders collection:
+---------------------------------------------------
 {
-  "_id": { "$oid": "68c53cbf76f524c7b0c36850" },
-  "studentId": {
-    "$oid": "68c4fbe8f2588348c6a79383"
-  },
-  "canteenId": {
-    "$oid": "68c503c8f2588348c6a793ad"
-  },
-  "menuId": {
-    "$oid": "65123456789abcde00000001"
-  },
-  "quantity": { "$numberInt": "2" },
-  "totalPrice": { "$numberInt": "100" },
-  "paymentMethod": "online",
-  "status": "completed",
-  "orderDate": {
-    "$date": { "$numberLong": "1757671200000" }
-  }
+  "_id": ObjectId("..."),
+  "student_id": ObjectId("..."),
+  "canteen_id": ObjectId("..."),
+  "meal_id": ObjectId("..."),
+  "order_date": "2025-09-29T12:30:00Z",
+  "status": "pending", // "pending" | "prepared" | "delivered" | "cancelled"
+  "quantity": 1,
+  "total_price": 120.0,
+  "payment_id": ObjectId("...")
 }
 
 
-mealplans collection:
+payments collection:
+--------------------------------------------------
 {
-  "_id": { "$oid": "68c53cdf76f524c7b0c36851" },
-  "studentId": {
-    "$oid": "68c4fbe8f2588348c6a79383"
-  },
-  "month": "September",
-  "year": { "$numberInt": "2025" },
-  "plans": [
+  "_id": ObjectId("..."),
+  "student_id": ObjectId("..."),
+  "order_id": ObjectId("..."),
+  "amount": 120.0,
+  "method": "bkash", // "bkash" | "nagad" | "cash"
+  "status": "paid", // "paid" | "failed" | "pending"
+  "timestamp": "2025-09-29T12:31:00Z"
+}
+
+
+feedback collection:
+----------------------------------------------------------
+{
+  "_id": ObjectId("..."),
+  "student_id": ObjectId("..."),
+  "meal_id": ObjectId("..."),
+  "canteen_id": ObjectId("..."),
+  "rating": 4.5,
+  "comment": "Delicious and affordable!",
+  "created_at": "2025-09-29T13:00:00Z"
+}
+
+
+notifications collection:
+-------------------------------------------
+{
+  "_id": ObjectId("..."),
+  "user_id": ObjectId("..."),
+  "title": "Your order is ready!",
+  "message": "Please collect your meal from counter 3.",
+  "is_read": false,
+  "created_at": "2025-09-29T13:05:00Z"
+}
+
+
+menu collections:
+-----------------------------------------------------
+{
+  "_id": ObjectId("..."),
+  "canteen_id": ObjectId("..."),
+  "title": "Weekly Menu (Sep 29 - Oct 5)",
+  "description": "Healthy and affordable weekly meals for students.",
+  "start_date": "2025-09-29",
+  "end_date": "2025-10-05",
+  
+  // Unsplash image for the overall menu
+  "image_url": "https://images.unsplash.com/photo-1606756790138-f6b1a3eeb1ef",
+  
+  "meals": [
     {
-      "day": { "$numberInt": "1" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Chicken Rice",
-      "snacks": "Coffee",
-      "dinner": "Veg Salad"
+      "day": "Monday",
+      "items": [
+        {
+          "meal_id": ObjectId("meal1"),
+          "name": "Grilled Chicken Bowl",          // optional, cached for quick access
+          "price": 120.0,                         // either use this or fetch from meals collection
+          "image_url": "https://images.unsplash.com/photo-1590080875835-8ad62b45f4a5"
+        },
+        {
+          "meal_id": ObjectId("meal2"),
+          "name": "Mixed Veg Rice",
+          "price": 90.0,
+          "image_url": "https://images.unsplash.com/photo-1565958011705-44e2110a4fba"
+        }
+      ],
+      "combo_price": 190.0 // Optional: discount for selecting all meals of the day
     },
     {
-      "day": { "$numberInt": "2" },
-      "breakfast": "Pasta",
-      "lunch": "Fried Rice",
-      "snacks": "Tea",
-      "dinner": "Chicken Curry"
-    },
-    {
-      "day": { "$numberInt": "3" },
-      "breakfast": "Omelette",
-      "lunch": "Beef Burger",
-      "snacks": "Juice",
-      "dinner": "Veg Sandwich"
-    },
-    {
-      "day": { "$numberInt": "4" },
-      "breakfast": "Veg Sandwich",
-      "lunch": "Pasta",
-      "snacks": "Coffee",
-      "dinner": "Chicken Rice"
-    },
-    {
-      "day": { "$numberInt": "5" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Fried Rice",
-      "snacks": "Tea",
-      "dinner": "Pasta"
-    },
-    {
-      "day": { "$numberInt": "6" },
-      "breakfast": "Omelette",
-      "lunch": "Chicken Rice",
-      "snacks": "Juice",
-      "dinner": "Beef Burger"
-    },
-    {
-      "day": { "$numberInt": "7" },
-      "breakfast": "Pasta",
-      "lunch": "Veg Salad",
-      "snacks": "Coffee",
-      "dinner": "Chicken Curry"
-    },
-    {
-      "day": { "$numberInt": "8" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Beef Burger",
-      "snacks": "Tea",
-      "dinner": "Veg Sandwich"
-    },
-    {
-      "day": { "$numberInt": "9" },
-      "breakfast": "Omelette",
-      "lunch": "Fried Rice",
-      "snacks": "Juice",
-      "dinner": "Pasta"
-    },
-    {
-      "day": { "$numberInt": "10" },
-      "breakfast": "Veg Sandwich",
-      "lunch": "Chicken Rice",
-      "snacks": "Coffee",
-      "dinner": "Beef Burger"
-    },
-    {
-      "day": { "$numberInt": "11" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Pasta",
-      "snacks": "Tea",
-      "dinner": "Chicken Curry"
-    },
-    {
-      "day": { "$numberInt": "12" },
-      "breakfast": "Omelette",
-      "lunch": "Veg Salad",
-      "snacks": "Juice",
-      "dinner": "Fried Rice"
-    },
-    {
-      "day": { "$numberInt": "13" },
-      "breakfast": "Pasta",
-      "lunch": "Beef Burger",
-      "snacks": "Coffee",
-      "dinner": "Veg Sandwich"
-    },
-    {
-      "day": { "$numberInt": "14" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Fried Rice",
-      "snacks": "Tea",
-      "dinner": "Chicken Rice"
-    },
-    {
-      "day": { "$numberInt": "15" },
-      "breakfast": "Omelette",
-      "lunch": "Pasta",
-      "snacks": "Juice",
-      "dinner": "Beef Burger"
-    },
-    {
-      "day": { "$numberInt": "16" },
-      "breakfast": "Veg Sandwich",
-      "lunch": "Chicken Rice",
-      "snacks": "Coffee",
-      "dinner": "Pasta"
-    },
-    {
-      "day": { "$numberInt": "17" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Fried Rice",
-      "snacks": "Tea",
-      "dinner": "Veg Salad"
-    },
-    {
-      "day": { "$numberInt": "18" },
-      "breakfast": "Omelette",
-      "lunch": "Beef Burger",
-      "snacks": "Juice",
-      "dinner": "Chicken Curry"
-    },
-    {
-      "day": { "$numberInt": "19" },
-      "breakfast": "Pasta",
-      "lunch": "Veg Salad",
-      "snacks": "Coffee",
-      "dinner": "Fried Rice"
-    },
-    {
-      "day": { "$numberInt": "20" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Chicken Rice",
-      "snacks": "Tea",
-      "dinner": "Beef Burger"
-    },
-    {
-      "day": { "$numberInt": "21" },
-      "breakfast": "Omelette",
-      "lunch": "Pasta",
-      "snacks": "Juice",
-      "dinner": "Veg Sandwich"
-    },
-    {
-      "day": { "$numberInt": "22" },
-      "breakfast": "Veg Sandwich",
-      "lunch": "Fried Rice",
-      "snacks": "Coffee",
-      "dinner": "Chicken Curry"
-    },
-    {
-      "day": { "$numberInt": "23" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Beef Burger",
-      "snacks": "Tea",
-      "dinner": "Pasta"
-    },
-    {
-      "day": { "$numberInt": "24" },
-      "breakfast": "Omelette",
-      "lunch": "Veg Salad",
-      "snacks": "Juice",
-      "dinner": "Chicken Rice"
-    },
-    {
-      "day": { "$numberInt": "25" },
-      "breakfast": "Pasta",
-      "lunch": "Chicken Rice",
-      "snacks": "Coffee",
-      "dinner": "Veg Sandwich"
-    },
-    {
-      "day": { "$numberInt": "26" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Fried Rice",
-      "snacks": "Tea",
-      "dinner": "Beef Burger"
-    },
-    {
-      "day": { "$numberInt": "27" },
-      "breakfast": "Omelette",
-      "lunch": "Pasta",
-      "snacks": "Juice",
-      "dinner": "Chicken Curry"
-    },
-    {
-      "day": { "$numberInt": "28" },
-      "breakfast": "Veg Sandwich",
-      "lunch": "Beef Burger",
-      "snacks": "Coffee",
-      "dinner": "Fried Rice"
-    },
-    {
-      "day": { "$numberInt": "29" },
-      "breakfast": "Egg Sandwich",
-      "lunch": "Chicken Rice",
-      "snacks": "Tea",
-      "dinner": "Pasta"
-    },
-    {
-      "day": { "$numberInt": "30" },
-      "breakfast": "Omelette",
-      "lunch": "Fried Rice",
-      "snacks": "Juice",
-      "dinner": "Veg Salad"
+      "day": "Tuesday",
+      "items": [
+        {
+          "meal_id": ObjectId("meal3"),
+          "name": "Egg Curry with Rice",
+          "price": 100.0,
+          "image_url": "https://images.unsplash.com/photo-1605478038858-5a89b88e0b07"
+        }
+      ],
+      "combo_price": 95.0
     }
-  ]
+  ],
+
+  "created_at": "2025-09-29T08:00:00Z",
+  "updated_at": "2025-09-29T09:00:00Z"
 }
 
 
-complaints collection:
+meal_plans collection:
+----------------------------------------------------------
 {
-  "_id": { "$oid": "68c53d0576f524c7b0c36852" },
-  "studentId": {
-    "$oid": "68c4fbe8f2588348c6a79384"
-  },
-  "canteenId": {
-    "$oid": "68c503dff2588348c6a793ae"
-  },
-  "menuId": {
-    "$oid": "65123456789abcde00000004"
-  },
-  "complaint": "Price increased unfairly",
-  "status": "pending",
-  "createdAt": {
-    "$date": { "$numberLong": "1757682000000" }
-  }
+  "_id": ObjectId("..."),
+  "student_id": ObjectId("..."),
+  "plan_type": "weekly", // "daily" | "weekly"
+  "start_date": "2025-09-30",
+  "end_date": "2025-10-06",
+  "selected_meals": [
+    {
+      "date": "2025-09-30",
+      "meal_id": ObjectId("...")
+    }
+  ],
+  "total_cost": 500.0,
+  "status": "active" // "active" | "completed"
 }
