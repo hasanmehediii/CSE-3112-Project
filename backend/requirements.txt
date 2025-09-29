@@ -1,4 +1,9 @@
+fastapi
+uvicorn
+motor
 pymongo
 python-dotenv
-uvicorn
-fastapi
+pydantic
+passlib[bcrypt]
+email-validator
+python-jose[cryptography]
