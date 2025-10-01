@@ -24,16 +24,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue.shade900, Colors.purple.shade900],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: const Center(
-          child: FlutterLogo(size: 120, textColor: Colors.white),
+      backgroundColor: const Color.fromARGB(255, 255, 179, 14),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/logo.png', height: 120),
+            const SizedBox(height: 20),
+            const Text(
+              'KhaiKhai, Your Meal Planner',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 40),
+            const CircularProgressIndicator(),
+          ],
         ),
       ),
     );
