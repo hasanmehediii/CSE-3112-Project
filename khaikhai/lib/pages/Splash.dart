@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:khaikhai/pages/Home.dart';
 import 'dart:async';
-import 'Home.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

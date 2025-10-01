@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khaikhai/auth/Login.dart';
+import 'package:khaikhai/common/Footer.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -175,59 +176,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // FAQ & About Us Section
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 40,
-                  horizontal: 24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "About Us",
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "KhaiKhai is dedicated to making campus dining easy, fast, and enjoyable for every student. We partner with your university cafeterias to bring you a seamless food experience.",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyLarge?.copyWith(color: Colors.black87),
-                    ),
-                    const SizedBox(height: 32),
-                    Text(
-                      "FAQ",
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                    ),
-                    const SizedBox(height: 12),
-                    const _FaqItem(
-                      question: "How do I place an order?",
-                      answer:
-                          "Just tap 'Get Started', log in, and browse today's menu. Add items to your cart and confirm your order!",
-                    ),
-                    const _FaqItem(
-                      question: "Can I customize my meal?",
-                      answer:
-                          "Yes! Many menu items allow you to add notes or select options before checkout.",
-                    ),
-                    const _FaqItem(
-                      question: "Is there a loyalty program?",
-                      answer:
-                          "Absolutely! Earn points with every order and redeem them for discounts and rewards.",
-                    ),
-                  ],
-                ),
-              ),
+              const Footer(),
             ],
           ),
         ),
@@ -271,39 +220,6 @@ class _FeatureCard extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FaqItem extends StatelessWidget {
-  final String question;
-  final String answer;
-
-  const _FaqItem({required this.question, required this.answer});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            question,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            answer,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.black87),
           ),
         ],
       ),
