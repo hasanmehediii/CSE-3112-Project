@@ -32,23 +32,28 @@ class FooterPageTemplate extends StatelessWidget {
           ),
           // Blurry Card
           Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(16.0),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                      ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(16.0),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.2),
                     ),
-                    child: child,
+                  ),
+                  child: SingleChildScrollView( // Moved SingleChildScrollView inside
+                    padding: const EdgeInsets.all(24.0), // Padding moved here
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        child,
+                        const SizedBox(height: 40), // Added space below the card content
+                      ],
+                    ),
                   ),
                 ),
               ),

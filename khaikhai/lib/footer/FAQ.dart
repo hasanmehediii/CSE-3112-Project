@@ -1,81 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:khaikhai/common/FooterPageTemplate.dart';
 
 class FAQScreen extends StatelessWidget {
   const FAQScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('FAQ'), backgroundColor: Colors.blue),
-      body: Stack(
+    return FooterPageTemplate(
+      title: 'FAQ',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
+          Text(
+            'FAQs',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'FAQs',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  _buildFAQItem(
-                    'What is KhaiKhai?',
-                    'KhaiKhai is a platform that allows you to order food from your university canteen online.',
-                  ),
-                  _buildFAQItem(
-                    'How do I place an order?',
-                    'You can place an order by browsing the menu, adding items to your cart, and proceeding to checkout.',
-                  ),
-                  _buildFAQItem(
-                    'Can I pay online?',
-                    'Yes, we support online payments through various methods.',
-                  ),
-                  _buildFAQItem(
-                    'Is there a delivery service?',
-                    'Currently, we only offer a pickup service. You will be notified when your order is ready for pickup.',
-                  ),
-                  _buildFAQItem(
-                    'How can I contact support?',
-                    'You can contact our support team via the Contact Us page or email us',
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
+          const SizedBox(height: 20),
+          _buildFAQItem(
+            context,
+            'What is KhaiKhai?',
+            'KhaiKhai is a platform that allows you to order food from your university canteen online.',
+          ),
+          _buildFAQItem(
+            context,
+            'How do I place an order?',
+            'You can place an order by browsing the menu, adding items to your cart, and proceeding to checkout.',
+          ),
+          _buildFAQItem(
+            context,
+            'Can I pay online?',
+            'Yes, we support online payments through various methods.',
+          ),
+          _buildFAQItem(
+            context,
+            'Is there a delivery service?',
+            'Currently, we only offer a pickup service. You will be notified when your order is ready for pickup.',
+          ),
+          _buildFAQItem(
+            context,
+            'How can I contact support?',
+            'You can contact our support team via the Contact Us page or email us',
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFAQItem(String question, String answer) {
+  Widget _buildFAQItem(BuildContext context, String question, String answer) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           question,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 10),
-        Text(answer, style: const TextStyle(fontSize: 16, color: Colors.white)),
+        Text(
+          answer,
+          style: const TextStyle(fontSize: 16, color: Colors.white, height: 1.5),
+        ),
         const SizedBox(height: 20),
       ],
     );
