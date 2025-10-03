@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildHeroSection(BuildContext context) {
     return Stack(
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       children: [
         // Background Image
         Container(
@@ -77,9 +77,9 @@ class WelcomeScreen extends StatelessWidget {
               Text(
                 "KhaiKhai",
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               // Subtitle
@@ -87,23 +87,26 @@ class WelcomeScreen extends StatelessWidget {
                 "Enjoy your campus meal in an effective way.",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white70,
-                    ),
+                  color: const Color.fromARGB(255, 252, 252, 252),
+                ),
               ),
               const SizedBox(height: 24),
               // Get Started Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1876D1),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => LoginPage()));
                 },
                 child: const Text(
                   "Get Started",
@@ -119,16 +122,16 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildFeaturesSection(BuildContext context) {
     return Container(
-      color: Colors.grey.shade100,
+      color: const Color.fromARGB(255, 255, 241, 208),
       padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
       child: Column(
         children: [
           Text(
             "Why KhaiKhai?",
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 40),
           Wrap(
@@ -184,18 +187,18 @@ class _FeatureCard extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             text,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
-                ),
+              color: Colors.black54,
+              fontWeight: FontWeight.w500,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

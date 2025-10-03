@@ -14,7 +14,12 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[900], // A more modern, neutral dark color
+      color: const Color.fromARGB(
+        255,
+        0,
+        0,
+        0,
+      ), // A more modern, neutral dark color
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,15 +47,32 @@ class Footer extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 30),
-          const Divider(color: Colors.white24),
+          const Divider(color: Color.fromARGB(255, 255, 255, 255)),
           const SizedBox(height: 20),
           // Social Media Icons
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(icon: const Icon(Icons.facebook), color: Colors.white70, onPressed: () {}),
-              IconButton(icon: const Icon(Icons.camera_alt), color: Colors.white70, onPressed: () {}),
-              IconButton(icon: const Icon(Icons.email), color: Colors.white70, onPressed: () {}),
+              IconButton(
+                icon: const Icon(Icons.facebook),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.camera_alt),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.email),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.youtube_searched_for),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                onPressed: () {},
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -59,6 +81,7 @@ class Footer extends StatelessWidget {
             '© 2025 KhaiKhai. All Rights Reserved.',
             style: TextStyle(color: Colors.white54, fontSize: 12),
           ),
+          const SizedBox(height: 30),
         ],
       ),
     );
