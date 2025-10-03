@@ -49,6 +49,7 @@ class OurStoryScreen extends StatelessWidget {
                     "The response was overwhelming. Students and faculty loved the convenience of ordering food online and the transparency of the digital menu. Today, KhaiKhai is an essential part of our university's dining experience, and we are proud of the positive impact we have made.",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

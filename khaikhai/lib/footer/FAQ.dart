@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class FAQScreen extends StatelessWidget {
@@ -7,10 +6,7 @@ class FAQScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FAQ'),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: AppBar(title: const Text('FAQ'), backgroundColor: Colors.blue),
       body: Stack(
         children: [
           Container(
@@ -28,7 +24,7 @@ class FAQScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Frequently Asked Questions',
+                    'FAQs',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -52,6 +48,11 @@ class FAQScreen extends StatelessWidget {
                     'Is there a delivery service?',
                     'Currently, we only offer a pickup service. You will be notified when your order is ready for pickup.',
                   ),
+                  _buildFAQItem(
+                    'How can I contact support?',
+                    'You can contact our support team via the Contact Us page or email us',
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -74,13 +75,7 @@ class FAQScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Text(
-          answer,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white,
-          ),
-        ),
+        Text(answer, style: const TextStyle(fontSize: 16, color: Colors.white)),
         const SizedBox(height: 20),
       ],
     );

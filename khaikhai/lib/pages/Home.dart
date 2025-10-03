@@ -14,172 +14,149 @@ class WelcomeScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: const Color(0xFF1876D1),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Hero Section with background image and centered content
+            _buildHeroSection(context),
+
+            // Features Section
+            _buildFeaturesSection(context),
+
+            // Footer
+            const Footer(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroSection(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Background Image
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/background.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        // Overlay
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          width: double.infinity,
+          color: Colors.black.withOpacity(0.4),
+        ),
+        // Content
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Hero Section with background image and centered content
-              Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/background.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: double.infinity,
-                    color: Colors.black.withOpacity(0.3), // overlay
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: double.infinity,
-                    child: Center(
-                      child: SingleChildScrollView(
-                        physics: const ClampingScrollPhysics(),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Logo with rounded shape
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 8,
-                                      offset: Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Image.asset(
-                                    "assets/logo.png",
-                                    height: 100,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                "KhaiKhai",
-                                style: Theme.of(context).textTheme.displayLarge
-                                    ?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                "Enjoy campus meals and snacks the smart way!",
-                                style: Theme.of(context).textTheme.titleLarge
-                                    ?.copyWith(
-                                      color: Colors.white70,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 14),
-                              SizedBox(
-                                width: 150,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF1876D1),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 0,
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => LoginPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    "Get Started",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // Features Section
+              // Logo
               Container(
-                color: Colors.grey.shade100,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 40,
-                  horizontal: 20,
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  shape: BoxShape.circle,
                 ),
-                child: Column(
-                  children: [
-                    Text(
-                      "Why KhaiKhai?",
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                    ),
-                    const SizedBox(height: 40),
-                    Wrap(
-                      spacing: 50,
-                      runSpacing: 50,
-                      alignment: WrapAlignment.center,
-                      children: const [
-                        _FeatureCard(
-                          icon: Icons.fastfood,
-                          title: "Variety & Freshness",
-                          text:
-                              "Choose from daily menus, snacks, and healthy options directly from your campus cafeteria.",
-                        ),
-                        _FeatureCard(
-                          icon: Icons.schedule,
-                          title: "Convenient Orders",
-                          text:
-                              "Order ahead and skip lines—save time between classes and never miss your meal.",
-                        ),
-                        _FeatureCard(
-                          icon: Icons.people,
-                          title: "Student-Centric Service",
-                          text:
-                              "Support, rewards, and personal customization made for university life.",
-                        ),
-                      ],
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Image.asset("assets/logo.png"),
                 ),
               ),
-
-              const Footer(),
+              const SizedBox(height: 16),
+              // Title
+              Text(
+                "KhaiKhai",
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              // Subtitle
+              Text(
+                "Enjoy your campus meal in an effective way.",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
+              ),
+              const SizedBox(height: 24),
+              // Get Started Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1876D1),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: const Text(
+                  "Get Started",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildFeaturesSection(BuildContext context) {
+    return Container(
+      color: Colors.grey.shade100,
+      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+      child: Column(
+        children: [
+          Text(
+            "Why KhaiKhai?",
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+          ),
+          const SizedBox(height: 40),
+          Wrap(
+            spacing: 40,
+            runSpacing: 40,
+            alignment: WrapAlignment.center,
+            children: const [
+              _FeatureCard(
+                icon: Icons.fastfood,
+                title: "Variety & Freshness",
+                text:
+                    "Choose from daily menus, snacks, and healthy options directly from your campus cafeteria.",
+              ),
+              _FeatureCard(
+                icon: Icons.schedule,
+                title: "Convenient Orders",
+                text:
+                    "Order ahead and skip lines—save time between classes and never miss your meal.",
+              ),
+              _FeatureCard(
+                icon: Icons.people,
+                title: "Student-Centric Service",
+                text:
+                    "Support, rewards, and personal customization made for university life.",
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -207,18 +184,18 @@ class _FeatureCard extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             text,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
-            ),
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                ),
             textAlign: TextAlign.center,
           ),
         ],

@@ -54,6 +54,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     'We don’t share any personally identifying information publicly or with third-parties, except when required to by law.',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

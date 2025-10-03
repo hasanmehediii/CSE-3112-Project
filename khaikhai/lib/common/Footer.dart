@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:khaikhai/footer/AboutUs.dart';
 import 'package:khaikhai/footer/ContactUs.dart';
 import 'package:khaikhai/footer/CookiePolicy.dart';
@@ -15,15 +14,18 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color.fromARGB(255, 26, 53, 110),
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      color: Colors.grey[900], // A more modern, neutral dark color
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // Using Wrap for better responsiveness on smaller screens
+          Wrap(
+            spacing: 40, // Horizontal space between columns
+            runSpacing: 30, // Vertical space between rows
+            alignment: WrapAlignment.center,
             children: [
-              _buildFooterColumn(context, 'About Us', {
+              _buildFooterColumn(context, 'About', {
                 'About Us': const AboutUsScreen(),
                 'Our Story': const OurStoryScreen(),
               }),
@@ -39,12 +41,23 @@ class Footer extends StatelessWidget {
               }),
             ],
           ),
+          const SizedBox(height: 30),
+          const Divider(color: Colors.white24),
           const SizedBox(height: 20),
-          const Divider(color: Colors.white54),
+          // Social Media Icons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(icon: const Icon(Icons.facebook), color: Colors.white70, onPressed: () {}),
+              IconButton(icon: const Icon(Icons.camera_alt), color: Colors.white70, onPressed: () {}),
+              IconButton(icon: const Icon(Icons.email), color: Colors.white70, onPressed: () {}),
+            ],
+          ),
           const SizedBox(height: 20),
-          const Text(
-            '© 2025 LooterBank. All Rights Reserved.',
-            style: TextStyle(color: Colors.white70),
+          // Copyright notice
+          Text(
+            '© 2025 KhaiKhai. All Rights Reserved.',
+            style: TextStyle(color: Colors.white54, fontSize: 12),
           ),
         ],
       ),
@@ -58,6 +71,7 @@ class Footer extends StatelessWidget {
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           title,
@@ -67,10 +81,10 @@ class Footer extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        const SizedBox(height: 10),
-        for (final item in items.entries)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
+        const SizedBox(height: 12),
+        ...items.entries.map((item) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: InkWell(
               onTap: () {
                 Navigator.push(
@@ -80,10 +94,11 @@ class Footer extends StatelessWidget {
               },
               child: Text(
                 item.key,
-                style: const TextStyle(color: Colors.white70),
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
               ),
             ),
-          ),
+          );
+        }).toList(),
       ],
     );
   }

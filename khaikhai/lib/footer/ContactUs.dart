@@ -97,6 +97,7 @@ class ContactUsScreen extends StatelessWidget {
                     onPressed: () {},
                     child: const Text('Send Message'),
                   ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

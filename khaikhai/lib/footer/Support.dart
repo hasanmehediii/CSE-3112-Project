@@ -44,6 +44,7 @@ class SupportScreen extends StatelessWidget {
                     'You can reach us by email at support@khaikhai.com or by phone at +1 (123) 456-7890. Our support hours are Monday to Friday, 9 AM to 5 PM.',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
