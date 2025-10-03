@@ -27,6 +27,8 @@ Our goal is to make eating both affordable and healthy, while also considering c
 
 ## Admin + Canteen Route (Website)
 ![Home Page](docs/khaikhai.png)
+## Students Route (Mobile App)
+![Home Page](docs/appdemo.jpg)
 
 ## 🚀 Why KhaiKhai?
 
