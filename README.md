@@ -95,14 +95,12 @@ You can test these endpoints via Postman or a browser.
 | POST   | /complaints/      | Submit a complaint              |
 
 
-## Developer
-  1. Mehedi Hasan, CSE, University of Dhaka
-    - [mehedi200105075@gmail.com](mailto:mehedi200105075@gmail.com)
-  2. XX, CSE, University of Dhaka
-    - [email@gmail.com](mailto:email@gmail.com)
-  3. XX, CSE, University of Dhaka
-    - [email@gmail.com](mailto:email@gmail.com)
-  4. xx, CSE, University of Dhaka
-    - [email@gmail.com](mailto:email@gmail.com)
-  5. XX, CSE, University of Dhaka
-    - [email@gmail.com](mailto:email@gmail.com) 
+## 👨‍💻 Developers
+
+| Name | Department | Email |
+|------|-------------|--------|
+| **Mehedi Hasan** | CSE, University of Dhaka | [mehedi200105075@gmail.com](mailto:mehedi200105075@gmail.com) |
+| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
+| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
+| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
+| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
