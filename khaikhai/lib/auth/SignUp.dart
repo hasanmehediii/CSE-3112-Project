@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:khaikhai/auth/Login.dart';
 import 'package:khaikhai/common/InputDecoration.dart';
 
@@ -19,6 +21,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final _allergyController = TextEditingController();
 
   String? previewImage;
+  bool _isLoading = false;
+
+  // ⚙️ Change to your FastAPI IP
+  final String baseUrl = "http://192.168.0.103:8000/auth/signup";
 
   @override
   void dispose() {
@@ -29,6 +35,65 @@ class _SignUpPageState extends State<SignUpPage> {
     _dietController.dispose();
     _allergyController.dispose();
     super.dispose();
+  }
+
+  Future<void> _signupUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    final user = {
+      "name": _nameController.text.trim(),
+      "email": _emailController.text.trim(),
+      "password": _passwordController.text.trim(),
+      "role": "student", // backend expects this
+      "profile_image": _profileImageController.text.trim(),
+      "preferences": {
+        "diet": _dietController.text.trim(),
+        "allergies": _allergyController.text
+            .split(',')
+            .map((a) => a.trim())
+            .where((a) => a.isNotEmpty)
+            .toList(),
+      },
+      "created_at": DateTime.now().toIso8601String(),
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(user),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message'] ?? "Signup successful!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['detail'] ?? "Signup failed"),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Signup failed: $e")));
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -190,7 +255,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       const SizedBox(height: 16),
 
-                      // Diet Preference
+                      // Diet
                       TextFormField(
                         controller: _dietController,
                         decoration: customInputDecoration(
@@ -228,33 +293,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              final user = {
-                                "name": _nameController.text.trim(),
-                                "email": _emailController.text.trim(),
-                                "password_hash": _passwordController.text
-                                    .trim(),
-                                "profile_image": _profileImageController.text
-                                    .trim(),
-                                "preferences": {
-                                  "diet": _dietController.text.trim(),
-                                  "allergies": _allergyController.text
-                                      .split(',')
-                                      .map((a) => a.trim())
-                                      .where((a) => a.isNotEmpty)
-                                      .toList(),
-                                },
-                                "created_at": DateTime.now().toIso8601String(),
-                              };
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Signing up: ${user["name"]}'),
-                                ),
-                              );
-                            }
-                          },
+                          onPressed: _isLoading ? null : _signupUser,
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
                             backgroundColor: Colors.transparent,
@@ -264,20 +303,23 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
-
                       const SizedBox(height: 20),
 
-                      // Login Redirect
+                      // Redirect
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacement(

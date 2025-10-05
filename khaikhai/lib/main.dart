@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv
 import 'pages/Splash.dart';
 
-void main() {
+Future<void> main() async {
+  // Mark main as async
+  await dotenv.load(fileName: ".env"); // Load .env file
   runApp(const AuthApp());
 }
 

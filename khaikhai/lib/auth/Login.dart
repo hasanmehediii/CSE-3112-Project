@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:khaikhai/auth/SignUp.dart';
 import 'package:khaikhai/common/InputDecoration.dart';
 import 'package:khaikhai/auth/ForgetPassword.dart';
+import 'package:khaikhai/services/api_services.dart'; // ✅ Add this
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,11 +16,46 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loginUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final response = await ApiService.loginUser(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      final token = response["access_token"];
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Login successful! Token: $token"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // TODO: Navigate to home/dashboard after login
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomePage()));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Login failed: $e"),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -78,7 +114,6 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        // Logo
                         Hero(
                           tag: 'logo',
                           child: CircleAvatar(
@@ -95,7 +130,6 @@ class _LoginPageState extends State<LoginPage> {
 
                         const SizedBox(height: 20),
 
-                        // Title
                         const Text(
                           'Welcome Back!',
                           textAlign: TextAlign.center,
@@ -186,7 +220,6 @@ class _LoginPageState extends State<LoginPage> {
 
                         const SizedBox(height: 10),
 
-                        // Forgot password
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
@@ -211,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
 
                         const SizedBox(height: 28),
 
-                        // Login Button
+                        // ✅ Login button with backend
                         Container(
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
@@ -229,15 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           child: ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Logging in...'),
-                                  ),
-                                );
-                              }
-                            },
+                            onPressed: _isLoading ? null : _loginUser,
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
                               backgroundColor: Colors.transparent,
@@ -249,20 +274,23 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: _isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
 
                         const SizedBox(height: 24),
 
-                        // Sign Up redirect
                         TextButton(
                           onPressed: () {
                             Navigator.pushReplacement(

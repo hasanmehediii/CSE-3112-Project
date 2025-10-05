@@ -1,6 +1,7 @@
 from app.core.database import get_db
 from app.core.security import hash_password, verify_password
 from app.utils.jwt_handler import create_access_token
+from app.models.user_model import UserModel # Import UserModel
 from bson import ObjectId
 from fastapi import HTTPException, status
 
@@ -11,10 +12,20 @@ async def create_user(user_data: dict):
     if existing_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
 
-    user_data["password_hash"] = hash_password(user_data.pop("password"))
-    result = await db["users"].insert_one(user_data)
-    user_data["_id"] = str(result.inserted_id)
-    return user_data
+    # Hash the password before creating the UserModel instance
+    password = user_data.pop("password")
+    user_data["password_hash"] = hash_password(password)
+
+    # Create a UserModel instance to apply defaults and validation
+    user_model_instance = UserModel(**user_data)
+
+    # Convert the UserModel instance back to a dictionary for MongoDB insertion
+    # Exclude 'id' as MongoDB will generate '_id'
+    user_to_insert = user_model_instance.model_dump(exclude_none=True, exclude={"id"})
+
+    result = await db["users"].insert_one(user_to_insert)
+    user_model_instance.id = str(result.inserted_id) # Assign the generated ID back to the model
+    return user_model_instance.model_dump(exclude_none=True) # Return the dictionary representation with defaults and ID
 
 
 async def authenticate_user(email: str, password: str):

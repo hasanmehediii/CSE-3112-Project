@@ -1,13 +1,21 @@
 from passlib.context import CryptContext
+import bcrypt
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Force pure-python backend for Windows safety
+bcrypt.__about__ = type("about", (), {"__version__": "4.0.1"})
 
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    bcrypt__ident="2b",
+    deprecated="auto",
+)
 
 def hash_password(password: str) -> str:
-    """Hash a plain password using bcrypt."""
-    return pwd_context.hash(password)
-
+    """Hash password (safe for Windows)."""
+    truncated_password = password[:72]
+    return pwd_context.hash(truncated_password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a plain password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verify password (safe for Windows)."""
+    truncated_password = plain_password[:72]
+    return pwd_context.verify(truncated_password, hashed_password)
