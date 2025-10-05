@@ -3,7 +3,7 @@
 <p align="center">
   <img src="docs/diet.png" alt="Website Logo" width="150" height="150"/>
   <br><br>
-  <strong>A Hybrid Platform for mobile app and website to guide your food plan whole month :)</strong>
+  <strong>A Hybrid Platform in mobile app and website to guide your food plan whole month :)</strong>
 </p>
 
 
@@ -11,6 +11,10 @@
 
 **KhaiKhai** is a smart meal planning platform designed to help students and busy individuals manage their daily food choices effectively.
 Our goal is to make eating both affordable and healthy, while also considering canteen availability, personal budget, and even weather conditions.
+There will be mainly 2 types of people, students and canteen owners.
+Students will use mobile app to upload their budget, see best deal for each day, food recommendation for him.
+Canteen Owners will upload thir daily menus with budgets and take orders from students.
+There will be an admin section for handle all types of problem in both side (we assumed it as University Authority).
 
 
 ## ✨ What We Do
