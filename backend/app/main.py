@@ -28,9 +28,6 @@ app.add_middleware(
 async def startup_db_client():
     await init_db()
 
-@app.on_event("shutdown")
-def shutdown_db_client():
-    close_db()
 
 # Register routers
 app.include_router(user_routes.router, prefix="/users", tags=["users"])
