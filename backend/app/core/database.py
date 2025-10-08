@@ -16,7 +16,8 @@ async def get_db():
             if client is None:
                 logger.info("Initializing database client on demand...")
                 try:
-                    client = AsyncIOMotorClient(settings.MONGO_URI)
+                    loop = asyncio.get_running_loop()
+                    client = AsyncIOMotorClient(settings.MONGO_URI, io_loop=loop)
                     await client.server_info()
                     logger.info("Database client initialized successfully.")
                 except Exception as e:
