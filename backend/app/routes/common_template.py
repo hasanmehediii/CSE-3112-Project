@@ -12,11 +12,14 @@ def make_simple_router(collection_name: str) -> APIRouter:
     @router.get("/", summary=f"Get all {collection_name}")
     async def get_all():
         try:
-            logger.info(f"Entering get_all for {collection_name}")
+            logger.info(f"Getting all documents from collection: {collection_name}")
             db = await get_db()
-            logger.info(f"Successfully got database handle: {db.name}")
-            # Temporarily return a success message to isolate the issue.
-            return {"message": f"Successfully connected to database for {collection_name}"}
+            coll = db[collection_name]
+            cursor = coll.find({})
+            # Use to_list() instead of async for to avoid event loop issues.
+            docs = await cursor.to_list(length=1000)
+            logger.info(f"Found {len(docs)} documents")
+            return serialize_list(docs)
         except Exception as e:
             logger.error(f"An error occurred in get_all for {collection_name}: {e}", exc_info=True)
             raise HTTPException(status_code=500, detail=str(e))
