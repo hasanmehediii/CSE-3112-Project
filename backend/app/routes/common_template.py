@@ -13,7 +13,7 @@ def make_simple_router(collection_name: str) -> APIRouter:
     async def get_all():
         try:
             logger.info(f"Getting all documents from collection: {collection_name}")
-            db = get_db()
+            db = await get_db()
             logger.info(f"Database: {db.name}")
             coll = db[collection_name]
             logger.info(f"Collection: {coll.name}")
