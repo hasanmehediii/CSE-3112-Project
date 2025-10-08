@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.database import init_db, close_db
 from app.routes import (
     user_routes,
     canteen_routes,
@@ -23,14 +22,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.on_event("startup")
-def startup_db_client():
-    init_db()
-
-@app.on_event("shutdown")
-def shutdown_db_client():
-    close_db()
 
 # Register routers
 app.include_router(user_routes.router, prefix="/users", tags=["users"])
