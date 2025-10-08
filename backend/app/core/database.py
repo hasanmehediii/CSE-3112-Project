@@ -1,33 +1,30 @@
-from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import MongoClient
 from .config import settings
-import asyncio
 import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-client: AsyncIOMotorClient | None = None
-_lock = asyncio.Lock()
+client: MongoClient | None = None
 
-async def get_db():
+def init_db():
     global client
+    logger.info("Initializing synchronous database client...")
+    try:
+        client = MongoClient(settings.MONGO_URI)
+        # The following line will force a connection to the database.
+        client.server_info()
+        logger.info("Database client initialized successfully.")
+    except Exception as e:
+        logger.error(f"Failed to initialize database client: {e}", exc_info=True)
+        raise e
+
+def get_db():
     if client is None:
-        async with _lock:
-            if client is None:
-                logger.info("Initializing database client on demand...")
-                try:
-                    loop = asyncio.get_running_loop()
-                    client = AsyncIOMotorClient(settings.MONGO_URI, io_loop=loop)
-                    await client.server_info()
-                    logger.info("Database client initialized successfully.")
-                except Exception as e:
-                    logger.error(f"Failed to initialize database client: {e}", exc_info=True)
-                    raise e
+        raise Exception("Database client not initialized. Ensure 'init_db' is called at application startup.")
     return client[settings.DB_NAME]
 
-async def init_db():
-    # This can be called at startup to "warm up" the connection.
-    await get_db()
-
 def close_db():
-    pass
+    global client
+    if client:
+        client.close()
