@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'pages/Splash.dart';
 
 Future<void> main() async {
-  // Mark main as async
-  await dotenv.load(fileName: ".env"); // Load .env file
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load(fileName: ".env");
+    print('Loaded .env successfully: ${dotenv.env}');
+  } catch (e) {
+    print('Error loading .env file: $e');
+  }
   runApp(const AuthApp());
 }
 

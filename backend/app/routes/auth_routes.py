@@ -1,8 +1,14 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, EmailStr
 from app.services.auth_service import create_user, authenticate_user
+from typing import List, Optional
 
 router = APIRouter()
+
+
+class UserPreferences(BaseModel):
+    diet: Optional[str] = None
+    allergies: List[str] = []
 
 
 class SignupRequest(BaseModel):
@@ -10,6 +16,8 @@ class SignupRequest(BaseModel):
     email: EmailStr
     password: str
     role: str = "student"
+    profile_image: Optional[str] = None
+    preferences: Optional[UserPreferences] = None
 
 
 class LoginRequest(BaseModel):
