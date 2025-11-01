@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:khaikhai/auth/Login.dart';
 import 'package:khaikhai/common/InputDecoration.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -24,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isLoading = false;
 
   // ⚙️ Change to your FastAPI IP
-  final String baseUrl = "http://192.168.0.103:8000/auth/signup";
+  final String baseUrl = "${dotenv.env['API_BASE_URL'] ?? 'http://192.168.0.103:8000'}/auth/signup";
 
   @override
   void dispose() {
@@ -56,7 +57,6 @@ class _SignUpPageState extends State<SignUpPage> {
             .where((a) => a.isNotEmpty)
             .toList(),
       },
-      "created_at": DateTime.now().toIso8601String(),
     };
 
     try {
@@ -66,9 +66,8 @@ class _SignUpPageState extends State<SignUpPage> {
         body: jsonEncode(user),
       );
 
-      final data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(data['message'] ?? "Signup successful!"),
@@ -80,14 +79,29 @@ class _SignUpPageState extends State<SignUpPage> {
           MaterialPageRoute(builder: (_) => const LoginPage()),
         );
       } else {
+        // Print the response body for debugging
+        debugPrint("Signup failed with status: ${response.statusCode}");
+        debugPrint("Response body: ${response.body}");
+
+        // Try to decode JSON for a detailed error, but handle failure
+        String errorMessage = "Signup failed";
+        try {
+          final data = jsonDecode(response.body);
+          errorMessage = data['detail'] ?? errorMessage;
+        } catch (_) {
+          // Ignore JSON decode error if the body is not JSON
+          errorMessage = "An unexpected server error occurred.";
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(data['detail'] ?? "Signup failed"),
+            content: Text(errorMessage),
             backgroundColor: Colors.redAccent,
           ),
         );
       }
     } catch (e) {
+      debugPrint("An exception occurred during signup: $e");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Signup failed: $e")));
