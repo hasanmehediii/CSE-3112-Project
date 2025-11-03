@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:khaikhai/auth/SignUp.dart';
 import 'package:khaikhai/common/InputDecoration.dart';
 import 'package:khaikhai/auth/ForgetPassword.dart';
-import 'package:khaikhai/services/api_services.dart'; // ✅ Add this
+import 'package:khaikhai/services/api_services.dart';
+import 'package:khaikhai/pages/Home_Screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -45,7 +46,8 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // TODO: Navigate to home/dashboard after login
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) =>const HomeScreen()));
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
