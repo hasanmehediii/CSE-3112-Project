@@ -25,7 +25,9 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isLoading = false;
 
   // ⚙️ Change to your FastAPI IP
-  final String baseUrl = "${dotenv.env['API_BASE_URL'] ?? 'http://192.168.0.103:8000'}/auth/signup";
+  //final String baseUrl = "${dotenv.env['API_BASE_URL'] ?? 'http://192.168.0.103:8000'}/auth/signup";
+
+  final String baseUrl = "${dotenv.env['API_BASE_URL']}/auth/signup";
 
   @override
   void dispose() {
@@ -58,6 +60,9 @@ class _SignUpPageState extends State<SignUpPage> {
             .toList(),
       },
     };
+
+    debugPrint("Using backend URL : $baseUrl");
+    debugPrint("Signup request body : ${jsonEncode(user)}");
 
     try {
       final response = await http.post(

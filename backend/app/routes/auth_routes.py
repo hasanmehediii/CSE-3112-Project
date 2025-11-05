@@ -26,18 +26,18 @@ class LoginRequest(BaseModel):
 
 
 @router.post("/signup")
-async def signup(request: SignupRequest):
+def signup(request: SignupRequest):
     user_data = request.dict()
-    created_user = await create_user(user_data)
+    created_user =  create_user(user_data)
     return {"message": "User created successfully", "user": created_user}
 
 
 @router.post("/login")
-async def login(request: LoginRequest):
-    token = await authenticate_user(request.email, request.password)
+def login(request: LoginRequest):
+    token = authenticate_user(request.email, request.password)
     return token
 
 @router.get("/me")
-async def get_current_user(user=Depends(authenticate_user)):
+def get_current_user(user=Depends(authenticate_user)):
     return user
 
