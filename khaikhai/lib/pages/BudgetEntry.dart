@@ -90,6 +90,14 @@ class _BudgetEntryScreenState extends State<BudgetEntryScreen> {
                           width: 60,
                           height: 60,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 60,
+                              height: 60,
+                              color: Colors.orange[100],
+                              child: const Icon(Icons.restaurant_menu, color: Colors.orange),
+                            );
+                          },
                         ),
                       ),
                       title: Text(m["meal"]),
@@ -122,6 +130,7 @@ class _BudgetEntryScreenState extends State<BudgetEntryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('budget_entry_scaffold'),
       appBar: AppBar(
         title: const Text("KhaiKhai Meal Planner"),
         backgroundColor: Colors.deepOrange,
@@ -143,25 +152,26 @@ class _BudgetEntryScreenState extends State<BudgetEntryScreen> {
                         labelText: "Enter Monthly Budget (Tk)",
                         border: OutlineInputBorder(),
                       ),
-                      validator: (value) =>
-                      value!.isEmpty ? "Enter budget" : null,
+                      validator: (value) => value!.isEmpty ? "Enter budget" : null,
                     ),
                   ),
                   const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
+                  SizedBox(
+                    width: 120,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepOrange,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          double budget = double.parse(_budgetController.text);
+                          _generateMealPlan(budget);
+                        }
+                      },
+                      child: const Text("Generate"),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        double budget = double.parse(_budgetController.text);
-                        _generateMealPlan(budget);
-                      }
-                    },
-                    child: const Text("Generate"),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -190,18 +200,27 @@ class _BudgetEntryScreenState extends State<BudgetEntryScreen> {
                 itemCount: mealPlan.length,
                 itemBuilder: (context, index) {
                   final dayPlan = mealPlan[index];
-                  return GestureDetector(
-                    onTap: () => _showMealPopup(context, dayPlan),
+                  return InkWell(
+                    onTap: () {
+                      Future.microtask(() {
+                        if (context.mounted) {
+                          _showMealPopup(context, dayPlan);
+                        }
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(12),
                     child: Card(
                       color: Colors.orange.shade100,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: Center(
                         child: Text(
                           "Day ${dayPlan["day"]}",
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
