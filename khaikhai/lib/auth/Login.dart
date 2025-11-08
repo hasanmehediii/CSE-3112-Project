@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:khaikhai/auth/SignUp.dart';
 import 'package:khaikhai/common/InputDecoration.dart';
 import 'package:khaikhai/auth/ForgetPassword.dart';
+import 'package:khaikhai/providers/user_profile_provider.dart';
 import 'package:khaikhai/services/api_services.dart';
 import 'package:khaikhai/pages/Home_Screen.dart';
+import 'package:khaikhai/services/storage_service.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -37,7 +42,11 @@ class _LoginPageState extends State<LoginPage> {
         _passwordController.text.trim(),
       );
 
-      final token = response["access_token"];
+      final token = response["access_token"] as String;
+      await StorageService.saveToken(token);
+      final profileProvider = Provider.of<UserProfileProvider>(context, listen: false);
+      print('Fetching profile from: ${dotenv.env['API_BASE_URL']}/user/profile');
+      await profileProvider.fetchUserProfile();   // <-- NEW
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Login successful! Token: $token"),

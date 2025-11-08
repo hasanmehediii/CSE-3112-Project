@@ -31,7 +31,7 @@ class UserProfileProvider with ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse('${dotenv.env['BASE_URL']}/user/profile'),
+        Uri.parse('${dotenv.env['API_BASE_URL']}/user/profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ class UserProfileProvider with ChangeNotifier {
 
     try {
       final response = await http.patch(
-        Uri.parse('${dotenv.env['BASE_URL']}/user/update-profile'),
+        Uri.parse('${dotenv.env['API_BASE_URL']}/user/update-profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
