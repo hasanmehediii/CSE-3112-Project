@@ -13,6 +13,10 @@ from app.routes import (
     auth_routes
 )
 
+from app.routes.auth_routes import router as auth_router
+from app.routes.user_profile_routes import router as profile_router
+from app.routes.user_routes import router as user_crud_router
+
 app = FastAPI(title="KhaiKhai Backend")
 
 app.add_middleware(
@@ -33,7 +37,7 @@ app.include_router(payment_routes.router, prefix="/payments", tags=["payments"])
 app.include_router(feedback_routes.router, prefix="/feedback", tags=["feedback"])
 app.include_router(notification_routes.router, prefix="/notifications", tags=["notifications"])
 app.include_router(mealplan_routes.router, prefix="/mealplans", tags=["meal plans"])
-
+app.include_router(profile_router, prefix="/user", tags=["User Profile"])
 app.include_router(auth_routes.router, prefix="/auth", tags=["auth"])
 
 @app.get("/")
