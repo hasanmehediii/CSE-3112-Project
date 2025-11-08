@@ -5,12 +5,12 @@ import '../models/user_profile.dart';
 import '../services/storage_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 class UserProfileProvider with ChangeNotifier {
   UserProfile? _userProfile;
 
   UserProfile? get userProfile => _userProfile;
-  bool get isPremium => _userProfile?.isPremium ?? false;
+
+  bool get isLoggedIn => _userProfile != null;
 
   void setUserProfile(UserProfile profile) {
     _userProfile = profile;
@@ -22,6 +22,7 @@ class UserProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fetch profile from FastAPI endpoint `/user/profile`
   Future<void> fetchUserProfile() async {
     final token = await StorageService.getToken();
     if (token == null) {
@@ -38,19 +39,36 @@ class UserProfileProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        final userData = jsonDecode(response.body);
-        _userProfile = UserProfile.fromJson(userData);
+        final data = jsonDecode(response.body);
+
+        /// FastAPI returns `_id` as {"$oid": "..."} unless you flatten it.
+        // final normalized = {
+        //   "_id": data["_id"] is Map ? data["_id"]["\$oid"] : data["_id"],
+        //   "name": data["name"],
+        //   "email": data["email"],
+        //   "role": data["role"],
+        //   "profile_image": data["profile_image"],
+        //   "preferences": data["preferences"],
+        //   "created_at": data["created_at"] is Map
+        //       ? data["created_at"]["\$date"]
+        //       : data["created_at"],
+        // };
+
+        //_userProfile = UserProfile.fromJson(normalized);
+        _userProfile = UserProfile.fromJson(data);
         await StorageService.saveUserProfile(_userProfile!);
         notifyListeners();
       } else {
-        throw Exception('Failed to fetch user profile: ${response.statusCode}');
+        throw Exception(
+            'Failed to fetch user profile: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error fetching user profile: $e');
     }
   }
 
-  Future<void> updatePremiumStatus(bool isPremium) async {
+  /// Example: update profile image or preferences
+  Future<void> updateProfileImage(String newUrl) async {
     final token = await StorageService.getToken();
     if (token == null) {
       throw Exception('No authentication token available');
@@ -58,33 +76,34 @@ class UserProfileProvider with ChangeNotifier {
 
     try {
       final response = await http.patch(
-        Uri.parse('${dotenv.env['BASE_URL']}/user/premium'),
+        Uri.parse('${dotenv.env['BASE_URL']}/user/update-profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'is_premium': isPremium}),
+        body: jsonEncode({"profile_image": newUrl}),
       );
 
       if (response.statusCode == 200) {
         _userProfile = UserProfile(
-          fullName: _userProfile!.fullName,
-          username: _userProfile!.username,
+          id: _userProfile!.id,
+          name: _userProfile!.name,
           email: _userProfile!.email,
-          phoneNumber: _userProfile!.phoneNumber,
-          countryCode: _userProfile!.countryCode,
-          gender: _userProfile!.gender,
-          nid: _userProfile!.nid,
-          dob: _userProfile!.dob,
-          isPremium: isPremium,
+          role: _userProfile!.role,
+          profileImage: newUrl,
+          diet: _userProfile!.diet,
+          allergies: _userProfile!.allergies,
+          createdAt: _userProfile!.createdAt,
         );
+
         await StorageService.saveUserProfile(_userProfile!);
         notifyListeners();
       } else {
-        throw Exception('Failed to update premium status: ${response.statusCode}');
+        throw Exception(
+            'Failed to update profile image: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error updating premium status: $e');
+      throw Exception('Error updating profile image: $e');
     }
   }
 }

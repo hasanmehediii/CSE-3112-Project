@@ -1,51 +1,49 @@
 class UserProfile {
-  String fullName;
-  String username;
-  String email;
-  String phoneNumber;
-  String countryCode;
-  String nid;
-  String dob;
-  String? gender;
-  final bool isPremium;
+  final String id;
+  final String name;
+  final String email;
+  final String role;
+  final String profileImage;
+  final String diet;
+  final List<String> allergies;
+  final DateTime createdAt;
 
   UserProfile({
-    required this.fullName,
-    required this.username,
+    required this.id,
+    required this.name,
     required this.email,
-    required this.phoneNumber,
-    required this.countryCode,
-    this.gender,
-    required this.nid,
-    required this.dob,
-    required this.isPremium,
+    required this.role,
+    required this.profileImage,
+    required this.diet,
+    required this.allergies,
+    required this.createdAt,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      fullName: json['fullName'],
-      username: json['username'],
+      id: json['_id'],
+      name: json['name'],
       email: json['email'],
-      phoneNumber: json['phoneNumber'],
-      countryCode: json['countryCode'],
-      nid: json['nid'],
-      dob: json['dob'],
-      gender: json['gender'],
-      isPremium: json['is_premium'] ?? false,
+      role: json['role'],
+      profileImage: json['profile_image'],
+      diet: json['preferences']?['diet'] ?? '',
+      allergies: List<String>.from(json['preferences']?['allergies'] ?? []),
+      createdAt: DateTime.parse(json['created_at']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'fullName': fullName,
-      'username': username,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'countryCode': countryCode,
-      'nid': nid,
-      'dob': dob,
-      'gender': gender,
-      'is_premium': isPremium,
+      "_id": id,
+      "name": name,
+      "email": email,
+      "role": role,
+      "profile_image": profileImage,
+      "preferences": {
+        "diet": diet,
+        "allergies": allergies,
+      },
+      "created_at": createdAt.toIso8601String(),
     };
   }
 }
