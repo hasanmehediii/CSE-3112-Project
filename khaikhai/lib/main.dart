@@ -33,11 +33,13 @@ class AuthApp extends StatelessWidget {
         title: 'Flutter Auth Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          brightness: Brightness.dark,
+          //brightness: Brightness.dark,
+          brightness: Brightness.light,
           primaryColor: Colors.deepPurple,
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.deepPurple,
-            brightness: Brightness.dark,
+            //brightness: Brightness.dark,
+            brightness: Brightness.light,
           ),
           useMaterial3: true,
           elevatedButtonTheme: ElevatedButtonThemeData(
