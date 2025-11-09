@@ -37,6 +37,9 @@ dependencies:
   http: ^1.5.0
   provider: ^6.0.5
   flutter_dotenv: ^5.0.2
+  fl_chart: ^0.69.0
+  shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +75,12 @@ flutter:
     - .env
     - assets/background.jpg
     - assets/logo.png
+    - assets/profile_pic.jpg
+    - assets/meal1.jpg
+    - assets/meal2.jpg
+    - assets/breakfast.jpg
+    - assets/lunch.jpg
+    - assets/dinner.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
