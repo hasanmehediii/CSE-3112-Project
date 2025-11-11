@@ -171,6 +171,33 @@ class MealCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
+
+                  // Ingredients
+                  if (meal.ingredients.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: -6,
+                        children: meal.ingredients.map((ingredient) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              ingredient,
+                              style: const TextStyle(fontSize: 12, color: Colors.black87),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+
+
+
+
                   // Add Button
                   SizedBox(
                     width: double.infinity,
