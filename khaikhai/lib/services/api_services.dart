@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'storage_service.dart';
+import 'package:khaikhai/models/canteen_model.dart';
 
 class ApiService {
   //static final String baseUrl = dotenv.env['API_BASE_URL'] ?? "http://192.168.0.103:8000"; // your FastAPI base
@@ -41,4 +42,17 @@ class ApiService {
       throw Exception('Failed to update profile: ${response.body}');
     }
   }
+
+  static Future<List<Canteen>> getAllCanteens() async {
+    final response = await http.get(Uri.parse("$baseUrl/canteens"));
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((e) => Canteen.fromJson(e)).toList();
+    } else {
+      throw Exception("Failed to load canteens: ${response.body}");
+    }
+  }
+
+
 }

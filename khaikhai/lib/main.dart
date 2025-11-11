@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/user_profile_provider.dart';
+import 'providers/canteen_provider.dart';
 import 'pages/Splash.dart';
 
 Future<void> main() async {
@@ -28,6 +29,7 @@ class AuthApp extends StatelessWidget {
         ChangeNotifierProvider<UserProfileProvider>(
           create: (_) => UserProfileProvider(),
         ),
+        ChangeNotifierProvider(create: (_) => CanteenProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Auth Demo',
