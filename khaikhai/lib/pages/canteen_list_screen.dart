@@ -23,6 +23,7 @@ class _CanteenListScreenState extends State<CanteenListScreen> {
       appBar: AppBar(
         title: const Text("Canteens"),
         backgroundColor: Colors.deepOrange,
+        elevation: 0,
       ),
       body: Consumer<CanteenProvider>(
         builder: (context, provider, child) {
@@ -59,7 +60,7 @@ class CanteenCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: navigate to canteen details page
+        // TODO: Navigate to Canteen Details Page
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -84,29 +85,31 @@ class CanteenCard extends StatelessWidget {
               child: canteen.imageUrl == null
                   ? Image.asset(
                 "assets/canteen_placeholder.jpeg",
-                height: 140,
+                height: 160,
                 width: double.infinity,
                 fit: BoxFit.cover,
               )
                   : Image.network(
                 canteen.imageUrl!,
-                height: 140,
+                height: 160,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Name
                   Text(
                     canteen.name,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 6),
+
+                  // Location
                   Row(
                     children: [
                       const Icon(Icons.location_on,
@@ -115,14 +118,61 @@ class CanteenCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           canteen.location,
-                          style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          style:
+                          TextStyle(fontSize: 14, color: Colors.grey[700]),
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 6),
+
+                  // Short description
+                  if (canteen.description != null)
+                    Text(
+                      canteen.description!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                      TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                  const SizedBox(height: 6),
+
+                  // Open hours
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        "Open: ${canteen.openHours?.start ?? '--'} – ${canteen.openHours?.end ?? '--'}",
+                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // View Menu Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // TODO: Navigate to Canteen Details Page
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepOrange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        "View Menu",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
