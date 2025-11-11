@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/canteen_provider.dart';
 import 'package:khaikhai/models/canteen_model.dart';
+import 'canteen_menu_screen.dart';
 
 class CanteenListScreen extends StatefulWidget {
   const CanteenListScreen({super.key});
@@ -60,7 +61,15 @@ class CanteenCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: Navigate to Canteen Details Page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CanteenMenuScreen(
+              canteenId: canteen.id,
+              canteenName: canteen.name,
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -155,7 +164,15 @@ class CanteenCard extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // TODO: Navigate to Canteen Details Page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CanteenMenuScreen(
+                              canteenId: canteen.id,
+                              canteenName: canteen.name,
+                            ),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepOrange,
