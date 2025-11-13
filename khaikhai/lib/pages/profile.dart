@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_profile_provider.dart';
 import '../services/storage_service.dart'; // ← ADD THIS LINE
+import 'edit_profile_page.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -88,7 +89,10 @@ class ProfileScreen extends StatelessWidget {
                   leading: const Icon(Icons.edit, color: Colors.deepOrange),
                   title: const Text("Edit Profile"),
                   onTap: () {
-                    // TODO: Navigate to Edit Profile
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                      );
                   },
                 ),
                 ListTile(

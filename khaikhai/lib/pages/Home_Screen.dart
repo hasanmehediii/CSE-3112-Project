@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:khaikhai/pages/canteen_list_screen.dart';
+
 import 'BudgetEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     _buildDrawerItem(Icons.home, "Home Dashboard", const DailyBudgetScreen()),
                     _buildDrawerItem(Icons.restaurant_menu, "Meal Suggestions", const MealSuggestionsScreen()),
+                    _buildDrawerItem(Icons.dining, "Canteens", const CanteenListScreen()),
                     _buildDrawerItem(Icons.edit, "Expense Entry", const ExpenseEntryScreen()),
                     _buildDrawerItem(Icons.edit, "Budget Entry", const BudgetEntryScreen()),
                     _buildDrawerItem(Icons.bar_chart, "Expense Report", const ExpenseReportScreen()),
