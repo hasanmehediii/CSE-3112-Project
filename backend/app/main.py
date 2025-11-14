@@ -16,6 +16,8 @@ from app.routes import (
 from app.routes.auth_routes import router as auth_router
 from app.routes.user_profile_routes import router as profile_router
 from app.routes.user_routes import router as user_crud_router
+from app.routes.budget_routes import router as budget_router
+
 
 app = FastAPI(title="KhaiKhai Backend")
 
@@ -39,6 +41,8 @@ app.include_router(notification_routes.router, prefix="/notifications", tags=["n
 app.include_router(mealplan_routes.router, prefix="/mealplans", tags=["meal plans"])
 app.include_router(profile_router, prefix="/user", tags=["User Profile"])
 app.include_router(auth_routes.router, prefix="/auth", tags=["auth"])
+app.include_router(budget_router, prefix="/budget", tags=["budget"])
+
 
 @app.get("/")
 def root():
