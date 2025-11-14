@@ -10,7 +10,6 @@ import 'daily_budget.dart';
 import 'meal_suggestions.dart';
 import 'expense_entry.dart';
 import 'expense_report.dart';
-import 'budget_settings.dart';
 import 'profile.dart';
 import 'set_budget_screen.dart';
 import 'budget_dashboard.dart';
@@ -100,12 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildDrawerItem(Icons.home, "Home Dashboard", const DailyBudgetScreen()),
                     _buildDrawerItem(Icons.restaurant_menu, "Meal Suggestions", const MealSuggestionsScreen()),
                     _buildDrawerItem(Icons.dining, "Canteens", const CanteenListScreen()),
-                    _buildDrawerItem(Icons.edit, "Set Budget", const SetBudgetScreen()),
+                    _buildDrawerItem(Icons.account_balance_wallet, "Set Budget", const SetBudgetScreen()),
                     _buildDrawerItem(Icons.dining, "Budget Dashboard", const BudgetDashboardScreen()),
                     _buildDrawerItem(Icons.edit, "Expense Entry", const ExpenseEntryScreen()),
                     _buildDrawerItem(Icons.edit, "Budget Entry", const BudgetEntryScreen()),
                     _buildDrawerItem(Icons.bar_chart, "Expense Report", const ExpenseReportScreen()),
-                    _buildDrawerItem(Icons.account_balance_wallet, "Budget Settings", const BudgetSettingsScreen()),
                     _buildDrawerItem(Icons.person, "Profile", const ProfileScreen()),
                     //_buildDrawerItem(Icons.person, "Profile", const ProfilePage1()),
                   ],

@@ -95,6 +95,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Card(
+          color: Colors.orange.shade100,
           elevation: 8,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
