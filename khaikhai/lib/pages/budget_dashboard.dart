@@ -29,39 +29,28 @@ class _BudgetDashboardScreenState extends State<BudgetDashboardScreen> {
       final token = await StorageService.getToken();
       if (token == null) throw Exception('No auth token found');
 
-      // Fetch budget
       final fetchedBudget = await ApiService.getBudget(token);
-
-      // Fetch all meals
       final meals = await ApiService.getAllMeals();
 
-      // **Debug log for meals**
-      for (var meal in meals) {
-        print("Meal: ${meal.name}, canteenId: ${meal.canteenId}");
-      }
-
-
-      // Fetch all canteens and build map
       final canteens = await ApiService.getAllCanteens();
       final canteenMap = {for (var c in canteens) c.id: c.name};
 
-      // Recommend meals within daily budget
       final recMeals = ApiService.recommendMeals(meals, fetchedBudget.dailyBudget);
 
       setState(() {
         budget = fetchedBudget;
         allMeals = meals;
         recommendedMeals = recMeals;
-        this.canteenMap = canteenMap; // store in state
+        this.canteenMap = canteenMap;
         isLoading = false;
       });
     } catch (e) {
       setState(() => isLoading = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
   }
-
 
   Color _getDietColor(String dietType) {
     switch (dietType.toLowerCase()) {
@@ -95,7 +84,8 @@ class _BudgetDashboardScreenState extends State<BudgetDashboardScreen> {
             // Budget Overview Card
             Card(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16)),
+                borderRadius: BorderRadius.circular(16),
+              ),
               elevation: 4,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -123,7 +113,6 @@ class _BudgetDashboardScreenState extends State<BudgetDashboardScreen> {
                       style: const TextStyle(fontSize: 16, color: Colors.red),
                     ),
                     const SizedBox(height: 12),
-                    // Budget progress bar
                     LinearProgressIndicator(
                       value: (budget!.remainingBudget / budget!.monthlyBudget)
                           .clamp(0.0, 1.0),
@@ -211,7 +200,6 @@ class _BudgetDashboardScreenState extends State<BudgetDashboardScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 6),
-                                // Canteen Name placeholder
                                 Text(
                                   "Canteen: ${canteenMap[meal.canteenId] ?? '--'}",
                                   style: TextStyle(
@@ -239,6 +227,54 @@ class _BudgetDashboardScreenState extends State<BudgetDashboardScreen> {
                                               : Colors.red),
                                     ),
                                   ],
+                                ),
+                                const SizedBox(height: 8),
+
+                                // Ingredients
+                                if (meal.ingredients.isNotEmpty)
+                                  Wrap(
+                                    spacing: 6,
+                                    runSpacing: -6,
+                                    children: meal.ingredients.map((ingredient) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          ingredient,
+                                          style: const TextStyle(
+                                              fontSize: 12, color: Colors.black87),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+
+                                const SizedBox(height: 8),
+
+                                // Add Button
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: meal.isAvailable
+                                        ? () {
+                                      // TODO: Add to cart logic
+                                    }
+                                        : null,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.deepOrange,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                    ),
+                                    child: const Text(
+                                      "Add",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
