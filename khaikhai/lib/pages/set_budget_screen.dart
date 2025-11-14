@@ -11,28 +11,58 @@ class SetBudgetScreen extends StatefulWidget {
 }
 
 class _SetBudgetScreenState extends State<SetBudgetScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _budgetController = TextEditingController();
+  final _manualController = TextEditingController();
   bool isLoading = false;
+
+  double _dailyBudget = 200; // default daily budget
+  double _monthlyBudget = 0; // calculated dynamically
+  late int _remainingDays;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateRemainingDays();
+    _monthlyBudget = _dailyBudget * _remainingDays;
+    _manualController.text = _dailyBudget.toStringAsFixed(0);
+  }
+
+  void _calculateRemainingDays() {
+    final now = DateTime.now();
+    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+    _remainingDays = daysInMonth - now.day + 1; // include today
+  }
 
   @override
   void dispose() {
-    _budgetController.dispose();
+    _manualController.dispose();
     super.dispose();
   }
 
+  void _updateDailyBudget(double value) {
+    setState(() {
+      _dailyBudget = value;
+      _monthlyBudget = _dailyBudget * _remainingDays;
+      _manualController.text = _dailyBudget.toStringAsFixed(0);
+    });
+  }
+
+  void _manualInputChanged(String value) {
+    final val = double.tryParse(value);
+    if (val != null && val > 0) {
+      setState(() {
+        _dailyBudget = val;
+        _monthlyBudget = _dailyBudget * _remainingDays;
+      });
+    }
+  }
+
   Future<void> _submitBudget() async {
-    if (!_formKey.currentState!.validate()) return;
-
     setState(() => isLoading = true);
-
     try {
       final token = await StorageService.getToken();
       if (token == null) throw Exception('No auth token found');
 
-      final amount = double.parse(_budgetController.text.trim());
-
-      final budget = await ApiService.setMonthlyBudget(amount, token);
+      final budget = await ApiService.setMonthlyBudget(_monthlyBudget, token);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -41,9 +71,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
         ),
       );
 
-      // Optionally: navigate back or to dashboard
-      Navigator.pop(context, budget); // pass the new budget back
-
+      Navigator.pop(context, budget);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -60,77 +88,99 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Set Monthly Budget'),
+        title: const Text("Budget Settings"),
         backgroundColor: Colors.deepOrange,
+        centerTitle: true,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            elevation: 8,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Enter your monthly budget (BDT)',
-                      style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _budgetController,
-                      keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        prefixIcon: const Icon(Icons.attach_money),
-                        hintText: 'e.g. 5000',
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a budget';
-                        }
-                        final numValue = double.tryParse(value);
-                        if (numValue == null || numValue <= 0) {
-                          return 'Enter a valid number > 0';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: isLoading ? null : _submitBudget,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: isLoading
-                            ? const CircularProgressIndicator(
-                          color: Colors.white,
-                        )
-                            : const Text(
-                          'Set Budget',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Set Your Budget",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrange),
                 ),
-              ),
+                const SizedBox(height: 16),
+
+                // Monthly budget display
+                Text(
+                  "Monthly Budget: Tk ${_monthlyBudget.toStringAsFixed(0)}",
+                  style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrange),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "($_remainingDays days remaining)",
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
+
+                // Daily budget display
+                Text(
+                  "Daily Budget: Tk ${_dailyBudget.toStringAsFixed(0)}",
+                  style: const TextStyle(fontSize: 18, color: Colors.deepOrange),
+                ),
+                const SizedBox(height: 16),
+
+                // Slider input
+                Slider(
+                  value: _dailyBudget,
+                  min: 50,
+                  max: 1000,
+                  divisions: 95,
+                  activeColor: Colors.deepOrange,
+                  inactiveColor: Colors.orange.shade200,
+                  label: "Tk ${_dailyBudget.toStringAsFixed(0)}",
+                  onChanged: _updateDailyBudget,
+                ),
+                const SizedBox(height: 16),
+
+                // Manual input
+                TextField(
+                  controller: _manualController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: "Manual Daily Budget",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    suffixText: "Tk",
+                  ),
+                  onChanged: _manualInputChanged,
+                ),
+                const SizedBox(height: 24),
+
+                // Save button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _submitBudget,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                      "Save Budget",
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
