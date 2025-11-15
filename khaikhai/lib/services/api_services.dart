@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'storage_service.dart';
 import 'package:khaikhai/models/canteen_model.dart';
 import 'package:khaikhai/models/meal_model.dart';
+import 'package:khaikhai/models/budget_model.dart';
 
 class ApiService {
   //static final String baseUrl = dotenv.env['API_BASE_URL'] ?? "http://192.168.0.103:8000"; // your FastAPI base
@@ -67,6 +68,70 @@ class ApiService {
     }
   }
 
+
+  // Set monthly budget
+  static Future<Budget> setMonthlyBudget(double amount, String token) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/budget/set-budget'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({'monthly_budget': amount}),
+    );
+
+    if (response.statusCode == 200) {
+      return Budget.fromJson(jsonDecode(response.body)['budget']);
+    } else {
+      throw Exception('Failed to set budget: ${response.body}');
+    }
+  }
+
+  // Get budget
+  static Future<Budget> getBudget(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/budget/get-budget'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Budget.fromJson(jsonDecode(response.body)['budget']);
+    } else {
+      throw Exception('Failed to fetch budget: ${response.body}');
+    }
+  }
+
+  // Recommend meals within daily budget
+  static List<Meal> recommendMeals(List<Meal> meals, double dailyBudget) {
+    // Simple greedy approach: pick meals <= daily budget
+    meals.sort((a, b) => a.price.compareTo(b.price));
+    double total = 0;
+    List<Meal> recommended = [];
+
+    for (var meal in meals) {
+      if (total + meal.price <= dailyBudget) {
+        recommended.add(meal);
+        total += meal.price;
+      }
+    }
+
+    return recommended;
+  }
+
+
+  // Fetch all meals (from all canteens)
+  static Future<List<Meal>> getAllMeals() async {
+    final response = await http.get(Uri.parse('$baseUrl/meals/'));
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((e) => Meal.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to fetch all meals: ${response.body}');
+    }
+  }
 
 
 }

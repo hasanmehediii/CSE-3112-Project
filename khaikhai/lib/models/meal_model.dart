@@ -8,6 +8,7 @@ class Meal {
   final String dietType;
   final bool isAvailable;
   final List<String> ingredients; // NEW
+  final String? canteenId;
 
   Meal({
     required this.id,
@@ -19,6 +20,7 @@ class Meal {
     required this.dietType,
     required this.isAvailable,
     required this.ingredients, // NEW
+    this.canteenId,
   });
 
   factory Meal.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class Meal {
       dietType: json['diet_type'] ?? 'veg',
       isAvailable: json['is_available'] ?? true,
       ingredients: List<String>.from(json['ingredients'] ?? []), // NEW
+      canteenId: json["canteen_id"],
     );
   }
 }
