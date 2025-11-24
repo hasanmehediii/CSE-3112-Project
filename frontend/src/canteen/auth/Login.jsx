@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const CanteenOwnerSignUp = () => {
-    const [name, setName] = useState('');
+const CanteenOwnerLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -13,12 +12,12 @@ const CanteenOwnerSignUp = () => {
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8000/auth/owner/signup', {
+            const response = await fetch('http://localhost:8000/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
@@ -27,9 +26,13 @@ const CanteenOwnerSignUp = () => {
                 throw new Error(data.detail || 'Something went wrong');
             }
 
-            // Assuming the token is returned on signup to log the user in directly
-            // Or just navigate to a login page. For now, let's navigate to a dashboard.
-            // The user request mentions navigating to a dashboard.
+            // Assuming the token is in data.access_token
+            localStorage.setItem('token', data.access_token);
+            
+            // We should also get user info to confirm the role is 'owner'
+            // For now, just redirecting. A full implementation would decode the token
+            // or have an endpoint like /users/me to get user details.
+            
             navigate('/canteen/dashboard');
 
         } catch (err) {
@@ -39,18 +42,8 @@ const CanteenOwnerSignUp = () => {
 
     return (
         <div style={{ maxWidth: '400px', margin: '0 auto', paddingTop: '50px' }}>
-            <h2>Canteen Owner Sign Up</h2>
+            <h2>Canteen Owner Login</h2>
             <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '10px' }}>
-                    <label>Name</label>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        style={{ width: '100%', padding: '8px' }}
-                    />
-                </div>
                 <div style={{ marginBottom: '10px' }}>
                     <label>Email</label>
                     <input
@@ -73,11 +66,11 @@ const CanteenOwnerSignUp = () => {
                 </div>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: 'blue', color: 'white' }}>
-                    Sign Up
+                    Login
                 </button>
             </form>
         </div>
     );
 };
 
-export default CanteenOwnerSignUp;
+export default CanteenOwnerLogin;

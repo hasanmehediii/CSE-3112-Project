@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, EmailStr
-from app.services.auth_service import create_user, authenticate_user
+from app.services.auth_service import create_user, authenticate_user, create_owner
 from typing import List, Optional
 
 router = APIRouter()
@@ -20,6 +20,13 @@ class SignupRequest(BaseModel):
     preferences: Optional[UserPreferences] = None
 
 
+class OwnerSignupRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    profile_image: Optional[str] = None
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
@@ -32,6 +39,13 @@ def signup(request: SignupRequest):
     return {"message": "User created successfully", "user": created_user}
 
 
+@router.post("/owner/signup")
+def owner_signup(request: OwnerSignupRequest):
+    user_data = request.dict()
+    created_owner = create_owner(user_data)
+    return {"message": "Owner created successfully", "user": created_owner}
+
+
 @router.post("/login")
 def login(request: LoginRequest):
     token = authenticate_user(request.email, request.password)
@@ -40,4 +54,3 @@ def login(request: LoginRequest):
 @router.get("/me")
 def get_current_user(user=Depends(authenticate_user)):
     return user
-

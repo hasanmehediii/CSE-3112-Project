@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -107,7 +106,6 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -120,15 +118,25 @@ const Login = () => {
     }
 
     try {
-      const success = await login({ email, password });
+      const response = await fetch('http://localhost:8000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (success) {
-        navigate('/');
-      } else {
-        setError('Login failed. Please check your credentials.');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Something went wrong');
       }
+      
+      localStorage.setItem('token', data.access_token);
+      navigate('/canteen/dashboard');
+
     } catch (err) {
-      setError(err.response?.data?.msg || 'Login failed');
+      setError(err.message);
     }
   };
 
@@ -137,7 +145,7 @@ const Login = () => {
       <Navbar/>
       <LoginContainer>
         <LoginCard>
-          <Title>Login</Title>
+          <Title>Owner & Admin Login</Title>
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <form onSubmit={handleSubmit}>

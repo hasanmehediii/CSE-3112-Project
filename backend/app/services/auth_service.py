@@ -50,6 +50,59 @@ def create_user(user_data: dict):
     # Return the final user dictionary with ID
     return user_model_instance.model_dump(exclude_none=True)
 
+from app.models.canteen_model import Canteen
+
+
+def create_owner(user_data: dict):
+    db = get_db()
+
+    # Check if email already exists
+    if db["users"].find_one({"email": user_data["email"]}):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+
+    # Hash the password and set role
+    password = user_data.pop("password")
+    user_data["password_hash"] = hash_password(password)
+    user_data["role"] = "owner"
+
+    # Create user model for validation and defaults
+    user_model_instance = UserModel(**user_data)
+    user_to_insert = user_model_instance.model_dump(exclude_none=True, exclude={"id"})
+    user_to_insert = convert_for_mongo(user_to_insert)
+
+    # Insert user and get ID
+    user_result = db["users"].insert_one(user_to_insert)
+    user_id = user_result.inserted_id
+    user_model_instance.id = str(user_id)
+
+    # Create a canteen for the owner
+    canteen_data = {
+        "name": f"{user_data['name']}'s Canteen",
+        "location": "Not specified",
+        "owner_id": str(user_id),
+        "contact": user_data['email'],
+        "description": "Welcome to your new canteen! Please update your details."
+    }
+    canteen_model_instance = Canteen(**canteen_data)
+    canteen_to_insert = canteen_model_instance.model_dump(exclude_none=True, exclude={"id"})
+    
+    # Insert canteen and get ID
+    canteen_result = db["canteens"].insert_one(canteen_to_insert)
+    canteen_id = canteen_result.inserted_id
+
+    # Update user with canteen_id
+    db["users"].update_one(
+        {"_id": user_id},
+        {"$set": {"canteen_id": str(canteen_id)}}
+    )
+    user_model_instance.canteen_id = str(canteen_id)
+
+    return user_model_instance.model_dump(exclude_none=True)
+
+
 def authenticate_user(email: str, password: str):
     db = get_db()
     user = db["users"].find_one({"email": email})
@@ -63,3 +116,4 @@ def authenticate_user(email: str, password: str):
     # Generate JWT token
     token = create_access_token({"sub": str(user["_id"]), "email": user["email"]})
     return {"access_token": token, "token_type": "bearer"}
+

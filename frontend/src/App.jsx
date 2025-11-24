@@ -13,6 +13,9 @@ import StudentManagement from "./admin/pages/StudentManagement";
 import ComplaintManagement from "./admin/pages/ComplaintManagement";
 import ComplaintDetail from "./admin/pages/ComplaintDetail";
 import ActionManagement from "./admin/pages/ActionManagement";
+import CanteenOwnerSignUp from "./canteen/auth/SignUp";
+import CanteenOwnerLogin from "./canteen/auth/Login";
+import CanteenDashboard from "./canteen/pages/Dashboard";
 
 export default function App() {
   return (
@@ -30,6 +33,11 @@ export default function App() {
       <Route path="/admin/complains" element={<ComplaintManagement />} />
       <Route path="/admin/complains/:complaintId" element={<ComplaintDetail />} />
       <Route path="/admin/actions" element={<ActionManagement />} />
+
+      {/* Canteen Owner Routes */}
+      <Route path="/canteen/signup" element={<CanteenOwnerSignUp />} />
+      <Route path="/canteen/login" element={<CanteenOwnerLogin />} />
+      <Route path="/canteen/dashboard" element={<CanteenDashboard />} />
     </Routes>
   );
 }

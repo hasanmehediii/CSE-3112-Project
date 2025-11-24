@@ -1,5 +1,3 @@
-// ✅ Updated SignUp.js with two-column layout + role + canteen_id + preferences
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
@@ -29,7 +27,7 @@ const SignUpCard = styled.div`
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 650px;
+  max-width: 450px;
   text-align: center;
 `;
 
@@ -38,13 +36,6 @@ const Title = styled.h2`
   color: #00b51bff;
   font-size: 2rem;
   font-weight: 700;
-`;
-
-// ✅ Two-column grid
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
 `;
 
 const InputGroup = styled.div`
@@ -60,17 +51,6 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-
-  &:focus { border-color: #16a34a; outline: none; }
-`;
-
-const Select = styled.select`
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
@@ -114,40 +94,46 @@ const ErrorMessage = styled.p`
   margin-top: 1rem;
 `;
 
-const SignUp = () => {
+const CanteenOwnerSignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [studentReg, setStudentReg] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
-  const [canteenId, setCanteenId] = useState('');
-  const [diet, setDiet] = useState('none');
-  const [allergies, setAllergies] = useState('');
+  const [profileImage, setProfileImage] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     const payload = {
-      username,
+      name: username,
       email,
-      phone,
-      studentReg,
       password,
-      role,
-      canteen_id: role === "owner" ? canteenId : null,
-      preferences: role === "student" ? {
-        diet,
-        allergies: allergies.split(',').map(a => a.trim()),
-      } : {},
+      profile_image: profileImage,
     };
 
-    console.log(payload);
-    navigate('/login');
+    try {
+      const response = await fetch('http://localhost:8000/auth/owner/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Something went wrong');
+      }
+
+      navigate('/canteen/login');
+
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -155,69 +141,29 @@ const SignUp = () => {
       <Navbar />
       <SignUpContainer>
         <SignUpCard>
-          <Title>Sign Up</Title>
+          <Title>Canteen Owner Sign Up</Title>
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <form onSubmit={handleSubmit}>
-            <FormGrid>
-              <InputGroup>
-                <Label>Username</Label>
-                <Input value={username} onChange={(e) => setUsername(e.target.value)} required />
-              </InputGroup>
+            <InputGroup>
+              <Label>Username</Label>
+              <Input value={username} onChange={(e) => setUsername(e.target.value)} required />
+            </InputGroup>
 
-              <InputGroup>
-                <Label>Email</Label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </InputGroup>
+            <InputGroup>
+              <Label>Email</Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </InputGroup>
 
-              <InputGroup>
-                <Label>Phone</Label>
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} required />
-              </InputGroup>
+            <InputGroup>
+              <Label>Password</Label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </InputGroup>
 
-              <InputGroup>
-                <Label>Student Registration</Label>
-                <Input value={studentReg} onChange={(e) => setStudentReg(e.target.value)} required />
-              </InputGroup>
-
-              <InputGroup>
-                <Label>Password</Label>
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-              </InputGroup>
-
-              <InputGroup>
-                <Label>Role</Label>
-                <Select value={role} onChange={(e) => setRole(e.target.value)}>
-                  <option value="student">Student</option>
-                  <option value="owner">Canteen Owner</option>
-                </Select>
-              </InputGroup>
-
-              {role === 'owner' && (
-                <InputGroup>
-                  <Label>Canteen ID</Label>
-                  <Input value={canteenId} onChange={(e) => setCanteenId(e.target.value)} />
-                </InputGroup>
-              )}
-
-              {role === 'student' && (
-                <>
-                  <InputGroup>
-                    <Label>Diet</Label>
-                    <Select value={diet} onChange={(e) => setDiet(e.target.value)}>
-                      <option value="none">None</option>
-                      <option value="vegetarian">Vegetarian</option>
-                      <option value="vegan">Vegan</option>
-                    </Select>
-                  </InputGroup>
-
-                  <InputGroup>
-                    <Label>Allergies (comma separated)</Label>
-                    <Input value={allergies} onChange={(e) => setAllergies(e.target.value)} />
-                  </InputGroup>
-                </>
-              )}
-            </FormGrid>
+            <InputGroup>
+              <Label>Profile Image URL</Label>
+              <Input type="text" value={profileImage} onChange={(e) => setProfileImage(e.target.value)} />
+            </InputGroup>
 
             <Button type="submit">Sign Up</Button>
           </form>
@@ -232,4 +178,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default CanteenOwnerSignUp;
