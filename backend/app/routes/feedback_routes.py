@@ -1,51 +1,63 @@
-from fastapi import APIRouter, HTTPException, status
-from app.models.feedback_model import Feedback
+from fastapi import APIRouter, HTTPException, Body, status
 from app.core.database import get_db
-from app.routes.common_template import make_simple_router
+from bson import ObjectId
+from app.core.utils import serialize_list, serialize_doc
+from app.schemas.feedback_schema import FeedbackCreate, FeedbackUpdate
+from datetime import datetime
 
-router = make_simple_router("feedback")
+router = APIRouter()
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_feedback(feedback: Feedback):
+def create_feedback(feedback: FeedbackCreate):
     db = get_db()
-    coll = db["feedback"]
-    result = await coll.insert_one(feedback.dict())
-    created = await coll.find_one({"_id": result.inserted_id})
-    return {"measage": "Feedback created", "feedback": created}
+    feedback_data = feedback.model_dump()
+    feedback_data["created_at"] = datetime.now()
+    result = db["feedback"].insert_one(feedback_data)
+    return {"message": "Feedback created", "feedback_id": str(result.inserted_id)}
 
-@router.get("/{feedback_id}")
-async def get_feedback(feedback_id: str):
+@router.get("/", summary="Get all feedback")
+def get_all_feedback():
     db = get_db()
-    coll = db["feedback"]
-    feedback = await coll.find_one({"_id": feedback_id})
-    if not feedback:
-        raise HTTPException(status_code=404, detail="Feedback not found")
-    return feedback
+    feedback = list(db["feedback"].find())
+    return serialize_list(feedback)
 
-@router.delete("/{feedback_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_feedback(feedback_id: str):
+@router.get("/{feedback_id}", summary="Get a single feedback")
+def get_feedback(feedback_id: str):
     db = get_db()
-    coll = db["feedback"]
-    result = await coll.delete_one({"_id": feedback_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Feedback not found")
-    return {"message": "Feedback deleted"}
+    feedback = db["feedback"].find_one({"_id": ObjectId(feedback_id)})
+    if feedback:
+        return serialize_doc(feedback)
+    raise HTTPException(status_code=404, detail="Feedback not found")
 
-@router.put("/{feedback_id}")
-async def update_feedback(feedback_id: str, feedback: Feedback):
+@router.put("/{feedback_id}", summary="Update a feedback")
+def update_feedback(feedback_id: str, feedback: FeedbackUpdate = Body(...)):
     db = get_db()
-    coll = db["feedback"]
-    result = await coll.update_one({"_id": feedback_id}, {"$set": feedback.dict()})
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Feedback not found")
-    updated = await coll.find_one({"_id": feedback_id})
-    return {"message": "Feedback updated", "feedback": updated}
+    feedback_data = feedback.model_dump(exclude_unset=True)
+    result = db["feedback"].update_one({"_id": ObjectId(feedback_id)}, {"$set": feedback_data})
+    if result.modified_count == 1:
+        return {"message": "Feedback updated successfully"}
+    raise HTTPException(status_code=404, detail="Feedback not found")
 
-@router.get("/")
-async def list_feedbacks():
+@router.delete("/{feedback_id}", summary="Delete a feedback")
+def delete_feedback(feedback_id: str):
+    db = get_db()
+    result = db["feedback"].delete_one({"_id": ObjectId(feedback_id)})
+    if result.deleted_count == 1:
+        return {"message": "Feedback deleted successfully"}
+    raise HTTPException(status_code=404, detail="Feedback not found")
+
+@router.get("/canteen/{canteen_id}", summary="Get all feedback for a specific canteen")
+def get_canteen_feedback(canteen_id: str):
+    db = get_db()
+    feedback = list(db["feedback"].find({"canteen_id": canteen_id}))
+    return serialize_list(feedback)
+
+@router.get("/pending/{canteen_id}")
+def get_pending_feedback_count(canteen_id: str):
     db = get_db()
     coll = db["feedback"]
-    feedbacks = []
-    async for feedback in coll.find():
-        feedbacks.append(feedback)
-    return feedbacks
+    
+    # Assuming all feedback is pending for now
+    count = coll.count_documents({"canteen_id": canteen_id})
+    
+    return {"pending_complaints": count}

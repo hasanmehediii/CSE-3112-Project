@@ -33,7 +33,7 @@ const CanteenOwnerLogin = () => {
             // For now, just redirecting. A full implementation would decode the token
             // or have an endpoint like /users/me to get user details.
             
-            navigate('/canteen/dashboard');
+            navigate('/canteen/CanteenDashboard');
 
         } catch (err) {
             setError(err.message);

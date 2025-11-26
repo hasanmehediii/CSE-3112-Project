@@ -15,7 +15,7 @@ import ComplaintDetail from "./admin/pages/ComplaintDetail";
 import ActionManagement from "./admin/pages/ActionManagement";
 import CanteenOwnerSignUp from "./canteen/auth/SignUp";
 import CanteenOwnerLogin from "./canteen/auth/Login";
-import CanteenDashboard from "./canteen/pages/Dashboard";
+import CanteenDashboard from "./canteen/CanteenDashboard";
 
 export default function App() {
   return (
@@ -38,6 +38,12 @@ export default function App() {
       <Route path="/canteen/signup" element={<CanteenOwnerSignUp />} />
       <Route path="/canteen/login" element={<CanteenOwnerLogin />} />
       <Route path="/canteen/dashboard" element={<CanteenDashboard />} />
+      <Route path="/canteen/*" element={<CanteenDashboard />} />
+      <Route path="/canteen/orders" element={<CanteenDashboard />} />
+      <Route path="/canteen/purchases" element={<CanteenDashboard />} />
+      <Route path="/canteen/complaints" element={<CanteenDashboard />} />
+      <Route path="/canteen/settings" element={<CanteenDashboard />} />
+
     </Routes>
   );
 }
