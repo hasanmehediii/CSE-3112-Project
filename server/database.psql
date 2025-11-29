@@ -1,0 +1,101 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('student', 'canteen', 'admin')),
+
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    password_hash TEXT NOT NULL,
+    image_url TEXT,
+
+    -- Student specific
+    registration_no VARCHAR(40) UNIQUE,
+    dept VARCHAR(100),
+    address TEXT,
+
+    -- Canteen specific
+    canteen_name VARCHAR(120),
+    location TEXT
+);
+
+CREATE TABLE canteens (
+    id SERIAL PRIMARY KEY,
+    owner_id INT REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(120) NOT NULL,
+    image_url TEXT,
+    location TEXT,
+    category VARCHAR(60),     -- e.g., Halal, Snacks, Cafe, Veg
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE meals (
+    id SERIAL PRIMARY KEY,
+    canteen_id INT REFERENCES canteens(id) ON DELETE CASCADE,
+    
+    name VARCHAR(120) NOT NULL,
+    price NUMERIC(10,2) NOT NULL,
+    image_url TEXT,
+    quantity INT DEFAULT 0,
+    is_available BOOLEAN DEFAULT TRUE,
+
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES users(id) ON DELETE SET NULL,
+    canteen_id INT REFERENCES canteens(id) ON DELETE SET NULL,
+
+    total_price NUMERIC(10,2) NOT NULL,
+    status VARCHAR(30) NOT NULL 
+           CHECK (status IN ('pending', 'accepted', 'rejected', 'preparing', 'ready', 'completed', 'cancelled')),
+
+    mode VARCHAR(20) CHECK (mode IN ('pickup', 'delivery')),
+    delivery_address TEXT,
+
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+    meal_id INT REFERENCES meals(id) ON DELETE SET NULL,
+
+    quantity INT NOT NULL,
+    price_each NUMERIC(10,2) NOT NULL
+);
+
+CREATE TABLE complaints (
+    id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES users(id) ON DELETE CASCADE,
+    canteen_id INT REFERENCES canteens(id),
+    meal_id INT REFERENCES meals(id),
+    order_id INT REFERENCES orders(id),
+
+    message TEXT NOT NULL,
+    status VARCHAR(30) DEFAULT 'pending' 
+           CHECK (status IN ('pending', 'reviewing', 'resolved')),
+
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE bookings (
+    id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES users(id),
+    meal_id INT REFERENCES meals(id),
+
+    scheduled_time TIMESTAMP NOT NULL,
+    status VARCHAR(20) DEFAULT 'booked'
+        CHECK (status IN ('booked', 'cancelled')),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE invoices (
+    id SERIAL PRIMARY KEY,
+    canteen_id INT REFERENCES canteens(id),
+    order_id INT REFERENCES orders(id) UNIQUE,
+    total_amount NUMERIC(10,2),
+
+    issued_at TIMESTAMP DEFAULT NOW()
+);
