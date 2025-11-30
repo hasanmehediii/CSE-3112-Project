@@ -110,3 +110,7 @@ def delete_canteen(owner_id: int, db: Session):
     db.delete(canteen)
     db.commit()
     return {"detail": "Canteen deleted successfully"}
+
+def get_all_canteens(db: Session):
+    canteens = db.query(Canteen).all()
+    return canteens

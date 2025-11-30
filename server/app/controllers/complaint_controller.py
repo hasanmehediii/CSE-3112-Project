@@ -63,3 +63,12 @@ def delete_complaint(complaint_id: int, student_id: int, db: Session):
     db.delete(complaint)
     db.commit()
     return {"detail": "Complaint deleted successfully"}
+
+def admin_delete_complaint(complaint_id: int, db: Session):
+    complaint = db.query(Complaint).get(complaint_id)
+    if not complaint:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+
+    db.delete(complaint)
+    db.commit()
+    return {"detail": "Complaint deleted successfully"}

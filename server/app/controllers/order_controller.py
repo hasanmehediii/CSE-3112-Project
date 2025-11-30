@@ -106,3 +106,7 @@ def delete_order(order_id: int, student_id: int, db: Session):
     return {"detail": "Order deleted successfully"}
     order.status = new_status
     db.commit()
+
+def get_all_orders(db: Session):
+    orders = db.query(Order).all()
+    return orders

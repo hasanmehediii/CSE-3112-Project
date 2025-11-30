@@ -29,9 +29,15 @@ There will be an admin section for handle all types of problem in both side (we 
 
 **🥦 Health Focused:** Balanced diet suggestions to keep you energized throughout the day.
 
-## Admin + Canteen Route (Website)
-![Home Page](docs/khaikhai.png)
-## Students Route (Mobile App)
+## Website
+| Page | Screenshot |
+|---|---|
+| Welcome Page | ![Welcome](docs/home.png) |
+| Menu Upload Page | ![meal](docs/mealupload.png) |
+| Profile Page | ![profile](docs/profile.png) |
+| Student Page | ![dashboard](docs/student.png) |
+| Complaint Page | ![complaint](docs/complain.png) |
+## Mobile App
 ![Home Page](docs/appdemo.jpg)
 
 ## 🚀 Why KhaiKhai?
