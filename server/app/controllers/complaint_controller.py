@@ -13,7 +13,7 @@ def create_complaint(student_id: int, data: ComplaintCreate, db: Session):
         meal_id=data.meal_id,
         order_id=data.order_id,
         message=data.message,
-        status="open",
+        status="pending",
     )
     db.add(complaint)
     db.commit()

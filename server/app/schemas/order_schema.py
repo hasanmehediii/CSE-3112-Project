@@ -1,6 +1,6 @@
-from typing import List
 from pydantic import BaseModel, ConfigDict
-
+from typing import List, Optional
+from datetime import datetime
 
 class OrderItemCreate(BaseModel):
     meal_id: int
@@ -10,7 +10,7 @@ class OrderItemCreate(BaseModel):
 class OrderCreate(BaseModel):
     canteen_id: int
     mode: str  # 'pickup' or 'delivery'
-    delivery_address: str | None = None
+    delivery_address: Optional[str] = None
     items: List[OrderItemCreate]
 
 
@@ -24,6 +24,7 @@ class OrderOut(BaseModel):
     total_price: float
     status: str
     mode: str | None
-    delivery_address: str | None
+    delivery_address: Optional[str] = None
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

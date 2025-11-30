@@ -63,14 +63,25 @@ function NavBar() {
                     </>
                 )}
                 {token && userRole === "student" && (
-                    <Link style={linkStyle} to="/student">
-                        Student Dashboard
-                    </Link>
+                    <>
+                        <Link style={linkStyle} to="/student">
+                            Dashboard
+                        </Link>
+                        <Link style={linkStyle} to="/student/profile">
+                            Profile
+                        </Link>
+                        <Link style={linkStyle} to="/student/complaints">
+                            Complaints
+                        </Link>
+                    </>
                 )}
                 {token && userRole === "canteen" && (
                     <>
                         <Link style={linkStyle} to="/canteen">
                             Canteen Dashboard
+                        </Link>
+                        <Link style={linkStyle} to="/canteen/orders">
+                            Orders
                         </Link>
                         <Link style={linkStyle} to="/canteen/profile">
                             Profile

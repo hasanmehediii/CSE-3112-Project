@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { apiRequest } from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -8,15 +9,16 @@ type Meal = {
   price: number;
   canteen_id: number;
   quantity: number;
+  image_url?: string | null;
 };
 
-const pageStyle: React.CSSProperties = {
+const pageStyle: CSSProperties = {
   maxWidth: "900px",
   margin: "20px auto",
   padding: "10px",
 };
 
-const sectionStyle: React.CSSProperties = {
+const sectionStyle: CSSProperties = {
   backgroundColor: "white",
   padding: "12px",
   marginBottom: "12px",
@@ -24,13 +26,13 @@ const sectionStyle: React.CSSProperties = {
   boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
 };
 
-const titleStyle: React.CSSProperties = {
+const titleStyle: CSSProperties = {
   fontSize: "1.2rem",
   fontWeight: 600,
   marginBottom: "8px",
 };
 
-const mealRowStyle: React.CSSProperties = {
+const mealRowStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -39,7 +41,7 @@ const mealRowStyle: React.CSSProperties = {
   fontSize: "0.9rem",
 };
 
-const buttonStyle: React.CSSProperties = {
+const buttonStyle: CSSProperties = {
   padding: "4px 8px",
   borderRadius: "4px",
   border: "none",
@@ -49,9 +51,22 @@ const buttonStyle: React.CSSProperties = {
   fontSize: "0.8rem",
 };
 
-const smallTextStyle: React.CSSProperties = {
+const smallTextStyle: CSSProperties = {
   fontSize: "0.8rem",
   color: "#6b7280",
+};
+
+const thumbStyle: CSSProperties = {
+  width: "50px",
+  height: "50px",
+  objectFit: "cover",
+  borderRadius: "6px",
+  marginRight: "8px",
+};
+
+const leftBlockStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
 };
 
 function StudentDashboard() {
@@ -122,9 +137,22 @@ function StudentDashboard() {
         <div style={titleStyle}>Today&apos;s Available Meals</div>
         {availableMeals.map((m) => (
           <div key={m.id} style={mealRowStyle}>
-            <div>
-              <div>{m.name}</div>
-              <div style={smallTextStyle}>Canteen #{m.canteen_id}</div>
+            <div style={leftBlockStyle}>
+              {m.image_url && (
+                <img
+                  src={m.image_url}
+                  alt={m.name}
+                  style={thumbStyle}
+                  onError={(e) => {
+                    // hide broken image
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              )}
+              <div>
+                <div>{m.name}</div>
+                <div style={smallTextStyle}>Canteen #{m.canteen_id}</div>
+              </div>
             </div>
             <div>
               <span style={{ marginRight: "8px" }}>৳ {m.price}</span>
@@ -143,9 +171,21 @@ function StudentDashboard() {
         <div style={titleStyle}>Budget Deals (Low → High)</div>
         {budgetDeals.map((m) => (
           <div key={m.id} style={mealRowStyle}>
-            <div>
-              <div>{m.name}</div>
-              <div style={smallTextStyle}>Canteen #{m.canteen_id}</div>
+            <div style={leftBlockStyle}>
+              {m.image_url && (
+                <img
+                  src={m.image_url}
+                  alt={m.name}
+                  style={thumbStyle}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              )}
+              <div>
+                <div>{m.name}</div>
+                <div style={smallTextStyle}>Canteen #{m.canteen_id}</div>
+              </div>
             </div>
             <div>৳ {m.price}</div>
           </div>

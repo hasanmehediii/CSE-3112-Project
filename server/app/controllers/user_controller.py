@@ -5,7 +5,7 @@ from passlib.hash import pbkdf2_sha256
 from ..models.user import User
 from ..models.canteen import Canteen
 from ..auth.auth_handler import create_access_token
-from ..schemas.user_schema import UserRegister, UserLogin
+from ..schemas.user_schema import UserRegister, UserLogin, UserUpdate
 
 
 def register_user(data: UserRegister, db: Session):
@@ -68,18 +68,24 @@ def get_me(user_id: int, db: Session):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-def update_me(user_id: int, data: dict, db: Session):
+def update_me(user_id: int, data: UserUpdate, db: Session):
     user = db.query(User).get(user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    for key, value in data.items():
-        if hasattr(user, key) and key != "id" and key != "email" and value is not None:
+    update_data = data.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        # never allow changing these via profile update
+        if key in {"id", "email", "role", "password_hash"}:
+            continue
+        if hasattr(user, key):
             setattr(user, key, value)
 
     db.commit()
     db.refresh(user)
     return user
+
 
 def delete_me(user_id: int, db: Session):
     user = db.query(User).get(user_id)

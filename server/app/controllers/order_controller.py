@@ -58,6 +58,30 @@ def update_order_status(order_id: int, canteen_id: int, new_status: str, db: Ses
     if order.canteen_id != canteen_id:
         raise HTTPException(403, "Cannot update this order")
 
+    # ✅ Only adjust stock when moving to "completed"
+    # and only once (avoid double-decrement if called again)
+    if order.status != "completed" and new_status == "completed":
+        # get all items for this order
+        order_items = (
+            db.query(OrderItem)
+            .filter(OrderItem.order_id == order.id)
+            .all()
+        )
+
+        for oi in order_items:
+            meal = db.query(Meal).get(oi.meal_id)
+            if not meal:
+                continue  # or raise, up to you
+
+            meal.quantity -= oi.quantity
+            if meal.quantity <= 0:
+                meal.quantity = 0
+                meal.is_available = False
+            else:
+                meal.is_available = True
+
+        # no need to commit yet, we’ll do it below
+
     order.status = new_status
     db.commit()
     db.refresh(order)

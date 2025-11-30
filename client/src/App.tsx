@@ -9,6 +9,10 @@ import CanteenProfile from "./pages/CanteenProfile";
 import { useAuth } from "./context/AuthContext";
 import NavBar from "./components/NavBar";
 import CanteenComplaints from "./pages/CanteenComplaints";
+import CanteenOrders from "./pages/CanteenOrders";
+import StudentProfilePage from "./pages/StudentProfile";
+import StudentComplaintsPage from "./pages/StudentComplaints";
+
 
 function RequireAuth({
   children,
@@ -50,6 +54,22 @@ function App() {
           }
         />
         <Route
+          path="/student/profile"
+          element={
+            <RequireAuth role="student">
+              <StudentProfilePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/student/complaints"
+          element={
+            <RequireAuth role="student">
+              <StudentComplaintsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/canteen"
           element={
             <RequireAuth role="canteen">
@@ -57,6 +77,15 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route
+          path="/canteen/orders"
+          element={
+            <RequireAuth role="canteen">
+              <CanteenOrders />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/canteen/profile"
           element={
