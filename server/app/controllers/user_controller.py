@@ -67,3 +67,37 @@ def get_me(user_id: int, db: Session):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+def update_me(user_id: int, data: dict, db: Session):
+    user = db.query(User).get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    for key, value in data.items():
+        if hasattr(user, key) and key != "id" and key != "email" and value is not None:
+            setattr(user, key, value)
+
+    db.commit()
+    db.refresh(user)
+    return user
+
+def delete_me(user_id: int, db: Session):
+    user = db.query(User).get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.delete(user)
+    db.commit()
+    return {"detail": "User deleted successfully"}  
+
+def get_all_users(db: Session):
+    return db.query(User).all()
+
+def delete_user(user_id: int, db: Session):
+    user = db.query(User).get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.delete(user)
+    db.commit()
+    return {"detail": "User deleted successfully"}  

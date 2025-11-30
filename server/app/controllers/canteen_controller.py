@@ -104,3 +104,9 @@ def update_canteen_profile(owner_id: int, data: CanteenProfileUpdate, db: Sessio
 
     # return updated combined profile
     return get_canteen_profile(owner_id, db)
+
+def delete_canteen(owner_id: int, db: Session):
+    canteen = _get_canteen_for_owner(owner_id, db)
+    db.delete(canteen)
+    db.commit()
+    return {"detail": "Canteen deleted successfully"}

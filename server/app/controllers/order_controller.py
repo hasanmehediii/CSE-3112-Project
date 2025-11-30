@@ -62,3 +62,23 @@ def update_order_status(order_id: int, canteen_id: int, new_status: str, db: Ses
     db.commit()
     db.refresh(order)
     return order
+
+
+def get_order_details(order_id: int, db: Session):
+    order = db.query(Order).get(order_id)
+    if not order:
+        raise HTTPException(404, "Order not found")
+    return order
+
+def delete_order(order_id: int, student_id: int, db: Session):
+    order = db.query(Order).get(order_id)
+    if not order:
+        raise HTTPException(404, "Order not found")
+    if order.student_id != student_id:
+        raise HTTPException(403, "Cannot delete this order")
+
+    db.delete(order)
+    db.commit()
+    return {"detail": "Order deleted successfully"}
+    order.status = new_status
+    db.commit()

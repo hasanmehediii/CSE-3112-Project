@@ -14,6 +14,9 @@ class OrderCreate(BaseModel):
     items: List[OrderItemCreate]
 
 
+class OrderStatusUpdate(BaseModel):
+    status: str
+
 class OrderOut(BaseModel):
     id: int
     student_id: int | None

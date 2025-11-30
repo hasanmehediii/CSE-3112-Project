@@ -68,3 +68,13 @@ def update_meal(meal_id: int, data: MealUpdate, db: Session, canteen_id: int):
     db.commit()
     db.refresh(meal)
     return meal
+
+def delete_meal(meal_id: int, db: Session, canteen_id: int):
+    """Delete a meal, ensuring it belongs to the given canteen."""
+    meal = db.query(Meal).get(meal_id)
+    if not meal or meal.canteen_id != canteen_id:
+        raise HTTPException(status_code=404, detail="Meal not found")
+
+    db.delete(meal)
+    db.commit()
+    return {"detail": "Meal deleted successfully"}

@@ -6,6 +6,7 @@ from ..auth.auth_bearer import JWTBearer
 from ..schemas.meal_schema import MealCreate, MealUpdate, MealOut
 from ..controllers.meal_controller import (
     create_meal,
+    delete_meal,
     get_meals_by_canteen,
     get_available_meals,
     get_budget_deals,
@@ -86,3 +87,19 @@ def update_meal_endpoint(
     owner_id = token_data["id"]
     canteen = _get_canteen_for_owner(owner_id, db)
     return update_meal(meal_id, payload, db, canteen.id)
+
+@router.delete(
+    "/{meal_id}",
+    dependencies=[Depends(JWTBearer("canteen"))],
+)
+def delete_meal_endpoint(
+    meal_id: int,
+    token_data=Depends(JWTBearer("canteen")),
+    db: Session = Depends(get_db),
+):
+    """
+    Canteen owner deletes one of their meals.
+    """
+    owner_id = token_data["id"]
+    canteen = _get_canteen_for_owner(owner_id, db)
+    return delete_meal(meal_id, db, canteen.id) 
