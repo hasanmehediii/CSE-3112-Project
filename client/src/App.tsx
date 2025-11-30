@@ -1,3 +1,4 @@
+// src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import type { ReactNode, CSSProperties } from "react";
 import LoginPage from "./pages/LoginPage";
@@ -12,7 +13,8 @@ import CanteenComplaints from "./pages/CanteenComplaints";
 import CanteenOrders from "./pages/CanteenOrders";
 import StudentProfilePage from "./pages/StudentProfile";
 import StudentComplaintsPage from "./pages/StudentComplaints";
-
+import HomePage from "./pages/Home";        // ⬅️ new
+import Footer from "./components/Footer";   // ⬅️ new
 
 function RequireAuth({
   children,
@@ -23,18 +25,41 @@ function RequireAuth({
 }) {
   const { token, userRole } = useAuth();
 
+  // Not logged in at all → go to login
   if (!token) return <Navigate to="/login" replace />;
 
-  if (role && userRole !== role) return <Navigate to="/login" replace />;
+  // Token exists, but role-based info not ready yet → show small loading state
+  if (role && !userRole) {
+    return (
+      <div
+        style={{
+          padding: "40px",
+          textAlign: "center",
+          fontSize: "0.95rem",
+          color: "#6b7280",
+        }}
+      >
+        Loading your dashboard...
+      </div>
+    );
+  }
+
+  // Now userRole is known – enforce correct role
+  if (role && userRole !== role) {
+    return <Navigate to="/login" replace />;
+  }
 
   return <>{children}</>;
 }
+
 
 const appWrapperStyle: CSSProperties = {
   minHeight: "100vh",
   backgroundColor: "#f6f7fb",
   fontFamily:
     "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  display: "flex",
+  flexDirection: "column",
 };
 
 function App() {
@@ -42,6 +67,9 @@ function App() {
     <div style={appWrapperStyle}>
       <NavBar />
       <Routes>
+        {/* Landing page */}
+        <Route path="/" element={<HomePage />} />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
@@ -85,7 +113,6 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/canteen/profile"
           element={
@@ -111,8 +138,12 @@ function App() {
           }
         />
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Any unknown route -> go to landing page */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {/* Global footer */}
+      <Footer />
     </div>
   );
 }

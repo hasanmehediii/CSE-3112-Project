@@ -1,4 +1,6 @@
+// src/pages/CanteenProfile.tsx
 import { useEffect, useState, type FormEvent } from "react";
+import type { CSSProperties } from "react";
 import { apiRequest } from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -21,73 +23,166 @@ type CanteenProfileResponse = {
   };
 };
 
-const pageStyle: React.CSSProperties = {
-  maxWidth: "700px",
-  margin: "20px auto",
-  padding: "10px",
+const pageWrapperStyle: CSSProperties = {
+  minHeight: "100vh",
+  padding: "120px 16px 40px", // room for navbar
+  backgroundImage:
+    "radial-gradient(circle at top, rgba(251, 146, 60, 0.16), transparent 55%), " +
+    "linear-gradient(#e5e7eb 1px, transparent 1px), " +
+    "linear-gradient(90deg, #e5e7eb 1px, transparent 1px)",
+  backgroundSize: "cover, 32px 32px, 32px 32px",
+  backgroundPosition: "center, 0 0, 0 0",
 };
 
-const sectionStyle: React.CSSProperties = {
+const innerStyle: CSSProperties = {
+  maxWidth: "780px",
+  margin: "0 auto",
+};
+
+const cardStyle: CSSProperties = {
   backgroundColor: "white",
-  padding: "12px",
-  marginBottom: "12px",
-  borderRadius: "8px",
-  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+  borderRadius: "20px",
+  padding: "20px 20px 18px",
+  boxShadow: "0 18px 45px rgba(15, 23, 42, 0.10)",
+  border: "1px solid #e5e7eb",
+  marginBottom: "16px",
 };
 
-const titleStyle: React.CSSProperties = {
+const headerRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "14px",
+  marginBottom: "6px",
+};
+
+const avatarStyle: CSSProperties = {
+  width: "52px",
+  height: "52px",
+  borderRadius: "999px",
+  background:
+    "linear-gradient(135deg, #f97316, #fb923c)",
+  color: "white",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 700,
+  fontSize: "1.3rem",
+  flexShrink: 0,
+  overflow: "hidden",
+};
+
+const avatarImgStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+};
+
+const titleBlockStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+};
+
+const mainTitleStyle: CSSProperties = {
   fontSize: "1.2rem",
-  fontWeight: 600,
-  marginBottom: "8px",
+  fontWeight: 650,
+  color: "#111827",
 };
 
-const labelStyle: React.CSSProperties = {
-  display: "block",
+const subTitleStyle: CSSProperties = {
+  fontSize: "0.9rem",
+  color: "#6b7280",
+};
+
+const smallTextStyle: CSSProperties = {
+  fontSize: "0.8rem",
+  color: "#6b7280",
+  marginTop: "4px",
+};
+
+const errorStyle: CSSProperties = {
   fontSize: "0.85rem",
+  color: "#b91c1c",
+  marginTop: "6px",
+  padding: "6px 8px",
+  borderRadius: "8px",
+  backgroundColor: "#fee2e2",
+  border: "1px solid #fecaca",
+};
+
+const successStyle: CSSProperties = {
+  fontSize: "0.85rem",
+  color: "#15803d",
+  marginTop: "6px",
+  padding: "6px 8px",
+  borderRadius: "8px",
+  backgroundColor: "#dcfce7",
+  border: "1px solid #bbf7d0",
+};
+
+const sectionTitleStyle: CSSProperties = {
+  fontSize: "0.95rem",
+  fontWeight: 600,
+  marginBottom: "10px",
+  color: "#111827",
+};
+
+const formGridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+  gap: "10px 16px",
+};
+
+const fieldWrapperStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+};
+
+const fullWidthFieldWrapperStyle: CSSProperties = {
+  ...fieldWrapperStyle,
+  gridColumn: "1 / -1",
+};
+
+const labelStyle: CSSProperties = {
+  display: "block",
+  fontSize: "0.82rem",
   fontWeight: 500,
   marginBottom: "4px",
+  color: "#374151",
 };
 
-const inputStyle: React.CSSProperties = {
+const inputStyle: CSSProperties = {
   width: "100%",
-  padding: "6px 8px",
-  borderRadius: "4px",
+  padding: "8px 10px",
+  borderRadius: "10px",
   border: "1px solid #d1d5db",
   fontSize: "0.9rem",
-  marginBottom: "10px",
+  outline: "none",
+  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
 };
 
-const buttonRowStyle: React.CSSProperties = {
+const readOnlyInputStyle: CSSProperties = {
+  ...inputStyle,
+  backgroundColor: "#f9fafb",
+};
+
+const buttonRowStyle: CSSProperties = {
   display: "flex",
   justifyContent: "flex-end",
-  gap: "8px",
+  marginTop: "14px",
 };
 
-const buttonStyle: React.CSSProperties = {
-  padding: "6px 12px",
-  borderRadius: "4px",
+const buttonStyle: CSSProperties = {
+  padding: "8px 16px",
+  borderRadius: "999px",
   border: "none",
   backgroundColor: "#2563eb",
   color: "white",
   cursor: "pointer",
   fontSize: "0.9rem",
-};
-
-const smallTextStyle: React.CSSProperties = {
-  fontSize: "0.8rem",
-  color: "#6b7280",
-};
-
-const errorStyle: React.CSSProperties = {
-  fontSize: "0.85rem",
-  color: "#b91c1c",
-  marginBottom: "6px",
-};
-
-const successStyle: React.CSSProperties = {
-  fontSize: "0.85rem",
-  color: "#15803d",
-  marginBottom: "6px",
+  fontWeight: 500,
+  boxShadow: "0 10px 25px rgba(37, 99, 235, 0.35)",
+  transition:
+    "background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
 };
 
 function CanteenProfile() {
@@ -110,7 +205,11 @@ function CanteenProfile() {
     if (!token) return;
     (async () => {
       try {
-        const data = (await apiRequest("/canteens/me", {}, token)) as CanteenProfileResponse;
+        const data = (await apiRequest(
+          "/canteens/me",
+          {},
+          token
+        )) as CanteenProfileResponse;
         setProfile(data);
         setOwnerName(data.user.name || "");
         setPhone(data.user.phone || "");
@@ -165,100 +264,253 @@ function CanteenProfile() {
 
   if (loading) {
     return (
-      <div style={pageStyle}>
-        <div style={sectionStyle}>Loading profile...</div>
+      <div style={pageWrapperStyle}>
+        <div style={innerStyle}>
+          <div style={cardStyle}>Loading profile...</div>
+        </div>
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div style={pageStyle}>
-        <div style={sectionStyle}>No profile data available.</div>
+      <div style={pageWrapperStyle}>
+        <div style={innerStyle}>
+          <div style={cardStyle}>No profile data available.</div>
+        </div>
       </div>
     );
   }
 
+  const firstLetter = (profile.canteen.name || profile.user.name || "?")
+    .trim()
+    .charAt(0)
+    .toUpperCase();
+
   return (
-    <div style={pageStyle}>
-      <div style={sectionStyle}>
-        <div style={titleStyle}>Canteen Profile</div>
-        <div style={smallTextStyle}>
-          Update your owner details and canteen info. Email is fixed and cannot be changed.
-        </div>
-        {error && <div style={errorStyle}>{error}</div>}
-        {success && <div style={successStyle}>{success}</div>}
-      </div>
-
-      <div style={sectionStyle}>
-        <form onSubmit={handleSubmit}>
-          <label style={labelStyle}>Email (read-only)</label>
-          <input
-            style={{ ...inputStyle, backgroundColor: "#f9fafb" }}
-            type="email"
-            value={profile.user.email}
-            disabled
-          />
-
-          <label style={labelStyle}>Owner Name</label>
-          <input
-            style={inputStyle}
-            value={ownerName}
-            onChange={(e) => setOwnerName(e.target.value)}
-          />
-
-          <label style={labelStyle}>Phone</label>
-          <input
-            style={inputStyle}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-
-          <label style={labelStyle}>Canteen Name</label>
-          <input
-            style={inputStyle}
-            value={canteenName}
-            onChange={(e) => setCanteenName(e.target.value)}
-          />
-
-          <label style={labelStyle}>Location</label>
-          <input
-            style={inputStyle}
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-
-          <label style={labelStyle}>Image URL</label>
-          <input
-            style={inputStyle}
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-
-          <label style={labelStyle}>Category</label>
-          <input
-            style={inputStyle}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
-
-          <label style={labelStyle}>
-            New Password{" "}
-            <span style={smallTextStyle}>(leave blank to keep current)</span>
-          </label>
-          <input
-            style={inputStyle}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <div style={buttonRowStyle}>
-            <button style={buttonStyle} type="submit">
-              Save Changes
-            </button>
+    <div style={pageWrapperStyle}>
+      <div style={innerStyle}>
+        {/* Header card */}
+        <div style={cardStyle}>
+          <div style={headerRowStyle}>
+            <div style={avatarStyle}>
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt={profile.canteen.name}
+                  style={avatarImgStyle}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display =
+                      "none";
+                  }}
+                />
+              ) : (
+                <span>{firstLetter}</span>
+              )}
+            </div>
+            <div style={titleBlockStyle}>
+              <div style={mainTitleStyle}>
+                {profile.canteen.name || "Canteen"}
+              </div>
+              <div style={subTitleStyle}>
+                Owner: {profile.user.name} • {profile.user.email}
+              </div>
+              <div style={smallTextStyle}>
+                {profile.canteen.location || "No location set yet"}
+              </div>
+            </div>
           </div>
-        </form>
+
+          <div style={smallTextStyle}>
+            Keep your canteen info up to date so students and admins see the
+            right details.
+          </div>
+
+          {error && <div style={errorStyle}>{error}</div>}
+          {success && <div style={successStyle}>{success}</div>}
+        </div>
+
+        {/* Form card */}
+        <div style={cardStyle}>
+          <div style={sectionTitleStyle}>Profile details</div>
+          <form onSubmit={handleSubmit}>
+            <div style={formGridStyle}>
+              {/* Email */}
+              <div style={fieldWrapperStyle}>
+                <label style={labelStyle}>Email (read-only)</label>
+                <input
+                  style={readOnlyInputStyle}
+                  type="email"
+                  value={profile.user.email}
+                  disabled
+                />
+              </div>
+
+              {/* Phone */}
+              <div style={fieldWrapperStyle}>
+                <label style={labelStyle}>Phone</label>
+                <input
+                  style={inputStyle}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Owner name */}
+              <div style={fieldWrapperStyle}>
+                <label style={labelStyle}>Owner Name</label>
+                <input
+                  style={inputStyle}
+                  value={ownerName}
+                  onChange={(e) => setOwnerName(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Category */}
+              <div style={fieldWrapperStyle}>
+                <label style={labelStyle}>Category</label>
+                <input
+                  style={inputStyle}
+                  placeholder="e.g. Cafeteria, Snacks, Full meals"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Canteen name */}
+              <div style={fieldWrapperStyle}>
+                <label style={labelStyle}>Canteen Name</label>
+                <input
+                  style={inputStyle}
+                  value={canteenName}
+                  onChange={(e) => setCanteenName(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Location */}
+              <div style={fieldWrapperStyle}>
+                <label style={labelStyle}>Location</label>
+                <input
+                  style={inputStyle}
+                  placeholder="e.g. Ground floor, Admin building"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Image URL */}
+              <div style={fullWidthFieldWrapperStyle}>
+                <label style={labelStyle}>Image URL</label>
+                <input
+                  style={inputStyle}
+                  placeholder="Paste a direct image link to show your canteen"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Password */}
+              <div style={fullWidthFieldWrapperStyle}>
+                <label style={labelStyle}>
+                  New Password{" "}
+                  <span style={{ fontSize: "0.75rem", color: "#9ca3af" }}>
+                    (leave blank to keep current)
+                  </span>
+                </label>
+                <input
+                  style={inputStyle}
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#2563eb";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 1px rgba(37, 99, 235, 0.35)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={buttonRowStyle}>
+              <button
+                style={buttonStyle}
+                type="submit"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1d4ed8";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow =
+                    "0 14px 30px rgba(37, 99, 235, 0.45)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#2563eb";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow =
+                    "0 10px 25px rgba(37, 99, 235, 0.35)";
+                }}
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
