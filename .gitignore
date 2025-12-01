@@ -11,3 +11,5 @@ backends/
 frontends/
 .github
 .idea
+server/venv/
+*node_modules/
