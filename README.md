@@ -9,25 +9,34 @@
 
 ## 🥗 About The Project
 
-**KhaiKhai** is a smart meal planning platform designed to help students and busy individuals manage their daily food choices effectively.
-Our goal is to make eating both affordable and healthy, while also considering canteen availability, personal budget, and even weather conditions.
-There will be mainly 2 types of people, students and canteen owners.
-Students will use mobile app to upload their budget, see best deal for each day, food recommendation for him.
-Canteen Owners will upload thir daily menus with budgets and take orders from students.
-There will be an admin section for handle all types of problem in both side (we assumed it as University Authority).
+**KhaiKhai** is a smart meal planning platform designed for students and busy individuals to manage their daily food choices effectively.
 
+Our goal is to make eating **affordable**, **healthy**, and **convenient**, while considering:
 
-## ✨ What We Do
+- Personal budget  
+- Canteen menu & availability  
+- Weather conditions  
+- User preferences  
 
-**📅 Daily Meal Planning:** Get a personalized plan for breakfast, lunch, snacks, and dinner.
+There are mainly **two types of users**:
 
-**💰 Budget-Friendly Choices:** Input your monthly pocket money, and KhaiKhai ensures you never overspend.
+- 🎓 **Students** – Use the mobile app to set their budget, view the best deal for each day, and get personalized food recommendations.  
+- 🍽️ **Canteen Owners** – Use the web dashboard to upload daily menus, set prices, and manage orders.  
 
-**🍴 Canteen Integration:** See real menus from nearby canteens and get suggestions on where to eat.
+There is also an **Admin panel** (assumed as University Authority) to monitor the system, handle complaints, and manage both students and canteen owners.
 
-**🌦️ Weather-Aware Recommendations:** Whether it’s a sunny or rainy day, KhaiKhai suggests meals that fit the weather.
+---
 
-**🥦 Health Focused:** Balanced diet suggestions to keep you energized throughout the day.
+## ✨ What KhaiKhai Offers
+
+- 📅 **Daily meal planning** (breakfast, lunch, snacks, dinner)  
+- 💰 **Budget-aware recommendations**  
+- 🍴 **Canteen-integrated menus & ordering**  
+- 🌦️ **Weather-aware suggestions**  
+- 🥦 **Balanced and health-focused meals**  
+- 🧾 **Order & complaint management**  
+
+---
 
 ## Website
 | Page | Screenshot |
@@ -40,44 +49,168 @@ There will be an admin section for handle all types of problem in both side (we 
 ## Mobile App
 ![Home Page](docs/appdemo.jpg)
 
+
 ## 🚀 Why KhaiKhai?
 
-Managing food expenses and making healthy choices can be difficult for students and young professionals. KhaiKhai bridges the gap between budget constraints and nutritional needs, providing a hybrid solution accessible from both Flutter mobile apps and React web apps, powered by a robust FastAPI backend and MongoDB database.
+Managing food expenses and maintaining a healthy diet is hard for students and young professionals.
 
+**KhaiKhai** bridges this gap by:
 
-## 🌟 Features
+- Combining **budget planning** and **meal planning**  
+- Offering a **hybrid solution** – Flutter mobile app + React web app  
+- Backed by a **FastAPI** backend and **database** for persistent storage  
+- Designed with **role-based access** for students, canteen owners, and admins  
 
-### 🍽️ Smart Meal Planning
-- Generates a **30-day meal plan** including breakfast, lunch, snacks, and dinner.
-- Balances **nutrition** and **budget** to ensure affordable, healthy meals tailored to students.
+---
+
+## 🌟 Core Features
+
+### 🍽️ Smart 30-Day Meal Planning
+- Generates a **30-day meal plan** for:
+  - Breakfast
+  - Lunch
+  - Snacks
+  - Dinner
+- Balances **nutrition** and **budget**.
+- Tailored specifically for **students** and **campus environments**.
+
+---
 
 ### 💰 Budget Management
-- Input your monthly pocket money.
-- Automatically suggests meals that fit within your budget.
-- Tracks spending to prevent overshooting your balance.
+- Students input their **monthly pocket money**.
+- KhaiKhai:
+  - Suggests meals that stay within the budget.
+  - Tracks daily & monthly spending.
+  - Prevents overshooting the remaining balance.
+
+---
 
 ### 🍴 Canteen Integration
-- Connects with campus canteens to display **real-time menus**.
-- Suggests meals from available items with detailed nutritional information.
-- Tracks canteen orders and earnings for canteen owners.
+- Canteen owners:
+  - Upload **daily menus** with prices.
+  - Update item **availability**.
+  - Track **orders** and **earnings**.
+- Students:
+  - See **real-time canteen menus**.
+  - Get **meal suggestions** directly from available items.
+  - View **nutrition details** (where available).
 
-### 🌦️ Weather-Aware Recommendations
-- Adjusts meal suggestions based on daily weather (e.g., light meals on hot days, warm soups on rainy days).
+---
 
-### 👤 User & Student Profiles
-- Role-based access for **students**, **admins**, and **canteen owners**.
-- Students can view personalized meal plans and order history.
-- Canteen owners can manage menus, update item availability, and track earnings.
+### 👤 User Roles & Profiles
+
+- **Student**
+  - Personalized dashboard  
+  - View 30-day meal plan  
+  - Track orders and spending  
+  - Submit complaints  
+
+- **Canteen Owner**
+  - Manage menu items (add/update/delete)  
+  - Track daily orders  
+  - View earnings and popularity of items  
+
+- **Admin / University Authority**
+  - Manage users (students & canteen owners)  
+  - Approve/monitor canteens  
+  - View and resolve complaints  
+
+---
 
 ### 📊 Orders & Complaints System
-- Students can place orders directly through the app.
-- Integrated **complaint box** for reporting issues and tracking resolutions.
+
+- Students can:
+  - Place orders directly from the app  
+  - Track order status  
+  - Submit complaints (food quality, delay, behavior, etc.)
+
+- Admins can:
+  - View all complaints  
+  - Change complaint status (open / in-progress / resolved)  
+  - Maintain transparency between students and canteen owners  
+
+---
 
 ### 🔒 Secure & Scalable
-- **User authentication** with secure password storage.
-- Built using a **FastAPI** backend, **MongoDB** database, **Flutter** mobile app, and **React** website.
-- Designed for scalability and a modern, user-friendly interface.
 
+- **User authentication** with secure credential handling  
+- Built using:
+  - ⚙️ **FastAPI** backend  
+  - 🗃️ **Database** (e.g., MongoDB / SQL via ORM)  
+  - 🌐 **React** web frontend  
+  - 📱 **Flutter** mobile app  
+- Designed for:
+  - Modular growth  
+  - Easy deployment  
+  - Clean, user-friendly UI  
+
+---
+
+## 🚀 Getting Started
+
+### ✅ Prerequisites
+
+Before running the project, make sure you have:
+
+- **Python 3.8+**
+- **pip** (Python package installer)
+
+> Optional but recommended: a **virtual environment** (venv) to keep dependencies isolated.
+
+---
+
+### 🔧 Installation & Backend Setup
+
+Follow these steps to set up and run the **FastAPI backend**:
+
+```bash
+# 1️⃣ Clone the repository
+git clone https://github.com/hasanmehediii/CSE-3112-Project.git
+
+# 2️⃣ Go to the backend folder
+cd server
+
+# 3️⃣ (Optional) Create a virtual environment
+python -m venv venv
+
+# 4️⃣ Activate the virtual environment
+# On Linux / macOS:
+source venv/bin/activate
+
+# On Windows (PowerShell):
+# .\venv\Scripts\Activate.ps1
+
+# On Windows (CMD):
+# venv\Scripts\activate
+
+# 5️⃣ Install required dependencies
+pip install -r requirements.txt
+
+# 6️⃣ Run the FastAPI development server
+uvicorn app.main:app --reload
+```
+
+### Setup .env in server (Schema are in ```database.psql```):
+```bash
+DATABASE_URL="postgresql://<db_user>:<db_password>@<host>/<db_name>?sslmode=require"
+JWT_SECRET="<your_super_secret_jwt_key_here>"
+PORT=8000
+
+FRONTEND_URL="http://localhost:5173"
+SERVER_URL="http://localhost:8000"
+```
+
+### Frontend Setup
+Follow these steps to set up and run the **React frontend**:
+
+```bash
+# 1️⃣ Go to the frontend folder
+cd client
+# 2️⃣ Install required dependencies
+npm install
+# 3️⃣ Run the React development server
+npm run dev
+```
 
 ## 🛠️ Tech Stack
 
@@ -86,31 +219,27 @@ Managing food expenses and making healthy choices can be difficult for students 
 | Backend             | FastAPI                             |
 | Frontend (Web)      | React.js                            |
 | Frontend (Mobile)   | Flutter                             |
-| Database            | MongoDB                             |
-| Deployment          | Vercel (frontend), Render (backend)|
+| Database            | MongoDB, PostgreSQL                           |
+| Deployment          | Vercel (frontend + backend) |
 
 
-## 📡 API Endpoints
+---
 
-You can test these endpoints via Postman or a browser.
+## ❤️ Acknowledgements
 
-| Method | Endpoint           | Description                     |
-|--------|------------------|---------------------------------|
-| GET    | /users/           | Retrieve all users              |
-| GET    | /students/        | Retrieve all students           |
-| GET    | /canteens/        | Retrieve all canteens           |
-| GET    | /mealplans/       | Retrieve a student's meal plan  |
-| GET    | /weather/         | Get current weather info        |
-| POST   | /orders/          | Place a new order               |
-| POST   | /complaints/      | Submit a complaint              |
+- Department of Computer Science & Engineering, University of Dhaka
+- All teachers and friends who inspired this project
+
+## 📌 Future Enhancements (Ideas)
+
+- Detailed nutrition breakdown for each meal
+- AI-based meal recommendation using past choices
+- Push notifications for meal reminders & low-balance alerts
+- Analytics dashboard for admin & canteen owners
 
 
 ## 👨‍💻 Developers
 
-| Name | Department | Email |
-|------|-------------|--------|
-| **Mehedi Hasan** | CSE, University of Dhaka | [mehedi200105075@gmail.com](mailto:mehedi200105075@gmail.com) |
-| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
-| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
-| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
-| XX | CSE, University of Dhaka | [email@gmail.com](mailto:email@gmail.com) |
+- ### Mehedi Hasan
+- GitHub: https://github.com/hasanmehediii
+- Email: mehedi200105075@gmail.com
