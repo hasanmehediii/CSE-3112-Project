@@ -105,11 +105,6 @@ const fieldWrapperStyle: CSSProperties = {
   flexDirection: "column",
 };
 
-const fullWidthFieldWrapperStyle: CSSProperties = {
-  ...fieldWrapperStyle,
-  gridColumn: "1 / -1",
-};
-
 const buttonStyle: CSSProperties = {
   width: "100%",
   padding: "10px 12px",
