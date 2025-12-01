@@ -1,17 +1,15 @@
 // src/components/NavBar.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const navStyle: React.CSSProperties = {
+const baseNavStyle: React.CSSProperties = {
   position: "fixed",
   top: 16,
-  left: "50%",
-  transform: "translateX(-50%)",
   width: "min(1120px, 94%)",
   padding: "10px 22px",
   borderRadius: "999px",
-  backgroundColor: "rgba(15, 23, 42, 0.55)", // dark + transparent
+  backgroundColor: "rgba(15, 23, 42, 0.55)",
   backdropFilter: "blur(24px)",
   WebkitBackdropFilter: "blur(24px)",
   boxShadow: "0 18px 45px rgba(15, 23, 42, 0.45)",
@@ -48,7 +46,7 @@ const logoStyle: React.CSSProperties = {
   objectFit: "cover",
 };
 
-const rightSectionStyle: React.CSSProperties = {
+const baseRightSectionStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: "10px",
@@ -81,6 +79,19 @@ function NavBar() {
   const { token, userRole, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth < 640);
+      }
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -110,10 +121,31 @@ function NavBar() {
     el.style.transform = "translateY(0)";
   };
 
+  const navStyle: React.CSSProperties = {
+    ...baseNavStyle,
+    left: isMobile ? 0 : "50%",
+    transform: isMobile ? "none" : "translateX(-50%)",
+    width: isMobile ? "100%" : baseNavStyle.width,
+    borderRadius: isMobile ? 16 : 999,
+    padding: isMobile ? "8px 12px" : baseNavStyle.padding,
+  };
+
+  const rightSectionStyle: React.CSSProperties = {
+    ...baseRightSectionStyle,
+    width: isMobile ? "100%" : "auto",
+    justifyContent: isMobile ? "flex-start" : "flex-end",
+    overflowX: isMobile ? "auto" : "visible",
+  };
+
   return (
     <nav style={navStyle}>
       {/* Left: logo + brand */}
-      <div style={leftSectionStyle}>
+      <div
+        style={{
+          ...leftSectionStyle,
+          marginBottom: isMobile ? 4 : 0,
+        }}
+      >
         <Link to="/" style={brandLinkStyle}>
           <img src="/logo.png" alt="KhaiKhai" style={logoStyle} />
           <span style={brandTextStyle}>KhaiKhai</span>
