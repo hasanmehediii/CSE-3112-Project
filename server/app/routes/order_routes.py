@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 
 from ..database import get_db
+from ..models.order import Order
 from ..auth.auth_bearer import JWTBearer
 from ..schemas.order_schema import OrderCreate, OrderOut, OrderStatusUpdate
 from ..controllers.order_controller import (
@@ -79,3 +81,15 @@ def update_order_status_endpoint(
     canteen = _get_canteen_for_owner(owner_id, db)
     # ✅ pass canteen.id and payload.status
     return update_order_status(order_id, canteen.id, payload.status, db)
+
+
+@router.get("/all", response_model=List[OrderOut])
+def get_all_orders(
+    token_data=Depends(JWTBearer()),
+    db: Session = Depends(get_db),
+):
+    # only admin can see all orders
+    if token_data["role"] != "admin":
+      raise HTTPException(status_code=403, detail="Not authorized")
+
+    return db.query(Order).all()

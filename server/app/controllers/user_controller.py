@@ -107,3 +107,6 @@ def delete_user(user_id: int, db: Session):
     db.delete(user)
     db.commit()
     return {"detail": "User deleted successfully"}  
+
+def get_users_by_role(role: str, db: Session):
+    return db.query(User).filter(User.role == role).all()

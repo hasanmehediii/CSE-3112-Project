@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from ..models.meal import Meal
+
 from ..database import get_db
 from ..auth.auth_bearer import JWTBearer
 from ..schemas.meal_schema import MealCreate, MealUpdate, MealOut
@@ -103,3 +105,15 @@ def delete_meal_endpoint(
     owner_id = token_data["id"]
     canteen = _get_canteen_for_owner(owner_id, db)
     return delete_meal(meal_id, db, canteen.id) 
+
+@router.get("/today", response_model=list[MealOut])
+def list_all_meals(
+    token_data=Depends(JWTBearer()),
+    db: Session = Depends(get_db),
+):
+    """
+    ADMIN: List all meals in the system.
+    """
+    if token_data["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return db.query(Meal).all()

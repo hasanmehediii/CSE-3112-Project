@@ -1,9 +1,20 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import Optional
+
 from ..database import get_db
 from ..schemas.user_schema import UserRegister, UserLogin, UserOut, UserUpdate
-from ..controllers.user_controller import register_user, login_user, get_me, update_me
+from ..controllers.user_controller import (
+    register_user,
+    login_user,
+    get_me,
+    update_me,
+    get_all_users,
+    get_users_by_role,
+    delete_user,
+)
 from ..auth.auth_bearer import JWTBearer
+from ..models.user import User
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -24,11 +35,6 @@ def read_me(token_data=Depends(JWTBearer()), db: Session = Depends(get_db)):
     return get_me(user_id, db)
 
 
-@router.get("/", response_model=list[UserOut])
-def list_users(db: Session = Depends(get_db)):
-    from ..models.user import User
-    return db.query(User).all()
-
 @router.patch("/me", response_model=UserOut)
 def update_me_endpoint(
     payload: UserUpdate,
@@ -37,3 +43,33 @@ def update_me_endpoint(
 ):
     user_id = token_data["id"]
     return update_me(user_id, payload, db)
+
+
+# 🔹 ADMIN: list users (optionally filtered by role)
+@router.get("/", response_model=list[UserOut])
+def list_users(
+    role: Optional[str] = None,
+    token_data=Depends(JWTBearer()),
+    db: Session = Depends(get_db),
+):
+    # only admin should see full user list
+    if token_data["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    if role:
+        # e.g., role="student" or "canteen" or "admin"
+        return get_users_by_role(role, db)
+    return get_all_users(db)
+
+
+# 🔹 ADMIN: delete any user by id
+@router.delete("/{user_id}")
+def delete_user_endpoint(
+    user_id: int,
+    token_data=Depends(JWTBearer()),
+    db: Session = Depends(get_db),
+):
+    if token_data["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return delete_user(user_id, db)
