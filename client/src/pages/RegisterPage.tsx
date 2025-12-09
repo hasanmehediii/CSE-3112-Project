@@ -13,64 +13,125 @@ const pageStyle: CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  padding: "120px 16px 40px", // gap from floating navbar
-  backgroundImage:
-    'linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(254,243,231,0.8)), url("/background.jpg")',
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
+  padding: "80px 16px 40px", // gap from floating navbar
+  background:
+    "radial-gradient(circle at top left, rgba(34,197,94,0.26), transparent 52%), " +
+    "radial-gradient(circle at bottom right, rgba(37,99,235,0.32), transparent 55%), " +
+    "linear-gradient(135deg, #020617, #020617)",
+  color: "#e5e7eb",
 };
 
 const containerStyle: CSSProperties = {
   width: "100%",
   maxWidth: "520px",
-  padding: "28px 26px 24px",
-  backgroundColor: "rgba(255, 255, 255, 0.98)",
-  borderRadius: "20px",
-  boxShadow: "0 18px 45px rgba(15, 23, 42, 0.16)",
-  border: "1px solid #e5e7eb",
+  padding: "22px 22px 24px",
+  backgroundColor: "rgba(15, 23, 42, 0.96)",
+  borderRadius: "18px",
+  border: "1px solid rgba(148,163,184,0.35)",
+  boxShadow: "0 34px 80px rgba(15, 23, 42, 0.8)",
+  backdropFilter: "blur(18px)",
+};
+
+// Brand row (same family as Login)
+const brandRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginBottom: "14px",
+};
+
+const brandLeftStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+};
+
+const brandIconStyle: CSSProperties = {
+  width: "32px",
+  height: "32px",
+  borderRadius: "999px",
+  background:
+    "conic-gradient(from 200deg, #22c55e, #facc15, #38bdf8, #22c55e)",
+  padding: "2px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+const brandIconInnerStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  borderRadius: "999px",
+  backgroundColor: "#020617",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "0.9rem",
+  fontWeight: 700,
+  color: "#22c55e",
+};
+
+const brandNameStyle: CSSProperties = {
+  fontSize: "0.9rem",
+  fontWeight: 600,
+};
+
+const brandTagStyle: CSSProperties = {
+  fontSize: "0.7rem",
+  color: "#9ca3af",
+};
+
+const envPillStyle: CSSProperties = {
+  fontSize: "0.7rem",
+  padding: "3px 8px",
+  borderRadius: "999px",
+  border: "1px solid rgba(55,65,81,0.9)",
+  backgroundColor: "rgba(15,23,42,0.8)",
+  color: "#9ca3af",
 };
 
 const smallTagStyle: CSSProperties = {
-  fontSize: "0.75rem",
+  fontSize: "0.7rem",
   textTransform: "uppercase",
-  letterSpacing: "0.08em",
+  letterSpacing: "0.14em",
   color: "#9ca3af",
   marginBottom: "4px",
 };
 
 const titleStyle: CSSProperties = {
   marginBottom: "4px",
-  fontSize: "1.7rem",
+  fontSize: "1.55rem",
   fontWeight: 700,
   textAlign: "left",
-  backgroundImage: "linear-gradient(to right, #16a34a, #22c55e)",
+  backgroundImage: "linear-gradient(to right, #22c55e, #4ade80)",
   WebkitBackgroundClip: "text",
   color: "transparent",
 };
 
 const subtitleStyle: CSSProperties = {
-  fontSize: "0.9rem",
-  color: "#6b7280",
-  marginBottom: "18px",
+  fontSize: "0.85rem",
+  color: "#9ca3af",
+  marginBottom: "16px",
 };
 
 const labelStyle: CSSProperties = {
-  fontSize: "0.85rem",
+  fontSize: "0.8rem",
   fontWeight: 500,
-  color: "#374151",
+  color: "#e5e7eb",
   marginBottom: "4px",
   display: "block",
 };
 
 const baseInputStyle: CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
-  borderRadius: "10px",
-  border: "1px solid #d1d5db",
-  fontSize: "0.9rem",
+  padding: "9px 11px",
+  borderRadius: "9px",
+  border: "1px solid #374151",
+  fontSize: "0.85rem",
   outline: "none",
-  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+  transition: "border-color 0.18s ease, box-shadow 0.18s ease",
+  backgroundColor: "#020617",
+  color: "#e5e7eb",
 };
 
 const inputStyle: CSSProperties = {
@@ -81,14 +142,14 @@ const selectStyle: CSSProperties = {
   ...baseInputStyle,
   appearance: "none",
   backgroundImage:
-    'linear-gradient(45deg, transparent 50%, #6b7280 50%), linear-gradient(135deg, #6b7280 50%, transparent 50%)',
+    'linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%)',
   backgroundPosition: "calc(100% - 14px) 50%, calc(100% - 10px) 50%",
   backgroundSize: "4px 4px, 4px 4px",
   backgroundRepeat: "no-repeat",
 };
 
 const roleHintStyle: CSSProperties = {
-  fontSize: "0.78rem",
+  fontSize: "0.75rem",
   color: "#9ca3af",
   marginTop: "4px",
 };
@@ -110,30 +171,32 @@ const buttonStyle: CSSProperties = {
   padding: "10px 12px",
   borderRadius: "999px",
   border: "none",
-  backgroundColor: "#16a34a",
+  backgroundImage: "linear-gradient(135deg, #22c55e, #16a34a)",
   color: "white",
   fontWeight: 600,
   fontSize: "0.95rem",
   cursor: "pointer",
   marginTop: "12px",
-  boxShadow: "0 10px 25px rgba(22, 163, 74, 0.35)",
+  boxShadow: "0 14px 30px rgba(22, 163, 74, 0.55)",
   transition:
-    "background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+    "background-position 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+  backgroundSize: "150% 150%",
+  backgroundPosition: "0% 50%",
 };
 
 const errorStyle: CSSProperties = {
-  color: "#b91c1c",
-  fontSize: "0.85rem",
-  marginBottom: "10px",
+  color: "#fecaca",
+  fontSize: "0.8rem",
+  marginBottom: "12px",
   padding: "8px 10px",
   borderRadius: "8px",
-  backgroundColor: "#fee2e2",
-  border: "1px solid #fecaca",
+  backgroundColor: "rgba(127, 29, 29, 0.4)",
+  border: "1px solid rgba(248, 113, 113, 0.6)",
 };
 
 const helperTextStyle: CSSProperties = {
-  fontSize: "0.8rem",
-  color: "#6b7280",
+  fontSize: "0.78rem",
+  color: "#9ca3af",
   marginTop: "10px",
   textAlign: "right",
 };
@@ -188,19 +251,33 @@ function RegisterPage() {
   const handleFocus = (
     e: FocusEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    e.currentTarget.style.borderColor = "#16a34a";
-    e.currentTarget.style.boxShadow = "0 0 0 1px rgba(22, 163, 74, 0.35)";
+    e.currentTarget.style.borderColor = "#22c55e";
+    e.currentTarget.style.boxShadow = "0 0 0 1px rgba(34,197,94,0.5)";
   };
 
   const handleBlur = (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = "#d1d5db";
+    e.currentTarget.style.borderColor = "#374151";
     e.currentTarget.style.boxShadow = "none";
   };
 
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>
-        <div style={smallTagStyle}>Create account</div>
+        {/* Brand row (to match Login) */}
+        <div style={brandRowStyle}>
+          <div style={brandLeftStyle}>
+            <div style={brandIconStyle}>
+              <div style={brandIconInnerStyle}>K</div>
+            </div>
+            <div>
+              <div style={brandNameStyle}>Khaikhai</div>
+              <div style={brandTagStyle}>Campus meal planner</div>
+            </div>
+          </div>
+          <div style={envPillStyle}>Create account</div>
+        </div>
+
+        <div style={smallTagStyle}>Get started</div>
         <h2 style={titleStyle}>Sign up for Khaikhai</h2>
         <p style={subtitleStyle}>
           Choose your role and get started with campus meal management.
@@ -213,7 +290,7 @@ function RegisterPage() {
             {/* Name */}
             <div style={fieldWrapperStyle}>
               <label style={labelStyle} htmlFor="name">
-                Full Name
+                Full name
               </label>
               <input
                 id="name"
@@ -257,7 +334,7 @@ function RegisterPage() {
                 onBlur={handleBlur}
               >
                 <option value="student">Student</option>
-                <option value="canteen">Canteen Owner</option>
+                <option value="canteen">Canteen owner</option>
                 <option value="admin">Admin</option>
               </select>
               <div style={roleHintStyle}>
@@ -287,7 +364,7 @@ function RegisterPage() {
               <>
                 <div style={fieldWrapperStyle}>
                   <label style={labelStyle} htmlFor="reg">
-                    Registration No
+                    Registration no
                   </label>
                   <input
                     id="reg"
@@ -322,7 +399,7 @@ function RegisterPage() {
               <>
                 <div style={fieldWrapperStyle}>
                   <label style={labelStyle} htmlFor="canteenName">
-                    Canteen Name
+                    Canteen name
                   </label>
                   <input
                     id="canteenName"
@@ -357,23 +434,35 @@ function RegisterPage() {
             style={buttonStyle}
             type="submit"
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#15803d";
               e.currentTarget.style.transform = "translateY(-1px)";
               e.currentTarget.style.boxShadow =
-                "0 14px 30px rgba(22, 163, 74, 0.45)";
+                "0 18px 36px rgba(22,163,74,0.7)";
+              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
+                "100% 50%";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#16a34a";
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow =
-                "0 10px 25px rgba(22, 163, 74, 0.35)";
+                "0 14px 30px rgba(22,163,74,0.55)";
+              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
+                "0% 50%";
             }}
           >
             Register
           </button>
 
           <div style={helperTextStyle}>
-            Already have an account? Log in from the top menu.
+            Already have an account?{" "}
+            <span
+              style={{
+                color: "#f97316",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("/login")}
+            >
+              Log in
+            </span>
           </div>
         </form>
       </div>

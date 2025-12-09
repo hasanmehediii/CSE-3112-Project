@@ -9,65 +9,127 @@ const pageStyle: CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  padding: "120px 16px 40px",
-  backgroundImage:
-    'linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(254,243,231,0.7)), url("/background.jpg")',
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
+  padding: "80px 16px 40px",
+  background:
+    "radial-gradient(circle at top left, rgba(249,115,22,0.28), transparent 52%), " +
+    "radial-gradient(circle at bottom right, rgba(37,99,235,0.3), transparent 55%), " +
+    "linear-gradient(135deg, #020617, #020617)",
+  color: "#0f172a",
 };
 
 const containerStyle: CSSProperties = {
   width: "100%",
-  maxWidth: "470px",
-  padding: "28px 26px",
-  backgroundColor: "rgba(255, 255, 255, 0.98)",
-  borderRadius: "20px",
-  boxShadow: "0 18px 45px rgba(15, 23, 42, 0.16)",
-  border: "1px solid #e5e7eb",
+  maxWidth: "480px",
+  padding: "22px 22px 24px",
+  borderRadius: "18px",
+  backgroundColor: "rgba(15, 23, 42, 0.96)",
+  border: "1px solid rgba(148,163,184,0.35)",
+  boxShadow: "0 34px 80px rgba(15, 23, 42, 0.8)",
+  backdropFilter: "blur(18px)",
+  color: "#e5e7eb",
+};
+
+// Brand row at the top
+const brandRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginBottom: "14px",
+};
+
+const brandLeftStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+};
+
+const brandIconStyle: CSSProperties = {
+  width: "32px",
+  height: "32px",
+  borderRadius: "999px",
+  background:
+    "conic-gradient(from 200deg, #f97316, #facc15, #22c55e, #f97316)",
+  padding: "2px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+const brandIconInnerStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  borderRadius: "999px",
+  backgroundColor: "#020617",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "0.9rem",
+  fontWeight: 700,
+  color: "#f97316",
+};
+
+const brandNameStyle: CSSProperties = {
+  fontSize: "0.9rem",
+  fontWeight: 600,
+};
+
+const brandTagStyle: CSSProperties = {
+  fontSize: "0.7rem",
+  color: "#9ca3af",
+};
+
+const envPillStyle: CSSProperties = {
+  fontSize: "0.7rem",
+  padding: "3px 8px",
+  borderRadius: "999px",
+  border: "1px solid rgba(55,65,81,0.9)",
+  backgroundColor: "rgba(15,23,42,0.8)",
+  color: "#9ca3af",
 };
 
 const smallTagStyle: CSSProperties = {
-  fontSize: "0.75rem",
+  fontSize: "0.7rem",
   textTransform: "uppercase",
-  letterSpacing: "0.08em",
+  letterSpacing: "0.14em",
   color: "#9ca3af",
   marginBottom: "4px",
 };
 
 const titleStyle: CSSProperties = {
   marginBottom: "4px",
-  fontSize: "1.7rem",
+  fontSize: "1.55rem",
   fontWeight: 700,
   textAlign: "left",
-  backgroundImage: "linear-gradient(to right, #f97316, #ea580c)",
+  backgroundImage: "linear-gradient(to right, #f97316, #fb923c)",
   WebkitBackgroundClip: "text",
   color: "transparent",
 };
 
 const subtitleStyle: CSSProperties = {
-  fontSize: "0.9rem",
-  color: "#6b7280",
-  marginBottom: "18px",
+  fontSize: "0.85rem",
+  color: "#9ca3af",
+  marginBottom: "16px",
 };
 
 const labelStyle: CSSProperties = {
-  fontSize: "0.85rem",
+  fontSize: "0.8rem",
   fontWeight: 500,
-  color: "#374151",
+  color: "#e5e7eb",
   marginBottom: "4px",
   display: "block",
 };
 
 const inputStyleBase: CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
+  padding: "9px 11px",
   marginBottom: "12px",
-  borderRadius: "10px",
-  border: "1px solid #d1d5db",
-  fontSize: "0.9rem",
+  borderRadius: "9px",
+  border: "1px solid #374151",
+  fontSize: "0.85rem",
   outline: "none",
-  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+  transition: "border-color 0.18s ease, box-shadow 0.18s ease",
+  backgroundColor: "#020617",
+  color: "#e5e7eb",
 };
 
 const buttonStyle: CSSProperties = {
@@ -75,34 +137,36 @@ const buttonStyle: CSSProperties = {
   padding: "10px 12px",
   borderRadius: "999px",
   border: "none",
-  backgroundColor: "#f97316",
+  backgroundImage: "linear-gradient(135deg, #f97316, #ea580c)",
   color: "white",
   fontWeight: 600,
   fontSize: "0.95rem",
   cursor: "pointer",
   marginTop: "6px",
-  boxShadow: "0 10px 25px rgba(249, 115, 22, 0.35)",
+  boxShadow: "0 14px 28px rgba(249, 115, 22, 0.55)",
   transition:
-    "background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+    "background-position 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+  backgroundSize: "150% 150%",
+  backgroundPosition: "0% 50%",
 };
 
 const helperRowStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  fontSize: "0.8rem",
-  color: "#6b7280",
+  fontSize: "0.78rem",
+  color: "#9ca3af",
   marginTop: "8px",
 };
 
 const errorStyle: CSSProperties = {
-  color: "#b91c1c",
-  fontSize: "0.85rem",
-  marginBottom: "10px",
+  color: "#fecaca",
+  fontSize: "0.8rem",
+  marginBottom: "12px",
   padding: "8px 10px",
   borderRadius: "8px",
-  backgroundColor: "#fee2e2",
-  border: "1px solid #fecaca",
+  backgroundColor: "rgba(127, 29, 29, 0.4)",
+  border: "1px solid rgba(248, 113, 113, 0.6)",
 };
 
 const passwordWrapperStyle: CSSProperties = {
@@ -112,7 +176,7 @@ const passwordWrapperStyle: CSSProperties = {
 
 const passwordInputStyle: CSSProperties = {
   ...inputStyleBase,
-  paddingRight: "80px",
+  paddingRight: "82px",
   marginBottom: 0,
 };
 
@@ -122,15 +186,16 @@ const toggleButtonStyle: CSSProperties = {
   top: "50%",
   transform: "translateY(-50%)",
   borderRadius: "999px",
-  border: "none",
-  padding: "4px 10px",
-  fontSize: "0.75rem",
+  border: "1px solid #4b5563",
+  padding: "3px 9px",
+  fontSize: "0.72rem",
   cursor: "pointer",
-  backgroundColor: "#f3f4f6",
-  color: "#4b5563",
+  backgroundColor: "#020617",
+  color: "#d1d5db",
   display: "flex",
   alignItems: "center",
   gap: "4px",
+  transition: "background-color 0.15s, border-color 0.15s, transform 0.12s",
 };
 
 function LoginPage() {
@@ -175,10 +240,25 @@ function LoginPage() {
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>
+        {/* Brand row */}
+        <div style={brandRowStyle}>
+          <div style={brandLeftStyle}>
+            <div style={brandIconStyle}>
+              <div style={brandIconInnerStyle}>K</div>
+            </div>
+            <div>
+              <div style={brandNameStyle}>Khaikhai</div>
+              <div style={brandTagStyle}>Campus meal planner</div>
+            </div>
+          </div>
+          <div style={envPillStyle}>Secure login</div>
+        </div>
+
         <div style={smallTagStyle}>Welcome back</div>
-        <h2 style={titleStyle}>Log in to Khaikhai</h2>
+        <h2 style={titleStyle}>Log in to your account</h2>
         <p style={subtitleStyle}>
-          Access your dashboard to manage meals, orders, and complaints.
+          Access your dashboard to manage meals, orders, and complaints in one
+          place.
         </p>
 
         {error && <div style={errorStyle}>{error}</div>}
@@ -197,10 +277,10 @@ function LoginPage() {
             onFocus={(e) => {
               e.currentTarget.style.borderColor = "#f97316";
               e.currentTarget.style.boxShadow =
-                "0 0 0 1px rgba(249, 115, 22, 0.4)";
+                "0 0 0 1px rgba(249,115,22,0.6)";
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = "#d1d5db";
+              e.currentTarget.style.borderColor = "#374151";
               e.currentTarget.style.boxShadow = "none";
             }}
           />
@@ -219,10 +299,10 @@ function LoginPage() {
               onFocus={(e) => {
                 e.currentTarget.style.borderColor = "#f97316";
                 e.currentTarget.style.boxShadow =
-                  "0 0 0 1px rgba(249, 115, 22, 0.4)";
+                  "0 0 0 1px rgba(249,115,22,0.6)";
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = "#d1d5db";
+                e.currentTarget.style.borderColor = "#374151";
                 e.currentTarget.style.boxShadow = "none";
               }}
             />
@@ -230,10 +310,14 @@ function LoginPage() {
               type="button"
               style={toggleButtonStyle}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#e5e7eb";
+                e.currentTarget.style.backgroundColor = "#111827";
+                e.currentTarget.style.borderColor = "#6b7280";
+                e.currentTarget.style.transform = "translateY(-50%) translateY(-1px)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#f3f4f6";
+                e.currentTarget.style.backgroundColor = "#020617";
+                e.currentTarget.style.borderColor = "#4b5563";
+                e.currentTarget.style.transform = "translateY(-50%)";
               }}
               onClick={() => setShowPassword((prev) => !prev)}
             >
@@ -246,16 +330,18 @@ function LoginPage() {
             style={buttonStyle}
             type="submit"
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#ea580c";
               e.currentTarget.style.transform = "translateY(-1px)";
               e.currentTarget.style.boxShadow =
-                "0 14px 30px rgba(249, 115, 22, 0.45)";
+                "0 18px 34px rgba(249,115,22,0.7)";
+              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
+                "100% 50%";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#f97316";
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow =
-                "0 10px 25px rgba(249, 115, 22, 0.35)";
+                "0 14px 28px rgba(249,115,22,0.55)";
+              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
+                "0% 50%";
             }}
           >
             Login
@@ -267,6 +353,7 @@ function LoginPage() {
               style={{
                 textDecoration: "underline",
                 cursor: "pointer",
+                color: "#f97316",
               }}
               // onClick={() => navigate("/forgot-password")}
             >
