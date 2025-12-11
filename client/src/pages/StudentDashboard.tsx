@@ -133,7 +133,7 @@ const mealsSectionCardStyle: CSSProperties = {
 
 const scrollWrapperStyle: CSSProperties = {
   marginTop: "6px",
-  maxHeight: "430px",
+  maxHeight: "600px",
   overflowY: "auto",
   paddingRight: "4px",
 };
