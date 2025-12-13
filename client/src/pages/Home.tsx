@@ -35,9 +35,8 @@ function useTiltAnimation() {
 
   const transform = `perspective(1200px) rotateX(${(-tilt.y * 14).toFixed(
     2
-  )}deg) rotateY(${(tilt.x * 18).toFixed(2)}deg) scale(${
-    hovering ? 1.02 : 1
-  })`;
+  )}deg) rotateY(${(tilt.x * 18).toFixed(2)}deg) scale(${hovering ? 1.02 : 1
+    })`;
 
   return {
     cardRef,
@@ -73,7 +72,7 @@ const heroSectionStyle: CSSProperties = {
   textAlign: "left",
   padding: "140px 40px 110px",
   backgroundImage:
-    'linear-gradient(to bottom right, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url("/background4.jpg")',
+    'linear-gradient(to bottom right, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url("/background5.jpg")',
   backgroundSize: "cover",
   backgroundPosition: "center",
   boxShadow: "inset 0 0 60px rgba(0,0,0,0.6)",
@@ -581,15 +580,15 @@ function HomePage() {
 
   const visibleStyle: CSSProperties = cardVisible
     ? {
-        opacity: 1,
-        transform: `${transform}`,
-        filter: "blur(0px)",
-      }
+      opacity: 1,
+      transform: `${transform}`,
+      filter: "blur(0px)",
+    }
     : {
-        opacity: 0,
-        transform: "translateY(160px) scale(0.9)",
-        filter: "blur(14px)",
-      };
+      opacity: 0,
+      transform: "translateY(160px) scale(0.9)",
+      filter: "blur(14px)",
+    };
 
   const handleGetStarted = () => {
     navigate("/login");
