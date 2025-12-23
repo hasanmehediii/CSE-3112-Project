@@ -72,7 +72,7 @@ const heroSectionStyle: CSSProperties = {
   textAlign: "left",
   padding: "140px 40px 110px",
   backgroundImage:
-    'linear-gradient(to bottom right, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url("/background5.jpg")',
+    'linear-gradient(to bottom right, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url("/background4.jpg")',
   backgroundSize: "cover",
   backgroundPosition: "center",
   boxShadow: "inset 0 0 60px rgba(0,0,0,0.6)",
