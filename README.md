@@ -6,6 +6,10 @@
   <strong>A Hybrid Platform in mobile app and website to guide your food plan whole month :)</strong>
 </p>
 
+<p align="center">
+  <img src="docs/KhaiKhai.png"/>
+  <br>
+</p>
 
 ## 🥗 About The Project
 
