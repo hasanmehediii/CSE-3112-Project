@@ -144,7 +144,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blue.withOpacity(0.25),
+                  color: Colors.blue.withValues(alpha: 0.25),
                   blurRadius: 18,
                   offset: const Offset(0, 8),
                 ),
@@ -157,7 +157,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                   height: 42,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withValues(alpha: 0.15),
                   ),
                   child: const Icon(
                     Icons.report_problem_outlined,
@@ -180,7 +180,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                       Text(
                         'Submit issues about canteens, meals, or orders and track how they\'re resolved.',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 11.5,
                         ),
                       ),
@@ -222,7 +222,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 16,
                   offset: const Offset(0, 10),
                 ),
@@ -354,7 +354,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 12,
                             offset: const Offset(0, 6),
                           ),
@@ -384,7 +384,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                                     borderRadius: BorderRadius.circular(999),
                                     color: _statusColor(
                                       c.status,
-                                    ).withOpacity(0.12),
+                                    ).withValues(alpha: 0.12),
                                   ),
                                   child: Row(
                                     children: [

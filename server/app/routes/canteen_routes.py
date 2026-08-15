@@ -27,9 +27,11 @@ def create_canteen_endpoint(
 @router.get("/", response_model=list[CanteenOut])
 def list_canteens(
     category: str | None = Query(default=None),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=200),
     db: Session = Depends(get_db),
 ):
-    return get_canteens(db, category)
+    return get_canteens(db, category, offset, limit)
 
 
 # 🔹 PUT THESE BEFORE /{canteen_id}

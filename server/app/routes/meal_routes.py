@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Literal
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from ..models.meal import Meal
@@ -28,7 +30,7 @@ def _get_canteen_for_owner(owner_id: int, db: Session) -> Canteen:
 
 
 @router.post(
-    "/", response_model=MealOut, dependencies=[Depends(JWTBearer("canteen"))]
+    "/", response_model=MealOut, status_code=201, dependencies=[Depends(JWTBearer("canteen"))]
 )
 def create_meal_endpoint(
     payload: MealCreate,
@@ -45,23 +47,33 @@ def create_meal_endpoint(
 
 
 @router.get("/canteen/{canteen_id}", response_model=list[MealOut])
-def list_meals_by_canteen(canteen_id: int, db: Session = Depends(get_db)):
+def list_meals_by_canteen(
+    canteen_id: int,
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=200),
+    db: Session = Depends(get_db),
+):
     """
     List meals for a specific canteen.
     """
-    return get_meals_by_canteen(canteen_id, db)
+    return get_meals_by_canteen(canteen_id, db, offset, limit)
 
 
 @router.get("/available", response_model=list[MealOut])
-def list_available_meals(db: Session = Depends(get_db)):
+def list_available_meals(
+    sort: Literal["name", "price"] = "name",
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=200),
+    db: Session = Depends(get_db),
+):
     """
     List all available meals (is_available = true).
     Used for student's 'today's meals' dashboard.
     """
-    return get_available_meals(db)
+    return get_available_meals(db, sort, offset, limit)
 
 
-@router.get("/budget", response_model=list[MealOut])
+@router.get("/budget", response_model=list[MealOut], deprecated=True)
 def list_budget_deals(db: Session = Depends(get_db)):
     """
     List all available meals ordered by price ascending.

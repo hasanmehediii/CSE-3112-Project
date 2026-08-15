@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         body: {'email': _emailCtrl.text.trim(), 'password': _passwordCtrl.text},
       );
 
-      final token = res['access_token'] as String;
+      final token = (res as Map<String, dynamic>)['access_token'] as String;
       await auth.login(token);
 
       if (!mounted) return;
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
           // Background image
           Image.asset('assets/background.jpg', fit: BoxFit.cover),
           // Overlay
-          Container(color: Colors.black.withOpacity(0.4)),
+          Container(color: Colors.black.withValues(alpha: 0.4)),
           // Content
           Center(
             child: SingleChildScrollView(
@@ -92,16 +92,16 @@ class _LoginPageState extends State<LoginPage> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
-                    color: Colors.white.withOpacity(0.96),
+                    color: Colors.white.withValues(alpha: 0.96),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
+                        color: Colors.black.withValues(alpha: 0.25),
                         blurRadius: 26,
                         offset: const Offset(0, 16),
                       ),
                     ],
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       width: 1,
                     ),
                   ),
@@ -125,7 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                                 color: const Color(0xFFFFEDD5),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.orange.withOpacity(0.25),
+                                    color: Colors.orange.withValues(
+                                      alpha: 0.25,
+                                    ),
                                     blurRadius: 18,
                                     offset: const Offset(0, 8),
                                   ),

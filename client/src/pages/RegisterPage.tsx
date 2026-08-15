@@ -6,7 +6,7 @@ import {
   type FocusEvent,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiRequest } from "../api";
+import { apiRequest, getErrorMessage } from "../api";
 
 const pageStyle: CSSProperties = {
   minHeight: "100vh",
@@ -138,16 +138,6 @@ const inputStyle: CSSProperties = {
   ...baseInputStyle,
 };
 
-const selectStyle: CSSProperties = {
-  ...baseInputStyle,
-  appearance: "none",
-  backgroundImage:
-    'linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%)',
-  backgroundPosition: "calc(100% - 14px) 50%, calc(100% - 10px) 50%",
-  backgroundSize: "4px 4px, 4px 4px",
-  backgroundRepeat: "no-repeat",
-};
-
 const roleHintStyle: CSSProperties = {
   fontSize: "0.75rem",
   color: "#9ca3af",
@@ -204,12 +194,9 @@ const helperTextStyle: CSSProperties = {
 function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"student" | "canteen" | "admin">("student");
   const [password, setPassword] = useState("");
   const [dept, setDept] = useState("");
   const [registrationNo, setRegistrationNo] = useState("");
-  const [canteenName, setCanteenName] = useState("");
-  const [location, setLocation] = useState("");
 
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -219,20 +206,13 @@ function RegisterPage() {
     setError(null);
 
     try {
-      const body: any = {
+      const body = {
         name,
         email,
         password,
-        role,
+        registration_no: registrationNo || undefined,
+        dept: dept || undefined,
       };
-
-      if (role === "student") {
-        body.registration_no = registrationNo;
-        body.dept = dept;
-      } else if (role === "canteen") {
-        body.canteen_name = canteenName;
-        body.location = location;
-      }
 
       await apiRequest(
         "/users/register",
@@ -243,8 +223,8 @@ function RegisterPage() {
         null
       );
       navigate("/login");
-    } catch (err: any) {
-      setError(err.message || "Registration failed");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Registration failed"));
     }
   };
 
@@ -280,7 +260,7 @@ function RegisterPage() {
         <div style={smallTagStyle}>Get started</div>
         <h2 style={titleStyle}>Sign up for Khaikhai</h2>
         <p style={subtitleStyle}>
-          Choose your role and get started with campus meal management.
+          Create your student account to browse and order campus meals.
         </p>
 
         {error && <div style={errorStyle}>{error}</div>}
@@ -320,28 +300,6 @@ function RegisterPage() {
               />
             </div>
 
-            {/* Role */}
-            <div style={fieldWrapperStyle}>
-              <label style={labelStyle} htmlFor="role">
-                Register as
-              </label>
-              <select
-                id="role"
-                style={selectStyle}
-                value={role}
-                onChange={(e) => setRole(e.target.value as any)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              >
-                <option value="student">Student</option>
-                <option value="canteen">Canteen owner</option>
-                <option value="admin">Admin</option>
-              </select>
-              <div style={roleHintStyle}>
-                Students order meals; canteen owners manage menus &amp; orders.
-              </div>
-            </div>
-
             {/* Password */}
             <div style={fieldWrapperStyle}>
               <label style={labelStyle} htmlFor="password">
@@ -356,12 +314,14 @@ function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                minLength={8}
+                required
               />
+              <div style={roleHintStyle}>Use at least 8 characters with a letter and number.</div>
             </div>
 
             {/* Student extra fields */}
-            {role === "student" && (
-              <>
+            <>
                 <div style={fieldWrapperStyle}>
                   <label style={labelStyle} htmlFor="reg">
                     Registration no
@@ -391,43 +351,7 @@ function RegisterPage() {
                     onBlur={handleBlur}
                   />
                 </div>
-              </>
-            )}
-
-            {/* Canteen extra fields */}
-            {role === "canteen" && (
-              <>
-                <div style={fieldWrapperStyle}>
-                  <label style={labelStyle} htmlFor="canteenName">
-                    Canteen name
-                  </label>
-                  <input
-                    id="canteenName"
-                    style={inputStyle}
-                    placeholder="e.g. TSC Cafeteria"
-                    value={canteenName}
-                    onChange={(e) => setCanteenName(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                  />
-                </div>
-
-                <div style={fieldWrapperStyle}>
-                  <label style={labelStyle} htmlFor="location">
-                    Location
-                  </label>
-                  <input
-                    id="location"
-                    style={inputStyle}
-                    placeholder="e.g. TSC, Dhaka University"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                  />
-                </div>
-              </>
-            )}
+            </>
           </div>
 
           <button

@@ -1,8 +1,8 @@
 // src/pages/StudentComplaintsPage.tsx
 import { type FormEvent, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 type Complaint = {
   id: number;
@@ -219,7 +219,7 @@ function StudentComplaintsPage() {
     if (!token) return;
     setLoading(true);
     try {
-      const data = await apiRequest("/complaints/me", {}, token);
+      const data = await apiRequest<Complaint[]>("/complaints/me", {}, token);
       setComplaints(data);
     } catch (err) {
       console.error(err);
@@ -264,8 +264,8 @@ function StudentComplaintsPage() {
       setOrderId("");
       setComplainText("");
       await loadComplaints();
-    } catch (err: any) {
-      setMessage(err.message || "Failed to submit complaint");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Failed to submit complaint"));
     }
   };
 

@@ -1,8 +1,8 @@
 // src/pages/CanteenOrders.tsx
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 type Order = {
   id: number;
@@ -167,9 +167,9 @@ function CanteenOrders() {
         map[o.id] = o.status;
       });
       setStatusMap(map);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error loading /orders/canteen:", err);
-      setMessage(err.message || "Failed to load orders");
+      setMessage(getErrorMessage(err, "Failed to load orders"));
       setOrders([]);
     } finally {
       setLoading(false);
@@ -202,8 +202,8 @@ function CanteenOrders() {
       );
       setMessage(`Order #${orderId} status updated.`);
       await loadOrders();
-    } catch (err: any) {
-      setMessage(err.message || "Failed to update order");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Failed to update order"));
     }
   };
 

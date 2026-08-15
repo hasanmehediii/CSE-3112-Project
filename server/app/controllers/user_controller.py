@@ -1,112 +1,122 @@
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
 from passlib.hash import pbkdf2_sha256
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
-from ..models.user import User
-from ..models.canteen import Canteen
 from ..auth.auth_handler import create_access_token
-from ..schemas.user_schema import UserRegister, UserLogin, UserUpdate
+from ..models.canteen import Canteen
+from ..models.user import User
+from ..schemas.user_schema import AdminUserCreate, UserLogin, UserRegister, UserUpdate
+
+
+def _normalized_email(email: str) -> str:
+    return email.strip().lower()
+
+
+def _ensure_unique_user(data, db: Session) -> None:
+    email = _normalized_email(str(data.email))
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(status_code=409, detail="Email already registered")
+    registration_no = getattr(data, "registration_no", None)
+    if registration_no and db.query(User).filter(User.registration_no == registration_no).first():
+        raise HTTPException(status_code=409, detail="Registration number already registered")
+
+
+def _create_user(data, role: str, db: Session) -> User:
+    _ensure_unique_user(data, db)
+    user = User(
+        name=data.name.strip(),
+        email=_normalized_email(str(data.email)),
+        role=role,
+        phone=data.phone,
+        password_hash=pbkdf2_sha256.hash(data.password),
+        registration_no=getattr(data, "registration_no", None),
+        dept=getattr(data, "dept", None),
+        address=getattr(data, "address", None),
+        canteen_name=getattr(data, "canteen_name", None),
+        location=getattr(data, "location", None),
+        image_url=getattr(data, "image_url", None),
+    )
+    db.add(user)
+    db.flush()
+
+    if role == "canteen":
+        canteen_name = (getattr(data, "canteen_name", None) or data.name).strip()
+        db.add(
+            Canteen(
+                owner_id=user.id,
+                name=canteen_name,
+                image_url=getattr(data, "image_url", None),
+                location=getattr(data, "location", None),
+                category=None,
+            )
+        )
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Account data already exists") from exc
+    db.refresh(user)
+    return user
 
 
 def register_user(data: UserRegister, db: Session):
-    # check duplicate email
-    existing = db.query(User).filter(User.email == data.email).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    # hash password
-    hashed = pbkdf2_sha256.hash(data.password)
-
-    user = User(
-        name=data.name,
-        email=data.email,
-        role=data.role,
-        phone=data.phone,
-        password_hash=hashed,
-        registration_no=data.registration_no,
-        dept=data.dept,
-        address=data.address,
-        canteen_name=data.canteen_name,
-        location=data.location,
-    )
-
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-
-    # ✅ AUTO-CREATE CANTEEN ROW IF ROLE == "canteen"
-    if data.role == "canteen":
-        canteen_name = data.canteen_name or data.name
-
-        canteen = Canteen(
-            owner_id=user.id,
-            name=canteen_name,
-            image_url=None,
-            location=data.location,
-            category=None,
-        )
-        db.add(canteen)
-        db.commit()
-        db.refresh(canteen)
-
+    user = _create_user(data, "student", db)
     token = create_access_token({"id": user.id, "role": user.role})
     return {"access_token": token, "token_type": "bearer"}
 
 
-def login_user(data: UserLogin, db: Session):
-    user = db.query(User).filter(User.email == data.email).first()
-    if not user or not pbkdf2_sha256.verify(data.password, user.password_hash):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+def admin_create_user(data: AdminUserCreate, db: Session) -> User:
+    if data.role == "canteen" and not data.canteen_name:
+        raise HTTPException(status_code=422, detail="Canteen name is required")
+    return _create_user(data, data.role, db)
 
+
+def login_user(data: UserLogin, db: Session):
+    user = db.query(User).filter(User.email == _normalized_email(str(data.email))).first()
+    if not user or not pbkdf2_sha256.verify(data.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
     token = create_access_token({"id": user.id, "role": user.role})
     return {"access_token": token, "token_type": "bearer"}
 
 
 def get_me(user_id: int, db: Session):
-    user = db.query(User).get(user_id)
+    user = db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+
 def update_me(user_id: int, data: UserUpdate, db: Session):
-    user = db.query(User).get(user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    update_data = data.model_dump(exclude_unset=True)
-
-    for key, value in update_data.items():
-        # never allow changing these via profile update
-        if key in {"id", "email", "role", "password_hash"}:
-            continue
-        if hasattr(user, key):
-            setattr(user, key, value)
-
+    user = get_me(user_id, db)
+    for key, value in data.model_dump(exclude_unset=True).items():
+        setattr(user, key, value)
     db.commit()
     db.refresh(user)
     return user
 
 
-def delete_me(user_id: int, db: Session):
-    user = db.query(User).get(user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+def get_all_users(db: Session, offset: int = 0, limit: int = 100):
+    return db.query(User).order_by(User.id.asc()).offset(offset).limit(limit).all()
 
-    db.delete(user)
-    db.commit()
-    return {"detail": "User deleted successfully"}  
 
-def get_all_users(db: Session):
-    return db.query(User).all()
+def get_users_by_role(role: str, db: Session, offset: int = 0, limit: int = 100):
+    return (
+        db.query(User)
+        .filter(User.role == role)
+        .order_by(User.id.asc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
 
 def delete_user(user_id: int, db: Session):
-    user = db.query(User).get(user_id)
+    user = db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
+    if user.role == "admin":
+        raise HTTPException(status_code=400, detail="Admin accounts cannot be deleted here")
     db.delete(user)
     db.commit()
-    return {"detail": "User deleted successfully"}  
-
-def get_users_by_role(role: str, db: Session):
-    return db.query(User).filter(User.role == role).all()
+    return {"detail": "User deleted successfully"}

@@ -1,8 +1,8 @@
 // src/pages/StudentProfilePage.tsx
 import { type FormEvent, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 type StudentProfile = {
   id: number;
@@ -198,7 +198,7 @@ function StudentProfilePage() {
     if (!token) return;
     setLoading(true);
     try {
-      const data = await apiRequest("/users/me", {}, token);
+      const data = await apiRequest<StudentProfile>("/users/me", {}, token);
       setProfile(data);
       setName(data.name || "");
       setPhone(data.phone || "");
@@ -239,8 +239,8 @@ function StudentProfilePage() {
       );
       setMessage("Profile updated.");
       await loadProfile();
-    } catch (err: any) {
-      setMessage(err.message || "Failed to update profile");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Failed to update profile"));
     }
   };
 

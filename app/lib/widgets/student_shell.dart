@@ -4,6 +4,7 @@ import '../auth/auth_state.dart';
 import '../pages/student_dashboard_page.dart';
 import '../pages/student_complaints_page.dart';
 import '../pages/student_profile_page.dart';
+import '../pages/student_orders_page.dart';
 import '../pages/login_page.dart';
 
 class StudentShell extends StatefulWidget {
@@ -18,11 +19,12 @@ class _StudentShellState extends State<StudentShell> {
 
   final _pages = const [
     StudentDashboardPage(),
+    StudentOrdersPage(),
     StudentComplaintsPage(),
     StudentProfilePage(),
   ];
 
-  final _titles = const ['Dashboard', 'Complaints', 'Profile'];
+  final _titles = const ['Meals', 'Orders', 'Complaints', 'Profile'];
 
   Future<void> _logout() async {
     final auth = context.read<AuthState>();
@@ -38,8 +40,6 @@ class _StudentShellState extends State<StudentShell> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_currentIndex]),
@@ -64,6 +64,10 @@ class _StudentShellState extends State<StudentShell> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_outlined),
+            label: 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.report_outlined),

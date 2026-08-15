@@ -21,29 +21,38 @@ def create_meal(canteen_id: int, data: MealCreate, db: Session):
     return meal
 
 
-def get_meals_by_canteen(canteen_id: int, db: Session):
+def get_meals_by_canteen(canteen_id: int, db: Session, offset: int = 0, limit: int = 100):
     """Return all meals for a specific canteen."""
-    return db.query(Meal).filter(Meal.canteen_id == canteen_id).all()
+    return (
+        db.query(Meal)
+        .filter(Meal.canteen_id == canteen_id)
+        .order_by(Meal.name.asc(), Meal.id.asc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
 
-def get_available_meals(db: Session):
+def get_available_meals(db: Session, sort: str = "name", offset: int = 0, limit: int = 100):
     """Return all meals that are marked available."""
-    return db.query(Meal).filter(Meal.is_available == True).all()  # noqa: E712
+    query = db.query(Meal).filter(Meal.is_available == True, Meal.quantity > 0)  # noqa: E712
+    query = query.order_by(Meal.price.asc(), Meal.id.asc()) if sort == "price" else query.order_by(Meal.name.asc(), Meal.id.asc())
+    return query.offset(offset).limit(limit).all()
 
 
 def get_budget_deals(db: Session):
     """Return all available meals sorted by price (low to high)."""
     return (
         db.query(Meal)
-        .filter(Meal.is_available == True)  # noqa: E712
-        .order_by(Meal.price.asc())
+        .filter(Meal.is_available == True, Meal.quantity > 0)  # noqa: E712
+        .order_by(Meal.price.asc(), Meal.id.asc())
         .all()
     )
 
 
 def update_meal(meal_id: int, data: MealUpdate, db: Session, canteen_id: int):
     """Update a meal, ensuring it belongs to the given canteen."""
-    meal = db.query(Meal).get(meal_id)
+    meal = db.get(Meal, meal_id)
     if not meal or meal.canteen_id != canteen_id:
         raise HTTPException(status_code=404, detail="Meal not found")
 
@@ -71,7 +80,7 @@ def update_meal(meal_id: int, data: MealUpdate, db: Session, canteen_id: int):
 
 def delete_meal(meal_id: int, db: Session, canteen_id: int):
     """Delete a meal, ensuring it belongs to the given canteen."""
-    meal = db.query(Meal).get(meal_id)
+    meal = db.get(Meal, meal_id)
     if not meal or meal.canteen_id != canteen_id:
         raise HTTPException(status_code=404, detail="Meal not found")
 

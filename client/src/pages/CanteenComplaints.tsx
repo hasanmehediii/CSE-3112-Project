@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth";
 
 type Complaint = {
   id: number;

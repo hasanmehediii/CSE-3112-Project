@@ -1,58 +1,93 @@
-// lib/core/api_client.dart
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
+
 import '../config/app_config.dart';
 
+class ApiException implements Exception {
+  const ApiException(this.message, {this.statusCode, this.code});
+  final String message;
+  final int? statusCode;
+  final String? code;
+
+  @override
+  String toString() => message;
+}
+
 class ApiClient {
+  ApiClient({http.Client? client}) : _client = client ?? http.Client();
+
+  final http.Client _client;
+  static const _timeout = Duration(seconds: 15);
   String? _token;
+  Future<void> Function()? onUnauthorized;
 
-  void setToken(String? token) {
-    _token = token;
-  }
+  void setToken(String? token) => _token = token;
 
-  Uri _buildUri(String path) {
-    return Uri.parse(apiBaseUrl + path);
-  }
+  Future<Object?> get(String path) => _send('GET', path);
+  Future<Object?> post(String path, {Object? body}) =>
+      _send('POST', path, body: body);
+  Future<Object?> patch(String path, {Object? body}) =>
+      _send('PATCH', path, body: body);
 
-  Future<dynamic> get(String path) async {
-    final res = await http.get(_buildUri(path), headers: _headers());
-    return _handleResponse(res);
-  }
-
-  Future<dynamic> post(String path, {Object? body}) async {
-    final res = await http.post(
-      _buildUri(path),
-      headers: _headers(),
-      body: body == null ? null : jsonEncode(body),
-    );
-    return _handleResponse(res);
-  }
-
-  Future<dynamic> patch(String path, {Object? body}) async {
-    final res = await http.patch(
-      _buildUri(path),
-      headers: _headers(),
-      body: body == null ? null : jsonEncode(body),
-    );
-    return _handleResponse(res);
-  }
-
-  Map<String, String> _headers() {
-    final headers = <String, String>{'Content-Type': 'application/json'};
-    if (_token != null) {
-      headers['Authorization'] = 'Bearer $_token';
+  Future<Object?> _send(String method, String path, {Object? body}) async {
+    try {
+      final request = http.Request(method, Uri.parse('$apiBaseUrl$path'));
+      request.headers.addAll(_headers());
+      if (body != null) request.body = jsonEncode(body);
+      final streamed = await _client.send(request).timeout(_timeout);
+      final response = await http.Response.fromStream(streamed);
+      return _handleResponse(response);
+    } on TimeoutException {
+      throw const ApiException(
+        'The server took too long to respond. Please try again.',
+        code: 'timeout',
+      );
+    } on SocketException {
+      throw const ApiException(
+        'No connection to the server. Check your internet connection.',
+        code: 'offline',
+      );
+    } on http.ClientException {
+      throw const ApiException(
+        'Unable to reach the server. Please try again.',
+        code: 'network_error',
+      );
     }
-    return headers;
   }
 
-  dynamic _handleResponse(http.Response res) {
-    if (res.statusCode == 204) return null;
-    if (res.statusCode < 200 || res.statusCode >= 300) {
-      // try parse error text/json
-      final bodyText = res.body;
-      throw Exception(bodyText.isNotEmpty ? bodyText : res.reasonPhrase);
+  Map<String, String> _headers() => {
+    'Content-Type': 'application/json',
+    if (_token != null) 'Authorization': 'Bearer $_token',
+  };
+
+  Future<Object?> _handleResponse(http.Response response) async {
+    if (response.statusCode == 401) await onUnauthorized?.call();
+    if (response.statusCode == 204) return null;
+    Object? decoded;
+    if (response.body.isNotEmpty) {
+      try {
+        decoded = jsonDecode(response.body);
+      } on FormatException {
+        decoded = null;
+      }
     }
-    if (res.body.isEmpty) return null;
-    return jsonDecode(res.body);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      final envelope = decoded is Map<String, dynamic> ? decoded : null;
+      final error = envelope?['error'];
+      final message = error is Map<String, dynamic>
+          ? error['message'] as String?
+          : envelope?['detail'] as String?;
+      throw ApiException(
+        message ?? response.reasonPhrase ?? 'Request failed',
+        statusCode: response.statusCode,
+        code: error is Map<String, dynamic> ? error['code'] as String? : null,
+      );
+    }
+    return decoded;
   }
+
+  void close() => _client.close();
 }

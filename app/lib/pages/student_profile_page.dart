@@ -154,7 +154,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.green.withOpacity(0.3),
+                  color: Colors.green.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -167,7 +167,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       width: 2,
                     ),
                   ),
@@ -207,7 +207,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       Text(
                         _profile!.email,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
                       if (_profile!.registrationNo != null) ...[
@@ -215,7 +215,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                         Text(
                           'Reg: ${_profile!.registrationNo}',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                         ),
                       ],
@@ -235,7 +235,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: Colors.black.withValues(alpha: 0.06),
                   blurRadius: 18,
                   offset: const Offset(0, 10),
                 ),

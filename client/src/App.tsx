@@ -7,12 +7,13 @@ import StudentDashboard from "./pages/StudentDashboard";
 import CanteenDashboard from "./pages/CanteenDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import CanteenProfile from "./pages/CanteenProfile";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/auth";
 import NavBar from "./components/NavBar";
 import CanteenComplaints from "./pages/CanteenComplaints";
 import CanteenOrders from "./pages/CanteenOrders";
 import StudentProfilePage from "./pages/StudentProfile";
 import StudentComplaintsPage from "./pages/StudentComplaints";
+import StudentOrdersPage from "./pages/StudentOrders";
 import HomePage from "./pages/Home";        // ⬅️ new
 import Footer from "./components/Footer";   // ⬅️ new
 
@@ -86,6 +87,14 @@ function App() {
           element={
             <RequireAuth role="student">
               <StudentProfilePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/student/orders"
+          element={
+            <RequireAuth role="student">
+              <StudentOrdersPage />
             </RequireAuth>
           }
         />

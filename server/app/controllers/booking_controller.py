@@ -1,4 +1,4 @@
-from http.client import HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from ..models.booking import Booking
 from ..schemas.booking_schema import BookingCreate
@@ -22,7 +22,7 @@ def get_bookings_for_student(student_id: int, db: Session):
 
 
 def cancel_booking(booking_id: int, student_id: int, db: Session):
-    booking = db.query(Booking).get(booking_id)
+    booking = db.get(Booking, booking_id)
     if not booking or booking.student_id != student_id:
         return None
     booking.status = "cancelled"
@@ -40,7 +40,7 @@ def get_bookings_for_canteen(canteen_id: int, db: Session):
     )   
 
 def update_booking_status(booking_id: int, canteen_id: int, new_status: str, db: Session):
-    booking = db.query(Booking).get(booking_id)
+    booking = db.get(Booking, booking_id)
     if not booking:
         raise HTTPException(404, "Booking not found")
     if booking.meal.canteen_id != canteen_id:

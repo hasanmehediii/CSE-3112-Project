@@ -1,7 +1,7 @@
 // src/components/NavBar.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth";
 
 const baseNavStyle: React.CSSProperties = {
   position: "fixed",
@@ -227,6 +227,15 @@ function NavBar() {
             onMouseLeave={(e) => hoverOff(e.currentTarget)}
           >
             Dashboard
+          </Link>
+          <Link
+            to="/student/orders"
+            style={baseLinkStyle}
+            onClick={handleMenuLinkClick}
+            onMouseEnter={(e) => hoverOn(e.currentTarget)}
+            onMouseLeave={(e) => hoverOff(e.currentTarget)}
+          >
+            Orders
           </Link>
           <Link
             to="/student/profile"

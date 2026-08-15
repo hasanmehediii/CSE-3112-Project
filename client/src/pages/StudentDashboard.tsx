@@ -1,7 +1,7 @@
 // src/pages/StudentDashboard.tsx
 import { useEffect, useState, type CSSProperties } from "react";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 type Meal = {
   id: number;
@@ -397,7 +397,7 @@ const MealCard = ({ meal, variant, onQuickOrder }: MealCardProps) => {
           )}
 
           {variant === "budget" && (
-            <div style={budgetRibbonStyle}>Budget pick</div>
+            <div style={budgetRibbonStyle}>Low-cost pick</div>
           )}
         </div>
       </div>
@@ -423,11 +423,11 @@ function StudentDashboard() {
 
     (async () => {
       try {
-        const meals = await apiRequest("/meals/available", {}, token);
+        const meals = await apiRequest<Meal[]>("/meals/available", {}, token);
         setAvailableMeals(meals);
-        const budget = await apiRequest("/meals/budget", {}, token);
+        const budget = await apiRequest<Meal[]>("/meals/available?sort=price", {}, token);
         setBudgetDeals(budget);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
       }
     })();
@@ -448,7 +448,7 @@ function StudentDashboard() {
           },
         ],
       };
-      const res = await apiRequest(
+      const res = await apiRequest<{ id: number }>(
         "/orders/",
         {
           method: "POST",
@@ -457,8 +457,8 @@ function StudentDashboard() {
         token
       );
       setMessage(`Order #${res.id} placed for ${meal.name}`);
-    } catch (err: any) {
-      setMessage(err.message || "Could not place order");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Could not place order"));
     }
   };
 
@@ -478,7 +478,7 @@ function StudentDashboard() {
             <div>
               <div style={headerTitleStyle}>Student Dashboard</div>
               <div style={headerSubtitleStyle}>
-                See what’s cooking on campus, grab budget-friendly meals, and
+                See what’s cooking on campus, compare low-cost meals, and
                 place quick pickup orders—without standing in long queues.
               </div>
               <div style={headerChipRowStyle}>
@@ -566,7 +566,7 @@ function StudentDashboard() {
                   </div>
                 </div>
                 <div style={statPillStyle}>
-                  <div style={statPillLabelStyle}>Budget starts at</div>
+                  <div style={statPillLabelStyle}>Lowest price</div>
                   <div style={statPillValueStyle}>
                     {cheapest !== null ? `৳ ${cheapest}` : "—"}
                   </div>
@@ -576,16 +576,16 @@ function StudentDashboard() {
 
             {/* Budget deals card */}
             <div style={mealsSectionCardStyle}>
-              <div style={sectionTitleStyle}>Budget Deals (Low → High)</div>
+              <div style={sectionTitleStyle}>Low-cost meals (Low → High)</div>
               <div style={smallTextStyle}>
                 Wallet-friendly meals sorted by price so you can eat well on a
-                budget.
+                price.
               </div>
 
               <div style={scrollWrapperStyle}>
                 {budgetDeals.length === 0 && (
                   <div style={{ ...smallTextStyle, marginTop: "6px" }}>
-                    No special budget deals listed yet.
+                    No low-cost meals are available yet.
                   </div>
                 )}
 

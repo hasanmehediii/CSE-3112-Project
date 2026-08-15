@@ -1,8 +1,8 @@
 // src/pages/CanteenDashboard.tsx
 import { type FormEvent, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 type Meal = {
   id: number;
@@ -11,6 +11,10 @@ type Meal = {
   canteen_id: number;
   quantity: number;
   image_url?: string | null;
+};
+
+type CanteenProfileResponse = {
+  canteen: { id: number; name: string };
 };
 
 const pageWrapperStyle: CSSProperties = {
@@ -419,12 +423,12 @@ function CanteenDashboard() {
   const loadCanteenAndMeals = async () => {
     if (!token) return;
     try {
-      const profile = await apiRequest("/canteens/me", {}, token);
+      const profile = await apiRequest<CanteenProfileResponse>("/canteens/me", {}, token);
       const cid = profile.canteen.id as number;
       setCanteenId(cid);
       setCanteenName(profile.canteen.name);
 
-      const meals = await apiRequest(`/meals/canteen/${cid}`, {}, token);
+      const meals = await apiRequest<Meal[]>(`/meals/canteen/${cid}`, {}, token);
       setMyMeals(meals);
     } catch (err) {
       console.error(err);
@@ -461,8 +465,8 @@ function CanteenDashboard() {
       setImageUrl("");
       setMessage("Meal created.");
       await loadCanteenAndMeals();
-    } catch (err: any) {
-      setMessage(err.message || "Failed to create meal");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Failed to create meal"));
     }
   };
 
@@ -481,7 +485,7 @@ function CanteenDashboard() {
     setMessage(null);
 
     try {
-      const body: any = {
+      const body: Record<string, string | number | boolean | null> = {
         name: editName,
         price: Number(editPrice),
         quantity: Number(editQuantity),
@@ -500,8 +504,8 @@ function CanteenDashboard() {
       setMessage("Meal updated.");
       setEditingMeal(null);
       await loadCanteenAndMeals();
-    } catch (err: any) {
-      setMessage(err.message || "Failed to update meal");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Failed to update meal"));
     }
   };
 
@@ -524,8 +528,8 @@ function CanteenDashboard() {
         setEditingMeal(null);
       }
       await loadCanteenAndMeals();
-    } catch (err: any) {
-      setMessage(err.message || "Failed to delete meal");
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err, "Failed to delete meal"));
     }
   };
 

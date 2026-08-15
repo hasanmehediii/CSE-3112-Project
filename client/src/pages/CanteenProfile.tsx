@@ -1,8 +1,8 @@
 // src/pages/CanteenProfile.tsx
 import { useEffect, useState, type FormEvent } from "react";
 import type { CSSProperties } from "react";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 type CanteenProfileResponse = {
   user: {
@@ -295,7 +295,7 @@ function CanteenProfile() {
     setSuccess(null);
 
     try {
-      const body: any = {
+      const body: Record<string, string> = {
         name: ownerName,
         phone,
         canteen_name: canteenName,
@@ -319,8 +319,8 @@ function CanteenProfile() {
       setProfile(updated);
       setPassword("");
       setSuccess("Profile updated successfully.");
-    } catch (err: any) {
-      setError(err.message || "Failed to update profile");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to update profile"));
     }
   };
 

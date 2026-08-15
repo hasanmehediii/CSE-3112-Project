@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth";
 
 // ====== Types ======
 type Complaint = {
@@ -21,6 +21,7 @@ type Student = {
 
 type Canteen = {
   id: number;
+  owner_id: number;
   name: string;
   location?: string | null;
 };
@@ -202,7 +203,7 @@ function AdminDashboard() {
 
       // Complaints (this one already exists)
       try {
-        const complaintsData = await apiRequest("/complaints/all", {}, token);
+        const complaintsData = await apiRequest<Complaint[]>("/complaints/all", {}, token);
         setComplaints(complaintsData || []);
       } catch (err) {
         console.error("Error loading complaints", err);
@@ -211,45 +212,40 @@ function AdminDashboard() {
 
       // Students (via /users?role=student)
       try {
-        const studentsData = await apiRequest(
+        const studentsData = await apiRequest<Student[]>(
           "/users?role=student",
           {},
           token
         );
-        setStudents((studentsData || []) as Student[]);
+        setStudents(studentsData);
       } catch (err) {
         console.warn("Students endpoint error", err);
       }
 
       // Canteens (via /users?role=canteen) → map to {id, name, location}
       try {
-        const canteenUsers = await apiRequest(
-          "/users?role=canteen",
+        const canteenData = await apiRequest<Canteen[]>(
+          "/canteens",
           {},
           token
         );
-        const mapped: Canteen[] = (canteenUsers || []).map((u: any) => ({
-          id: u.id,
-          name: u.canteen_name || u.name,
-          location: u.location ?? null,
-        }));
-        setCanteens(mapped);
+        setCanteens(canteenData);
       } catch (err) {
         console.warn("Canteens endpoint error", err);
       }
 
       // Orders
       try {
-        const ordersData = await apiRequest("/orders/all", {}, token);
-        setOrders((ordersData || []) as Order[]);
+        const ordersData = await apiRequest<Order[]>("/orders/all", {}, token);
+        setOrders(ordersData);
       } catch (err) {
         console.warn("Orders endpoint error", err);
       }
 
       // Today’s menus
       try {
-        const todayMenusData = await apiRequest("/meals/today", {}, token);
-        setTodayMenus((todayMenusData || []) as Meal[]);
+        const todayMenusData = await apiRequest<Meal[]>("/meals/today", {}, token);
+        setTodayMenus(todayMenusData);
       } catch (err) {
         console.warn("Meals endpoint error", err);
       }
@@ -282,19 +278,19 @@ function AdminDashboard() {
   // ====== Sorted views ======
   const complaintsSortedByCanteen = useMemo(() => {
     return [...complaints].sort((a, b) => {
-      const an = getCanteenName(a.canteen_id);
-      const bn = getCanteenName(b.canteen_id);
+      const an = a.canteen_id ? canteenNameById[a.canteen_id] || `Canteen #${a.canteen_id}` : "-";
+      const bn = b.canteen_id ? canteenNameById[b.canteen_id] || `Canteen #${b.canteen_id}` : "-";
       return an.localeCompare(bn);
     });
-  }, [complaints, canteens]);
+  }, [complaints, canteenNameById]);
 
   const ordersSortedByStudent = useMemo(() => {
     return [...orders].sort((a, b) => {
-      const an = getStudentName(a.student_id);
-      const bn = getStudentName(b.student_id);
+      const an = a.student_id ? studentNameById[a.student_id] || `Student #${a.student_id}` : "-";
+      const bn = b.student_id ? studentNameById[b.student_id] || `Student #${b.student_id}` : "-";
       return an.localeCompare(bn);
     });
-  }, [orders, students]);
+  }, [orders, studentNameById]);
 
   // ====== Actions: Students ======
   const handleAddStudent = async () => {
@@ -314,7 +310,7 @@ function AdminDashboard() {
 
       // Admin-creating a student user
       await apiRequest(
-        "/users/register",
+        "/admin/users",
         {
           method: "POST",
           headers: {
@@ -326,8 +322,8 @@ function AdminDashboard() {
       );
 
       // Reload students
-      const studentsData = await apiRequest("/users?role=student", {}, token);
-      setStudents((studentsData || []) as Student[]);
+      const studentsData = await apiRequest<Student[]>("/users?role=student", {}, token);
+      setStudents(studentsData);
 
       setNewStudentName("");
       setNewStudentEmail("");
@@ -380,7 +376,7 @@ function AdminDashboard() {
       };
 
       await apiRequest(
-        "/users/register",
+        "/admin/users",
         {
           method: "POST",
           headers: {
@@ -392,13 +388,8 @@ function AdminDashboard() {
       );
 
       // Reload canteens from users
-      const canteenUsers = await apiRequest("/users?role=canteen", {}, token);
-      const mapped: Canteen[] = (canteenUsers || []).map((u: any) => ({
-        id: u.id,
-        name: u.canteen_name || u.name,
-        location: u.location ?? null,
-      }));
-      setCanteens(mapped);
+      const canteenData = await apiRequest<Canteen[]>("/canteens", {}, token);
+      setCanteens(canteenData);
 
       setNewCanteenName("");
       setNewCanteenEmail("");
@@ -416,7 +407,7 @@ function AdminDashboard() {
 
     try {
       await apiRequest(
-        `/users/${id}`,
+        `/users/${canteens.find((canteen) => canteen.id === id)?.owner_id ?? id}`,
         {
           method: "DELETE",
         },

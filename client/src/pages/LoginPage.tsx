@@ -1,8 +1,8 @@
 // src/pages/LoginPage.tsx
 import { type FormEvent, useState, type CSSProperties, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiRequest } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { apiRequest, getErrorMessage } from "../api";
+import { useAuth } from "../context/auth";
 
 const pageStyle: CSSProperties = {
   minHeight: "100vh",
@@ -220,7 +220,7 @@ function LoginPage() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await apiRequest(
+      const res = await apiRequest<{ access_token: string }>(
         "/users/login",
         {
           method: "POST",
@@ -232,8 +232,8 @@ function LoginPage() {
       // Just set the token; role will be loaded by AuthContext
       login(res.access_token);
       // ⬆️ No navigate here based on stale userRole
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Login failed"));
     }
   };
 

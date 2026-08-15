@@ -32,6 +32,17 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _register() async {
+    if (_nameCtrl.text.trim().length < 2 ||
+        !_emailCtrl.text.contains('@') ||
+        _passwordCtrl.text.length < 8 ||
+        !_passwordCtrl.text.contains(RegExp('[A-Za-z]')) ||
+        !_passwordCtrl.text.contains(RegExp('[0-9]'))) {
+      setState(() {
+        _error =
+            'Enter a valid name and email, plus an 8+ character password with a letter and number.';
+      });
+      return;
+    }
     setState(() {
       _loading = true;
       _error = null;
@@ -47,7 +58,6 @@ class _RegisterPageState extends State<RegisterPage> {
           'name': _nameCtrl.text.trim(),
           'email': _emailCtrl.text.trim(),
           'password': _passwordCtrl.text,
-          'role': 'student',
           'registration_no': _regCtrl.text.trim(),
           'dept': _deptCtrl.text.trim(),
         },
@@ -96,16 +106,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
-                    color: Colors.white.withOpacity(0.98),
+                    color: Colors.white.withValues(alpha: 0.98),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.13),
+                        color: Colors.black.withValues(alpha: 0.13),
                         blurRadius: 24,
                         offset: const Offset(0, 16),
                       ),
                     ],
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       width: 1,
                     ),
                   ),

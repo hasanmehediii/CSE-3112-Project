@@ -1,249 +1,102 @@
-# KhaiKhai - Your Meal Planner
+# KhaiKhai
 
-<p align="center">
-  <img src="docs/diet.png" alt="Website Logo" width="150" height="150"/>
-  <br><br>
-  <strong>A Hybrid Platform in mobile app and website to guide your food plan whole month :)</strong>
-</p>
+KhaiKhai is a campus meal-ordering platform for the University of Dhaka pilot. Students use the web or Android app, canteen teams manage menus and orders on the web, and university administrators control accounts and complaints.
 
-<p align="center">
-  <img src="docs/KhaiKhai.png"/>
-  <br>
-</p>
+The production web client is available at [khaikhai.vercel.app](https://khaikhai.vercel.app).
 
-## 🥗 About The Project
+## Repository
 
-**KhaiKhai** is a smart meal planning platform designed for students and busy individuals to manage their daily food choices effectively.
+```text
+client/  React 19 + TypeScript website for students, canteens, and admins
+server/  FastAPI + SQLAlchemy API shared by web and Android
+app/     Android-first Flutter student app
+docs/    Product screenshots and project documentation
+```
 
-Our goal is to make eating **affordable**, **healthy**, and **convenient**, while considering:
+The retired `frontend`, `backend`, and `khaikhai` implementations were removed. The recovery point before consolidation is Git tag `recovery/pre-consolidation-20260815`.
 
-- Personal budget  
-- Canteen menu & availability  
-- Weather conditions  
-- User preferences  
+## Local setup
 
-There are mainly **two types of users**:
+Copy `.env.example` to `.env` and provide a PostgreSQL connection, a random JWT secret of at least 32 characters, and the allowed frontend origins. Never commit `.env`.
 
-- 🎓 **Students** – Use the mobile app to set their budget, view the best deal for each day, and get personalized food recommendations.  
-- 🍽️ **Canteen Owners** – Use the web dashboard to upload daily menus, set prices, and manage orders.  
+### API
 
-There is also an **Admin panel** (assumed as University Authority) to monitor the system, handle complaints, and manage both students and canteen owners.
-
----
-
-## ✨ What KhaiKhai Offers
-
-- 📅 **Daily meal planning** (breakfast, lunch, snacks, dinner)  
-- 💰 **Budget-aware recommendations**  
-- 🍴 **Canteen-integrated menus & ordering**  
-- 🌦️ **Weather-aware suggestions**  
-- 🥦 **Balanced and health-focused meals**  
-- 🧾 **Order & complaint management**  
-
----
-
-## Website
-| Page | Screenshot |
-|---|---|
-| Welcome Page | ![Welcome](docs/home.png) |
-| Menu Upload Page | ![meal](docs/mealupload.png) |
-| Profile Page | ![profile](docs/profile.png) |
-| Student Page | ![dashboard](docs/student.png) |
-| Complaint Page | ![complaint](docs/complain.png) |
-## Mobile App
-![Home Page](docs/appdemo.jpg)
-
-
-## 🚀 Why KhaiKhai?
-
-Managing food expenses and maintaining a healthy diet is hard for students and young professionals.
-
-**KhaiKhai** bridges this gap by:
-
-- Combining **budget planning** and **meal planning**  
-- Offering a **hybrid solution** – Flutter mobile app + React web app  
-- Backed by a **FastAPI** backend and **database** for persistent storage  
-- Designed with **role-based access** for students, canteen owners, and admins  
-
----
-
-## 🌟 Core Features
-
-### 🍽️ Smart 30-Day Meal Planning
-- Generates a **30-day meal plan** for:
-  - Breakfast
-  - Lunch
-  - Snacks
-  - Dinner
-- Balances **nutrition** and **budget**.
-- Tailored specifically for **students** and **campus environments**.
-
----
-
-### 💰 Budget Management
-- Students input their **monthly pocket money**.
-- KhaiKhai:
-  - Suggests meals that stay within the budget.
-  - Tracks daily & monthly spending.
-  - Prevents overshooting the remaining balance.
-
----
-
-### 🍴 Canteen Integration
-- Canteen owners:
-  - Upload **daily menus** with prices.
-  - Update item **availability**.
-  - Track **orders** and **earnings**.
-- Students:
-  - See **real-time canteen menus**.
-  - Get **meal suggestions** directly from available items.
-  - View **nutrition details** (where available).
-
----
-
-### 👤 User Roles & Profiles
-
-- **Student**
-  - Personalized dashboard  
-  - View 30-day meal plan  
-  - Track orders and spending  
-  - Submit complaints  
-
-- **Canteen Owner**
-  - Manage menu items (add/update/delete)  
-  - Track daily orders  
-  - View earnings and popularity of items  
-
-- **Admin / University Authority**
-  - Manage users (students & canteen owners)  
-  - Approve/monitor canteens  
-  - View and resolve complaints  
-
----
-
-### 📊 Orders & Complaints System
-
-- Students can:
-  - Place orders directly from the app  
-  - Track order status  
-  - Submit complaints (food quality, delay, behavior, etc.)
-
-- Admins can:
-  - View all complaints  
-  - Change complaint status (open / in-progress / resolved)  
-  - Maintain transparency between students and canteen owners  
-
----
-
-### 🔒 Secure & Scalable
-
-- **User authentication** with secure credential handling  
-- Built using:
-  - ⚙️ **FastAPI** backend  
-  - 🗃️ **Database** (e.g., MongoDB / SQL via ORM)  
-  - 🌐 **React** web frontend  
-  - 📱 **Flutter** mobile app  
-- Designed for:
-  - Modular growth  
-  - Easy deployment  
-  - Clean, user-friendly UI  
-
----
-
-## 🚀 Getting Started
-
-### ✅ Prerequisites
-
-Before running the project, make sure you have:
-
-- **Python 3.8+**
-- **pip** (Python package installer)
-
-> Optional but recommended: a **virtual environment** (venv) to keep dependencies isolated.
-
----
-
-### 🔧 Installation & Backend Setup
-
-Follow these steps to set up and run the **FastAPI backend**:
-
-```bash
-# 1️⃣ Clone the repository
-git clone https://github.com/hasanmehediii/CSE-3112-Project.git
-
-# 2️⃣ Go to the backend folder
+```powershell
 cd server
-
-# 3️⃣ (Optional) Create a virtual environment
-python -m venv venv
-
-# 4️⃣ Activate the virtual environment
-# On Linux / macOS:
-source venv/bin/activate
-
-# On Windows (PowerShell):
-# .\venv\Scripts\Activate.ps1
-
-# On Windows (CMD):
-# venv\Scripts\activate
-
-# 5️⃣ Install required dependencies
-pip install -r requirements.txt
-
-# 6️⃣ Run the FastAPI development server
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-### Setup .env in server (Schema are in ```database.psql```):
-```bash
-DATABASE_URL="postgresql://<db_user>:<db_password>@<host>/<db_name>?sslmode=require"
-JWT_SECRET="<your_super_secret_jwt_key_here>"
-PORT=8000
+For a database that already contains the original KhaiKhai tables, inspect the schema and establish the migration baseline once with `alembic stamp 0001` instead of recreating the tables.
 
-FRONTEND_URL="http://localhost:5173"
-SERVER_URL="http://localhost:8000"
+Create the first administrator from the server directory:
+
+```powershell
+python -m app.bootstrap_admin --name "University Admin" --email admin@example.com
 ```
 
-### Frontend Setup
-Follow these steps to set up and run the **React frontend**:
+Students can self-register. Canteen accounts can only be provisioned by an authenticated administrator through `POST /admin/users`.
 
-```bash
-# 1️⃣ Go to the frontend folder
+### Website
+
+```powershell
 cd client
-# 2️⃣ Install required dependencies
-npm install
-# 3️⃣ Run the React development server
+npm ci
 npm run dev
 ```
 
-## 🛠️ Tech Stack
+Set `VITE_BACKEND_URL` in `client/.env.local` when the API does not run at `http://127.0.0.1:8000`.
 
-| Layer               | Technology                          |
-|--------------------|------------------------------------|
-| Backend             | FastAPI                             |
-| Frontend (Web)      | React.js                            |
-| Frontend (Mobile)   | Flutter                             |
-| Database            | MongoDB, PostgreSQL                           |
-| Deployment          | Vercel (frontend + backend) |
+### Android app
 
+```powershell
+cd app
+flutter pub get
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
+```
 
----
+Use `10.0.2.2` for the Android emulator and the computer's LAN address for a physical development device. Production builds should use the deployed HTTPS API:
 
-## ❤️ Acknowledgements
+```powershell
+flutter build apk --release --dart-define=API_BASE_URL=https://khaikhaiserver.vercel.app
+```
 
-- Department of Computer Science & Engineering, University of Dhaka
-- All teachers and friends who inspired this project
+## API and deployment
 
-## 📌 Future Enhancements (Ideas)
+- Run `alembic upgrade head` as a deployment/release step before starting a new API version.
+- Configure `ENVIRONMENT=production`, `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URLS`, and optionally `ACCESS_TOKEN_EXPIRE_SECONDS` in the backend environment.
+- Configure `VITE_BACKEND_URL` in the Vercel client project.
+- Use `/health` for process checks and `/ready` for database readiness checks.
+- The API reports `X-Request-ID` and `X-Response-Time-Ms` headers for diagnostics.
+- Rotate any database or JWT credentials that were ever stored in the formerly tracked root `.env`; removing a file does not remove it from Git history.
 
-- Detailed nutrition breakdown for each meal
-- AI-based meal recommendation using past choices
-- Push notifications for meal reminders & low-balance alerts
-- Analytics dashboard for admin & canteen owners
+The React client remains on Vercel. Backend hosting stays unchanged for this hardening release while cold-start and database latency are measured.
 
+## Quality checks
 
-## 👨‍💻 Developers
+```powershell
+# API
+cd server
+pytest -q
 
-- ### Mehedi Hasan
-- GitHub: https://github.com/hasanmehediii
-- Email: mehedi200105075@gmail.com
+# Website
+cd client
+npm run lint
+npm run build
+
+# Android app
+cd app
+flutter analyze
+flutter test
+flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:8000
+```
+
+## Product boundaries
+
+- This release is a single-campus pilot, not a multi-tenant billing product.
+- The Android app accepts student accounts only.
+- Students may also use the website.
+- Budget planning, expense reports, and legacy recommendation features are intentionally out of scope. “Low-cost meals” simply sorts currently available meals by price.

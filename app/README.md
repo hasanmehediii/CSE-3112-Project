@@ -1,16 +1,14 @@
-# app
+# KhaiKhai Student for Android
 
-A new Flutter project.
+The Flutter client is intentionally student-only and uses the same FastAPI server as the React website. It supports student registration/login, live meals, pickup orders, order tracking, complaints, and profile management.
 
-## Getting Started
+## Run
 
-This project is a starting point for a Flutter application.
+```powershell
+flutter pub get
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
+```
 
-A few resources to get you started if this is your first Flutter project:
+Tokens are stored with Android secure storage. The app rejects expired tokens and any token whose role is not `student`.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Only Android is maintained in this repository. Other Flutter targets can be regenerated later with `flutter create . --platforms=ios` or the appropriate platform list.

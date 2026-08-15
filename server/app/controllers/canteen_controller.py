@@ -8,6 +8,8 @@ from ..schemas.canteen_schema import CanteenCreate, CanteenProfileUpdate
 
 
 def create_canteen(owner_id: int, data: CanteenCreate, db: Session):
+    if db.query(Canteen).filter(Canteen.owner_id == owner_id).first():
+        raise HTTPException(status_code=409, detail="This owner already has a canteen")
     canteen = Canteen(
         owner_id=owner_id,
         name=data.name,
@@ -21,15 +23,15 @@ def create_canteen(owner_id: int, data: CanteenCreate, db: Session):
     return canteen
 
 
-def get_canteens(db: Session, category: str | None = None):
+def get_canteens(db: Session, category: str | None = None, offset: int = 0, limit: int = 100):
     query = db.query(Canteen)
     if category:
         query = query.filter(Canteen.category == category)
-    return query.all()
+    return query.order_by(Canteen.name.asc(), Canteen.id.asc()).offset(offset).limit(limit).all()
 
 
 def get_canteen_by_id(canteen_id: int, db: Session):
-    canteen = db.query(Canteen).get(canteen_id)
+    canteen = db.get(Canteen, canteen_id)
     if not canteen:
         raise HTTPException(404, "Canteen not found")
     return canteen
@@ -45,7 +47,7 @@ def _get_canteen_for_owner(owner_id: int, db: Session) -> Canteen:
 
 # ✅ GET profile for canteen owner (user + canteen info)
 def get_canteen_profile(owner_id: int, db: Session):
-    user = db.query(User).get(owner_id)
+    user = db.get(User, owner_id)
     if not user or user.role != "canteen":
         raise HTTPException(403, "Not a canteen owner")
 
@@ -73,7 +75,7 @@ def get_canteen_profile(owner_id: int, db: Session):
 
 # ✅ UPDATE profile (no email)
 def update_canteen_profile(owner_id: int, data: CanteenProfileUpdate, db: Session):
-    user = db.query(User).get(owner_id)
+    user = db.get(User, owner_id)
     if not user or user.role != "canteen":
         raise HTTPException(403, "Not a canteen owner")
 

@@ -13,7 +13,7 @@ class StudentDashboardPage extends StatefulWidget {
 class _StudentDashboardPageState extends State<StudentDashboardPage> {
   bool _loading = true;
   List<Meal> _availableMeals = [];
-  List<Meal> _budgetDeals = [];
+  List<Meal> _lowCostMeals = [];
   String? _message;
 
   @override
@@ -33,14 +33,15 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     try {
       final availableRes =
           await auth.apiClient.get('/meals/available') as List<dynamic>;
-      final budgetRes =
-          await auth.apiClient.get('/meals/budget') as List<dynamic>;
+      final lowCostRes =
+          await auth.apiClient.get('/meals/available?sort=price')
+              as List<dynamic>;
 
       setState(() {
         _availableMeals = availableRes
             .map((e) => Meal.fromJson(e as Map<String, dynamic>))
             .toList();
-        _budgetDeals = budgetRes
+        _lowCostMeals = lowCostRes
             .map((e) => Meal.fromJson(e as Map<String, dynamic>))
             .toList();
       });
@@ -74,7 +75,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         },
       );
 
-      final id = res['id'];
+      final id = (res as Map<String, dynamic>)['id'];
       setState(() {
         _message = 'Order #$id placed for ${meal.name}';
       });
@@ -92,7 +93,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, 10),
           ),
@@ -188,7 +189,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                           color: const Color(0xFFDCFCE7),
                         ),
                         child: const Text(
-                          'Budget pick',
+                          'Low-cost pick',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -227,7 +228,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.orange.withOpacity(0.25),
+                  color: Colors.orange.withValues(alpha: 0.25),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -240,7 +241,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                   height: 42,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withValues(alpha: 0.15),
                   ),
                   child: const Icon(
                     Icons.restaurant_menu_outlined,
@@ -261,9 +262,9 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'View today’s meals, explore budget deals, and place quick pickup orders.',
+                        'View today’s meals, compare low-cost picks, and place quick pickup orders.',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 11.5,
                         ),
                       ),
@@ -343,25 +344,25 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               ),
             const SizedBox(height: 18),
 
-            // Budget deals
+            // Low-cost meals
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Budget Deals (Low → High)',
+                  'Low-cost meals (Low → High)',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (_budgetDeals.isNotEmpty)
+                if (_lowCostMeals.isNotEmpty)
                   Text(
-                    '${_budgetDeals.length} picks',
+                    '${_lowCostMeals.length} picks',
                     style: const TextStyle(fontSize: 11.5, color: Colors.grey),
                   ),
               ],
             ),
             const SizedBox(height: 6),
-            if (_budgetDeals.isEmpty)
+            if (_lowCostMeals.isEmpty)
               const Text(
                 'No meals found.',
                 style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -370,7 +371,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: _budgetDeals.length,
+                itemCount: _lowCostMeals.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
@@ -378,7 +379,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                   childAspectRatio: 0.78,
                 ),
                 itemBuilder: (_, i) =>
-                    _buildMealCard(_budgetDeals[i], showQuickOrder: false),
+                    _buildMealCard(_lowCostMeals[i], showQuickOrder: false),
               ),
           ],
         ],
