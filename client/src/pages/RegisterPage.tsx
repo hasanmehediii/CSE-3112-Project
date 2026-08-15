@@ -5,190 +5,117 @@ import {
   type CSSProperties,
   type FocusEvent,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiRequest, getErrorMessage } from "../api";
+
+/* ── Reuse the same keyframes injected by LoginPage ── */
+const STYLE_ID = "auth-keyframes";
+if (typeof document !== "undefined" && !document.getElementById(STYLE_ID)) {
+  const s = document.createElement("style");
+  s.id = STYLE_ID;
+  s.textContent = `
+    @keyframes auth-fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes auth-float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes auth-glow   { 0%,100%{opacity:.45} 50%{opacity:.8} }
+    .auth-input:focus { border-color:#ea580c !important; box-shadow:0 0 0 3px rgba(234,88,12,.18) !important; }
+    .auth-btn:hover { transform:translateY(-2px) !important; box-shadow:0 20px 40px rgba(234,88,12,.55) !important; }
+  `;
+  document.head.appendChild(s);
+}
+
+/* ── Tokens ── */
+const brand   = "#ea580c";
+const brandLt = "#f97316";
 
 const pageStyle: CSSProperties = {
   minHeight: "100vh",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  padding: "80px 16px 40px", // gap from floating navbar
-  background:
-    "radial-gradient(circle at top left, rgba(34,197,94,0.26), transparent 52%), " +
-    "radial-gradient(circle at bottom right, rgba(37,99,235,0.32), transparent 55%), " +
-    "linear-gradient(135deg, #020617, #020617)",
-  color: "#e5e7eb",
+  padding: "100px 20px 48px",
+  background: "linear-gradient(170deg, #0f172a 0%, #0c0f1a 50%, #1a0f0a 100%)",
+  position: "relative",
+  overflow: "hidden",
 };
 
-const containerStyle: CSSProperties = {
+const orbStyle = (top: string, left: string, size: number, color: string, delay: string): CSSProperties => ({
+  position: "absolute", top, left,
+  width: size, height: size, borderRadius: "50%",
+  background: `radial-gradient(circle, ${color}, transparent 65%)`,
+  animation: `auth-float 8s ease-in-out infinite ${delay}`,
+  pointerEvents: "none",
+});
+
+const cardStyle: CSSProperties = {
   width: "100%",
-  maxWidth: "520px",
-  padding: "22px 22px 24px",
-  backgroundColor: "rgba(15, 23, 42, 0.96)",
-  borderRadius: "18px",
-  border: "1px solid rgba(148,163,184,0.35)",
-  boxShadow: "0 34px 80px rgba(15, 23, 42, 0.8)",
-  backdropFilter: "blur(18px)",
-};
-
-// Brand row (same family as Login)
-const brandRowStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  marginBottom: "14px",
-};
-
-const brandLeftStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-};
-
-const brandIconStyle: CSSProperties = {
-  width: "32px",
-  height: "32px",
-  borderRadius: "999px",
-  background:
-    "conic-gradient(from 200deg, #22c55e, #facc15, #38bdf8, #22c55e)",
-  padding: "2px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const brandIconInnerStyle: CSSProperties = {
-  width: "100%",
-  height: "100%",
-  borderRadius: "999px",
-  backgroundColor: "#020617",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "0.9rem",
-  fontWeight: 700,
-  color: "#22c55e",
-};
-
-const brandNameStyle: CSSProperties = {
-  fontSize: "0.9rem",
-  fontWeight: 600,
-};
-
-const brandTagStyle: CSSProperties = {
-  fontSize: "0.7rem",
-  color: "#9ca3af",
-};
-
-const envPillStyle: CSSProperties = {
-  fontSize: "0.7rem",
-  padding: "3px 8px",
-  borderRadius: "999px",
-  border: "1px solid rgba(55,65,81,0.9)",
-  backgroundColor: "rgba(15,23,42,0.8)",
-  color: "#9ca3af",
-};
-
-const smallTagStyle: CSSProperties = {
-  fontSize: "0.7rem",
-  textTransform: "uppercase",
-  letterSpacing: "0.14em",
-  color: "#9ca3af",
-  marginBottom: "4px",
-};
-
-const titleStyle: CSSProperties = {
-  marginBottom: "4px",
-  fontSize: "1.55rem",
-  fontWeight: 700,
-  textAlign: "left",
-  backgroundImage: "linear-gradient(to right, #22c55e, #4ade80)",
-  WebkitBackgroundClip: "text",
-  color: "transparent",
-};
-
-const subtitleStyle: CSSProperties = {
-  fontSize: "0.85rem",
-  color: "#9ca3af",
-  marginBottom: "16px",
+  maxWidth: 520,
+  padding: "32px 28px 28px",
+  borderRadius: 22,
+  background: "rgba(15,23,42,.85)",
+  border: "1px solid rgba(148,163,184,.12)",
+  boxShadow: "0 40px 80px rgba(0,0,0,.5)",
+  backdropFilter: "blur(24px)",
+  color: "#e2e8f0",
+  position: "relative",
+  zIndex: 1,
+  animation: "auth-fadeUp .6s both",
 };
 
 const labelStyle: CSSProperties = {
-  fontSize: "0.8rem",
-  fontWeight: 500,
-  color: "#e5e7eb",
-  marginBottom: "4px",
+  fontSize: ".8rem",
+  fontWeight: 600,
+  color: "#94a3b8",
+  marginBottom: 6,
   display: "block",
 };
 
-const baseInputStyle: CSSProperties = {
-  width: "100%",
-  padding: "9px 11px",
-  borderRadius: "9px",
-  border: "1px solid #374151",
-  fontSize: "0.85rem",
-  outline: "none",
-  transition: "border-color 0.18s ease, box-shadow 0.18s ease",
-  backgroundColor: "#020617",
-  color: "#e5e7eb",
-};
-
 const inputStyle: CSSProperties = {
-  ...baseInputStyle,
-};
-
-const roleHintStyle: CSSProperties = {
-  fontSize: "0.75rem",
-  color: "#9ca3af",
-  marginTop: "4px",
-};
-
-const formGridStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-  gap: "12px 16px",
-  marginTop: "4px",
-};
-
-const fieldWrapperStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-};
-
-const buttonStyle: CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
-  borderRadius: "999px",
+  padding: "11px 14px",
+  borderRadius: 12,
+  border: "1px solid rgba(148,163,184,.15)",
+  fontSize: ".88rem",
+  outline: "none",
+  transition: "border-color .2s, box-shadow .2s",
+  background: "rgba(0,0,0,.25)",
+  color: "#e2e8f0",
+};
+
+const btnStyle: CSSProperties = {
+  width: "100%",
+  padding: "12px 16px",
+  borderRadius: 999,
   border: "none",
-  backgroundImage: "linear-gradient(135deg, #22c55e, #16a34a)",
+  background: `linear-gradient(135deg, ${brandLt}, ${brand})`,
   color: "white",
-  fontWeight: 600,
-  fontSize: "0.95rem",
+  fontWeight: 700,
+  fontSize: ".95rem",
   cursor: "pointer",
-  marginTop: "12px",
-  boxShadow: "0 14px 30px rgba(22, 163, 74, 0.55)",
-  transition:
-    "background-position 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
-  backgroundSize: "150% 150%",
-  backgroundPosition: "0% 50%",
+  marginTop: 12,
+  boxShadow: `0 14px 32px rgba(234,88,12,.4)`,
+  transition: "transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s",
 };
 
 const errorStyle: CSSProperties = {
-  color: "#fecaca",
-  fontSize: "0.8rem",
-  marginBottom: "12px",
-  padding: "8px 10px",
-  borderRadius: "8px",
-  backgroundColor: "rgba(127, 29, 29, 0.4)",
-  border: "1px solid rgba(248, 113, 113, 0.6)",
+  padding: "10px 14px",
+  borderRadius: 12,
+  background: "rgba(127,29,29,.35)",
+  border: "1px solid rgba(248,113,113,.35)",
+  color: "#fca5a5",
+  fontSize: ".82rem",
+  marginBottom: 16,
 };
 
-const helperTextStyle: CSSProperties = {
-  fontSize: "0.78rem",
-  color: "#9ca3af",
-  marginTop: "10px",
-  textAlign: "right",
+const gridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+  gap: "14px 18px",
+  marginTop: 4,
+};
+
+const fieldStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
 };
 
 function RegisterPage() {
@@ -197,14 +124,12 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [dept, setDept] = useState("");
   const [registrationNo, setRegistrationNo] = useState("");
-
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-
     try {
       const body = {
         name,
@@ -213,14 +138,10 @@ function RegisterPage() {
         registration_no: registrationNo || undefined,
         dept: dept || undefined,
       };
-
       await apiRequest(
         "/users/register",
-        {
-          method: "POST",
-          body: JSON.stringify(body),
-        },
-        null
+        { method: "POST", body: JSON.stringify(body) },
+        null,
       );
       navigate("/login");
     } catch (err: unknown) {
@@ -228,165 +149,125 @@ function RegisterPage() {
     }
   };
 
-  const handleFocus = (
-    e: FocusEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    e.currentTarget.style.borderColor = "#22c55e";
-    e.currentTarget.style.boxShadow = "0 0 0 1px rgba(34,197,94,0.5)";
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = brand;
+    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(234,88,12,.18)";
   };
-
-  const handleBlur = (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = "#374151";
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = "rgba(148,163,184,.15)";
     e.currentTarget.style.boxShadow = "none";
   };
 
   return (
     <div style={pageStyle}>
-      <div style={containerStyle}>
-        {/* Brand row (to match Login) */}
-        <div style={brandRowStyle}>
-          <div style={brandLeftStyle}>
-            <div style={brandIconStyle}>
-              <div style={brandIconInnerStyle}>K</div>
-            </div>
+      {/* Decorative orbs */}
+      <div style={orbStyle("70%", "-30px", 350, "rgba(234,88,12,.12)", "0s")} />
+      <div style={orbStyle("-40px", "70%", 280, "rgba(99,102,241,.1)", "3s")} />
+
+      <div style={cardStyle}>
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <img src="/logo.png" alt="KhaiKhai" style={{ width: 32, height: 32, borderRadius: "50%" }} />
             <div>
-              <div style={brandNameStyle}>Khaikhai</div>
-              <div style={brandTagStyle}>Campus meal planner</div>
+              <div style={{ fontWeight: 700, fontSize: ".92rem", color: "white" }}>KhaiKhai</div>
+              <div style={{ fontSize: ".7rem", color: "#64748b" }}>Campus meal planner</div>
             </div>
           </div>
-          <div style={envPillStyle}>Create account</div>
+          <span style={{
+            fontSize: ".68rem", padding: "3px 10px", borderRadius: 999,
+            border: "1px solid rgba(148,163,184,.12)",
+            color: "#64748b", background: "rgba(0,0,0,.2)",
+          }}>Create account</span>
         </div>
 
-        <div style={smallTagStyle}>Get started</div>
-        <h2 style={titleStyle}>Sign up for Khaikhai</h2>
-        <p style={subtitleStyle}>
+        {/* Header */}
+        <div style={{ fontSize: ".72rem", textTransform: "uppercase" as const, letterSpacing: ".12em", color: "#64748b", marginBottom: 4 }}>
+          Get started
+        </div>
+        <h2 style={{
+          margin: "0 0 4px", fontSize: "1.5rem", fontWeight: 750,
+          background: `linear-gradient(135deg, ${brandLt}, #fb923c)`,
+          WebkitBackgroundClip: "text", color: "transparent",
+        }}>
+          Sign up for KhaiKhai
+        </h2>
+        <p style={{ margin: "0 0 20px", fontSize: ".84rem", color: "#64748b", lineHeight: 1.5 }}>
           Create your student account to browse and order campus meals.
         </p>
 
         {error && <div style={errorStyle}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div style={formGridStyle}>
-            {/* Name */}
-            <div style={fieldWrapperStyle}>
-              <label style={labelStyle} htmlFor="name">
-                Full name
-              </label>
+          <div style={gridStyle}>
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="name">Full name</label>
               <input
-                id="name"
-                style={inputStyle}
+                id="name" className="auth-input" style={inputStyle}
                 placeholder="Your full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            </div>
-
-            {/* Email */}
-            <div style={fieldWrapperStyle}>
-              <label style={labelStyle} htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                style={inputStyle}
-                type="email"
-                placeholder="you@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            </div>
-
-            {/* Password */}
-            <div style={fieldWrapperStyle}>
-              <label style={labelStyle} htmlFor="password">
-                Password
-              </label>
-              <input
-                id="password"
-                style={inputStyle}
-                type="password"
-                placeholder="Create a strong password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                minLength={8}
+                value={name} onChange={(e) => setName(e.target.value)}
+                onFocus={handleFocus} onBlur={handleBlur}
                 required
               />
-              <div style={roleHintStyle}>Use at least 8 characters with a letter and number.</div>
             </div>
 
-            {/* Student extra fields */}
-            <>
-                <div style={fieldWrapperStyle}>
-                  <label style={labelStyle} htmlFor="reg">
-                    Registration no
-                  </label>
-                  <input
-                    id="reg"
-                    style={inputStyle}
-                    placeholder="e.g. 2021123456"
-                    value={registrationNo}
-                    onChange={(e) => setRegistrationNo(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                  />
-                </div>
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="email">Email</label>
+              <input
+                id="email" className="auth-input" style={inputStyle}
+                type="email" placeholder="you@gmail.com"
+                value={email} onChange={(e) => setEmail(e.target.value)}
+                onFocus={handleFocus} onBlur={handleBlur}
+                required
+              />
+            </div>
 
-                <div style={fieldWrapperStyle}>
-                  <label style={labelStyle} htmlFor="dept">
-                    Department
-                  </label>
-                  <input
-                    id="dept"
-                    style={inputStyle}
-                    placeholder="e.g. CSE, EEE"
-                    value={dept}
-                    onChange={(e) => setDept(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                  />
-                </div>
-            </>
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="password">Password</label>
+              <input
+                id="password" className="auth-input" style={inputStyle}
+                type="password" placeholder="Create a strong password"
+                value={password} onChange={(e) => setPassword(e.target.value)}
+                onFocus={handleFocus} onBlur={handleBlur}
+                minLength={8} required
+              />
+              <div style={{ fontSize: ".72rem", color: "#475569", marginTop: 4 }}>
+                At least 8 characters with a letter and number.
+              </div>
+            </div>
+
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="reg">Registration no</label>
+              <input
+                id="reg" className="auth-input" style={inputStyle}
+                placeholder="e.g. 2021123456"
+                value={registrationNo} onChange={(e) => setRegistrationNo(e.target.value)}
+                onFocus={handleFocus} onBlur={handleBlur}
+              />
+            </div>
+
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="dept">Department</label>
+              <input
+                id="dept" className="auth-input" style={inputStyle}
+                placeholder="e.g. CSE, EEE"
+                value={dept} onChange={(e) => setDept(e.target.value)}
+                onFocus={handleFocus} onBlur={handleBlur}
+              />
+            </div>
           </div>
 
-          <button
-            style={buttonStyle}
-            type="submit"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow =
-                "0 18px 36px rgba(22,163,74,0.7)";
-              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
-                "100% 50%";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 14px 30px rgba(22,163,74,0.55)";
-              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
-                "0% 50%";
-            }}
-          >
-            Register
+          <button className="auth-btn" style={btnStyle} type="submit">
+            Create account
           </button>
 
-          <div style={helperTextStyle}>
+          <div style={{
+            marginTop: 14, fontSize: ".78rem", color: "#64748b", textAlign: "right" as const,
+          }}>
             Already have an account?{" "}
-            <span
-              style={{
-                color: "#f97316",
-                textDecoration: "underline",
-                cursor: "pointer",
-              }}
-              onClick={() => navigate("/login")}
-            >
-              Log in
-            </span>
+            <Link to="/login" style={{ color: brandLt, textDecoration: "none", fontWeight: 600 }}>
+              Log in →
+            </Link>
           </div>
         </form>
       </div>

@@ -3,22 +3,21 @@ import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 const footerWrapperStyle: CSSProperties = {
-  background:
-    "radial-gradient(circle at top left, #1f2933, #020617)",
-  color: "#9ca3af",
-  padding: "28px 20px 20px",
+  background: "#080b12",
+  color: "#94a3b8",
+  padding: "36px 24px 24px",
   marginTop: "auto",
-  borderTop: "1px solid rgba(148, 163, 184, 0.35)",
+  borderTop: "1px solid rgba(148,163,184,.08)",
 };
 
 const footerInnerStyle: CSSProperties = {
-  maxWidth: "1100px",
+  maxWidth: "1140px",
   margin: "0 auto",
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "space-between",
   alignItems: "flex-start",
-  gap: "24px",
+  gap: "28px",
 };
 
 const brandBlockStyle: CSSProperties = {
@@ -29,32 +28,33 @@ const brandRowStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: "10px",
-  marginBottom: "6px",
+  marginBottom: "8px",
 };
 
 const brandLogoStyle: CSSProperties = {
-  height: 26,
-  width: 26,
+  height: 28,
+  width: 28,
   borderRadius: "50%",
   objectFit: "cover",
 };
 
 const brandTextStyle: CSSProperties = {
   fontSize: "1.1rem",
-  fontWeight: 600,
+  fontWeight: 700,
   color: "white",
 };
 
 const brandTaglineStyle: CSSProperties = {
-  fontSize: "0.9rem",
-  color: "#9ca3af",
-  maxWidth: "260px",
+  fontSize: ".88rem",
+  color: "#64748b",
+  maxWidth: "280px",
+  lineHeight: 1.6,
 };
 
 const columnsWrapperStyle: CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
-  gap: "32px",
+  gap: "36px",
 };
 
 const columnStyle: CSSProperties = {
@@ -62,41 +62,42 @@ const columnStyle: CSSProperties = {
 };
 
 const columnTitleStyle: CSSProperties = {
-  fontSize: "0.9rem",
-  fontWeight: 600,
-  color: "#e5e7eb",
-  marginBottom: "8px",
-  letterSpacing: "0.03em",
+  fontSize: ".76rem",
+  fontWeight: 700,
+  color: "#94a3b8",
+  marginBottom: "10px",
+  letterSpacing: ".1em",
   textTransform: "uppercase",
 };
 
 const linkListStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: "4px",
-  fontSize: "0.9rem",
+  gap: "6px",
+  fontSize: ".88rem",
 };
 
 const footerLinkStyle: CSSProperties = {
-  color: "#9ca3af",
+  color: "#64748b",
   textDecoration: "none",
+  transition: "color .2s",
 };
 
 const mutedTextStyle: CSSProperties = {
-  fontSize: "0.85rem",
-  color: "#6b7280",
+  fontSize: ".84rem",
+  color: "#475569",
 };
 
 const bottomRowStyle: CSSProperties = {
-  maxWidth: "1100px",
-  margin: "18px auto 0",
-  borderTop: "1px solid rgba(31, 41, 55, 0.8)",
-  paddingTop: "10px",
+  maxWidth: "1140px",
+  margin: "20px auto 0",
+  borderTop: "1px solid rgba(148,163,184,.06)",
+  paddingTop: "14px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   gap: "12px",
-  fontSize: "0.8rem",
+  fontSize: ".78rem",
 };
 
 function Footer() {
@@ -156,10 +157,10 @@ function Footer() {
 
       {/* Bottom row */}
       <div style={bottomRowStyle}>
-        <span style={mutedTextStyle}>
+        <span style={{ ...mutedTextStyle, color: "#475569" }}>
           © {new Date().getFullYear()} Khaikhai Meal System. All rights reserved.
         </span>
-        <span style={mutedTextStyle}>
+        <span style={{ ...mutedTextStyle, color: "#475569" }}>
           Made for campus life 🍽️
         </span>
       </div>

@@ -1,201 +1,123 @@
 // src/pages/LoginPage.tsx
 import { type FormEvent, useState, type CSSProperties, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiRequest, getErrorMessage } from "../api";
 import { useAuth } from "../context/auth";
+
+/* ── Inject keyframes ── */
+const STYLE_ID = "auth-keyframes";
+if (typeof document !== "undefined" && !document.getElementById(STYLE_ID)) {
+  const s = document.createElement("style");
+  s.id = STYLE_ID;
+  s.textContent = `
+    @keyframes auth-fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes auth-float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes auth-glow   { 0%,100%{opacity:.45} 50%{opacity:.8} }
+    .auth-input:focus { border-color:#ea580c !important; box-shadow:0 0 0 3px rgba(234,88,12,.18) !important; }
+    .auth-btn:hover { transform:translateY(-2px) !important; box-shadow:0 20px 40px rgba(234,88,12,.55) !important; }
+  `;
+  document.head.appendChild(s);
+}
+
+/* ── Tokens ── */
+const brand   = "#ea580c";
+const brandLt = "#f97316";
 
 const pageStyle: CSSProperties = {
   minHeight: "100vh",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  padding: "80px 16px 40px",
-  background:
-    "radial-gradient(circle at top left, rgba(249,115,22,0.28), transparent 52%), " +
-    "radial-gradient(circle at bottom right, rgba(37,99,235,0.3), transparent 55%), " +
-    "linear-gradient(135deg, #020617, #020617)",
-  color: "#0f172a",
+  padding: "100px 20px 48px",
+  background: "linear-gradient(170deg, #0f172a 0%, #0c0f1a 50%, #1a0f0a 100%)",
+  position: "relative",
+  overflow: "hidden",
 };
 
-const containerStyle: CSSProperties = {
+const orbStyle = (top: string, left: string, size: number, color: string, delay: string): CSSProperties => ({
+  position: "absolute", top, left,
+  width: size, height: size, borderRadius: "50%",
+  background: `radial-gradient(circle, ${color}, transparent 65%)`,
+  animation: `auth-float 8s ease-in-out infinite ${delay}`,
+  pointerEvents: "none",
+});
+
+const cardStyle: CSSProperties = {
   width: "100%",
-  maxWidth: "480px",
-  padding: "22px 22px 24px",
-  borderRadius: "18px",
-  backgroundColor: "rgba(15, 23, 42, 0.96)",
-  border: "1px solid rgba(148,163,184,0.35)",
-  boxShadow: "0 34px 80px rgba(15, 23, 42, 0.8)",
-  backdropFilter: "blur(18px)",
-  color: "#e5e7eb",
-};
-
-// Brand row at the top
-const brandRowStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  marginBottom: "14px",
-};
-
-const brandLeftStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-};
-
-const brandIconStyle: CSSProperties = {
-  width: "32px",
-  height: "32px",
-  borderRadius: "999px",
-  background:
-    "conic-gradient(from 200deg, #f97316, #facc15, #22c55e, #f97316)",
-  padding: "2px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const brandIconInnerStyle: CSSProperties = {
-  width: "100%",
-  height: "100%",
-  borderRadius: "999px",
-  backgroundColor: "#020617",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "0.9rem",
-  fontWeight: 700,
-  color: "#f97316",
-};
-
-const brandNameStyle: CSSProperties = {
-  fontSize: "0.9rem",
-  fontWeight: 600,
-};
-
-const brandTagStyle: CSSProperties = {
-  fontSize: "0.7rem",
-  color: "#9ca3af",
-};
-
-const envPillStyle: CSSProperties = {
-  fontSize: "0.7rem",
-  padding: "3px 8px",
-  borderRadius: "999px",
-  border: "1px solid rgba(55,65,81,0.9)",
-  backgroundColor: "rgba(15,23,42,0.8)",
-  color: "#9ca3af",
-};
-
-const smallTagStyle: CSSProperties = {
-  fontSize: "0.7rem",
-  textTransform: "uppercase",
-  letterSpacing: "0.14em",
-  color: "#9ca3af",
-  marginBottom: "4px",
-};
-
-const titleStyle: CSSProperties = {
-  marginBottom: "4px",
-  fontSize: "1.55rem",
-  fontWeight: 700,
-  textAlign: "left",
-  backgroundImage: "linear-gradient(to right, #f97316, #fb923c)",
-  WebkitBackgroundClip: "text",
-  color: "transparent",
-};
-
-const subtitleStyle: CSSProperties = {
-  fontSize: "0.85rem",
-  color: "#9ca3af",
-  marginBottom: "16px",
+  maxWidth: 440,
+  padding: "32px 28px 28px",
+  borderRadius: 22,
+  background: "rgba(15,23,42,.85)",
+  border: "1px solid rgba(148,163,184,.12)",
+  boxShadow: "0 40px 80px rgba(0,0,0,.5)",
+  backdropFilter: "blur(24px)",
+  color: "#e2e8f0",
+  position: "relative",
+  zIndex: 1,
+  animation: "auth-fadeUp .6s both",
 };
 
 const labelStyle: CSSProperties = {
-  fontSize: "0.8rem",
-  fontWeight: 500,
-  color: "#e5e7eb",
-  marginBottom: "4px",
+  fontSize: ".8rem",
+  fontWeight: 600,
+  color: "#94a3b8",
+  marginBottom: 6,
   display: "block",
 };
 
-const inputStyleBase: CSSProperties = {
+const inputStyle: CSSProperties = {
   width: "100%",
-  padding: "9px 11px",
-  marginBottom: "12px",
-  borderRadius: "9px",
-  border: "1px solid #374151",
-  fontSize: "0.85rem",
+  padding: "11px 14px",
+  borderRadius: 12,
+  border: "1px solid rgba(148,163,184,.15)",
+  fontSize: ".88rem",
   outline: "none",
-  transition: "border-color 0.18s ease, box-shadow 0.18s ease",
-  backgroundColor: "#020617",
-  color: "#e5e7eb",
+  transition: "border-color .2s, box-shadow .2s",
+  background: "rgba(0,0,0,.25)",
+  color: "#e2e8f0",
 };
 
-const buttonStyle: CSSProperties = {
+const btnStyle: CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
-  borderRadius: "999px",
+  padding: "12px 16px",
+  borderRadius: 999,
   border: "none",
-  backgroundImage: "linear-gradient(135deg, #f97316, #ea580c)",
+  background: `linear-gradient(135deg, ${brandLt}, ${brand})`,
   color: "white",
-  fontWeight: 600,
-  fontSize: "0.95rem",
+  fontWeight: 700,
+  fontSize: ".95rem",
   cursor: "pointer",
-  marginTop: "6px",
-  boxShadow: "0 14px 28px rgba(249, 115, 22, 0.55)",
-  transition:
-    "background-position 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
-  backgroundSize: "150% 150%",
-  backgroundPosition: "0% 50%",
-};
-
-const helperRowStyle: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  fontSize: "0.78rem",
-  color: "#9ca3af",
-  marginTop: "8px",
+  marginTop: 8,
+  boxShadow: `0 14px 32px rgba(234,88,12,.4)`,
+  transition: "transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s",
 };
 
 const errorStyle: CSSProperties = {
-  color: "#fecaca",
-  fontSize: "0.8rem",
-  marginBottom: "12px",
-  padding: "8px 10px",
-  borderRadius: "8px",
-  backgroundColor: "rgba(127, 29, 29, 0.4)",
-  border: "1px solid rgba(248, 113, 113, 0.6)",
+  padding: "10px 14px",
+  borderRadius: 12,
+  background: "rgba(127,29,29,.35)",
+  border: "1px solid rgba(248,113,113,.35)",
+  color: "#fca5a5",
+  fontSize: ".82rem",
+  marginBottom: 16,
 };
 
-const passwordWrapperStyle: CSSProperties = {
-  position: "relative",
-  marginBottom: "12px",
-};
-
-const passwordInputStyle: CSSProperties = {
-  ...inputStyleBase,
-  paddingRight: "82px",
-  marginBottom: 0,
-};
-
-const toggleButtonStyle: CSSProperties = {
+const toggleBtnStyle: CSSProperties = {
   position: "absolute",
-  right: "8px",
+  right: 10,
   top: "50%",
   transform: "translateY(-50%)",
-  borderRadius: "999px",
-  border: "1px solid #4b5563",
-  padding: "3px 9px",
-  fontSize: "0.72rem",
+  borderRadius: 999,
+  border: "1px solid rgba(148,163,184,.2)",
+  padding: "3px 10px",
+  fontSize: ".72rem",
   cursor: "pointer",
-  backgroundColor: "#020617",
-  color: "#d1d5db",
+  background: "rgba(0,0,0,.3)",
+  color: "#94a3b8",
   display: "flex",
   alignItems: "center",
-  gap: "4px",
-  transition: "background-color 0.15s, border-color 0.15s, transform 0.12s",
+  gap: 4,
+  transition: "background .15s",
 };
 
 function LoginPage() {
@@ -207,10 +129,8 @@ function LoginPage() {
   const { login, userRole, token } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ Redirect AFTER token + role are known
   useEffect(() => {
     if (!token || !userRole) return;
-
     if (userRole === "student") navigate("/student", { replace: true });
     else if (userRole === "canteen") navigate("/canteen", { replace: true });
     else if (userRole === "admin") navigate("/admin", { replace: true });
@@ -222,16 +142,10 @@ function LoginPage() {
     try {
       const res = await apiRequest<{ access_token: string }>(
         "/users/login",
-        {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-        },
-        null
+        { method: "POST", body: JSON.stringify({ email, password }) },
+        null,
       );
-
-      // Just set the token; role will be loaded by AuthContext
       login(res.access_token);
-      // ⬆️ No navigate here based on stale userRole
     } catch (err: unknown) {
       setError(getErrorMessage(err, "Login failed"));
     }
@@ -239,126 +153,91 @@ function LoginPage() {
 
   return (
     <div style={pageStyle}>
-      <div style={containerStyle}>
-        {/* Brand row */}
-        <div style={brandRowStyle}>
-          <div style={brandLeftStyle}>
-            <div style={brandIconStyle}>
-              <div style={brandIconInnerStyle}>K</div>
-            </div>
+      {/* Decorative orbs */}
+      <div style={orbStyle("-60px", "-40px", 400, "rgba(234,88,12,.14)", "0s")} />
+      <div style={orbStyle("60%", "75%", 300, "rgba(99,102,241,.1)", "2s")} />
+
+      <div style={cardStyle}>
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <img src="/logo.png" alt="KhaiKhai" style={{ width: 32, height: 32, borderRadius: "50%" }} />
             <div>
-              <div style={brandNameStyle}>Khaikhai</div>
-              <div style={brandTagStyle}>Campus meal planner</div>
+              <div style={{ fontWeight: 700, fontSize: ".92rem", color: "white" }}>KhaiKhai</div>
+              <div style={{ fontSize: ".7rem", color: "#64748b" }}>Campus meal planner</div>
             </div>
           </div>
-          <div style={envPillStyle}>Secure login</div>
+          <span style={{
+            fontSize: ".68rem", padding: "3px 10px", borderRadius: 999,
+            border: "1px solid rgba(148,163,184,.12)",
+            color: "#64748b", background: "rgba(0,0,0,.2)",
+          }}>Secure login</span>
         </div>
 
-        <div style={smallTagStyle}>Welcome back</div>
-        <h2 style={titleStyle}>Log in to your account</h2>
-        <p style={subtitleStyle}>
-          Access your dashboard to manage meals, orders, and complaints in one
-          place.
+        {/* Header */}
+        <div style={{ fontSize: ".72rem", textTransform: "uppercase" as const, letterSpacing: ".12em", color: "#64748b", marginBottom: 4 }}>
+          Welcome back
+        </div>
+        <h2 style={{
+          margin: "0 0 4px", fontSize: "1.5rem", fontWeight: 750,
+          background: `linear-gradient(135deg, ${brandLt}, #fb923c)`,
+          WebkitBackgroundClip: "text", color: "transparent",
+        }}>
+          Log in to your account
+        </h2>
+        <p style={{ margin: "0 0 20px", fontSize: ".84rem", color: "#64748b", lineHeight: 1.5 }}>
+          Access your dashboard to manage meals, orders, and complaints.
         </p>
 
         {error && <div style={errorStyle}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <label style={labelStyle} htmlFor="email">
-            Email address
-          </label>
+          <label style={labelStyle} htmlFor="email">Email address</label>
           <input
             id="email"
-            style={inputStyleBase}
+            className="auth-input"
+            style={{ ...inputStyle, marginBottom: 16 }}
             type="email"
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "#f97316";
-              e.currentTarget.style.boxShadow =
-                "0 0 0 1px rgba(249,115,22,0.6)";
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "#374151";
-              e.currentTarget.style.boxShadow = "none";
-            }}
+            required
           />
 
-          <label style={labelStyle} htmlFor="password">
-            Password
-          </label>
-          <div style={passwordWrapperStyle}>
+          <label style={labelStyle} htmlFor="password">Password</label>
+          <div style={{ position: "relative", marginBottom: 16 }}>
             <input
               id="password"
-              style={passwordInputStyle}
+              className="auth-input"
+              style={{ ...inputStyle, paddingRight: 80 }}
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = "#f97316";
-                e.currentTarget.style.boxShadow =
-                  "0 0 0 1px rgba(249,115,22,0.6)";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = "#374151";
-                e.currentTarget.style.boxShadow = "none";
-              }}
+              required
             />
             <button
               type="button"
-              style={toggleButtonStyle}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#111827";
-                e.currentTarget.style.borderColor = "#6b7280";
-                e.currentTarget.style.transform = "translateY(-50%) translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#020617";
-                e.currentTarget.style.borderColor = "#4b5563";
-                e.currentTarget.style.transform = "translateY(-50%)";
-              }}
-              onClick={() => setShowPassword((prev) => !prev)}
+              style={toggleBtnStyle}
+              onClick={() => setShowPassword((p) => !p)}
             >
               {showPassword ? "Hide" : "Show"}
               <span aria-hidden="true">{showPassword ? "🙈" : "👁️"}</span>
             </button>
           </div>
 
-          <button
-            style={buttonStyle}
-            type="submit"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow =
-                "0 18px 34px rgba(249,115,22,0.7)";
-              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
-                "100% 50%";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 14px 28px rgba(249,115,22,0.55)";
-              (e.currentTarget as HTMLButtonElement).style.backgroundPosition =
-                "0% 50%";
-            }}
-          >
-            Login
+          <button className="auth-btn" style={btnStyle} type="submit">
+            Sign in
           </button>
 
-          <div style={helperRowStyle}>
-            <span>Use your campus account credentials.</span>
-            <span
-              style={{
-                textDecoration: "underline",
-                cursor: "pointer",
-                color: "#f97316",
-              }}
-              // onClick={() => navigate("/forgot-password")}
-            >
-              Forgot?
-            </span>
+          <div style={{
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+            marginTop: 14, fontSize: ".78rem", color: "#64748b",
+          }}>
+            <span>Use your campus credentials.</span>
+            <Link to="/register" style={{ color: brandLt, textDecoration: "none", fontWeight: 600 }}>
+              Create account →
+            </Link>
           </div>
         </form>
       </div>
